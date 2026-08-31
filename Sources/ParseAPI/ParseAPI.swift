@@ -169,6 +169,12 @@ public final class ParseAPI: Sendable {
 		try await get("/name/\(enc(name))")
 	}
 
+	/// Screen a name against the official OFAC lists. Exact match after
+	/// normalization, never fuzzy. Sanctioned false is not clearance.
+	public func sanctions(_ name: String) async throws -> Sanctions {
+		try await get("/sanctions/\(enc(name))")
+	}
+
 	public func postal(_ code: String, country: String? = nil) async throws -> Postal {
 		try await get("/postal/\(enc(code))", query: [("country", country)])
 	}
@@ -236,6 +242,17 @@ public final class ParseAPI: Sendable {
 	/// Decodes a 17-character VIN. Deep adds open recall campaigns on paid plans.
 	public func vin(_ vin: String, deep: Bool = false) async throws -> Vin {
 		try await get("/vin/\(enc(vin))", query: deepQuery(deep))
+	}
+
+	/// Looks up a US Harmonized Tariff Schedule code. Deep with an origin
+	/// resolves the Chapter 99 tariff measures that apply from that country.
+	public func hts(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Hts {
+		try await get("/hts/\(enc(code))", query: [("origin", origin)] + deepQuery(deep))
+	}
+
+	/// Searches tariff schedule descriptions by product.
+	public func htsSearch(_ q: String) async throws -> HtsSearch {
+		try await get("/hts", query: [("q", q)])
 	}
 
 	public func currency(_ code: String) async throws -> Currency {

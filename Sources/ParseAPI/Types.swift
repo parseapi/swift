@@ -339,6 +339,61 @@ public struct Npi: Codable, Sendable {
 	public let phone: String?
 }
 
+public struct HtsMeasure: Codable, Sendable {
+	/// Chapter 99 heading, dotted (9903.01.24).
+	public let heading: String
+	/// The measure text verbatim.
+	public let description: String
+	/// The rate string verbatim.
+	public let rate: String?
+	/// Effective from, ISO YYYY-MM-DD. Nil when the schedule states none.
+	public let from: String?
+	/// Expires, ISO YYYY-MM-DD. Nil when open-ended.
+	public let until: String?
+}
+
+public struct HtsDeep: Codable, Sendable {
+	/// The origin country the measures were resolved for.
+	public let origin: String?
+	/// Composed ad valorem percent. Nil when the components do not compose cleanly.
+	public let effectiveRate: Double?
+	/// Every Chapter 99 tariff measure that applies to this code from this origin.
+	public let measures: [HtsMeasure]?
+}
+
+public struct Hts: Codable, Sendable {
+	/// Normalized code with dots (8471.30.01.00).
+	public let hts: String
+	/// The schedule line verbatim.
+	public let description: String
+	/// Parent descriptions from the schedule outline, outermost first.
+	public let lineage: [String]
+	/// Units of quantity (No., kg).
+	public let units: [String]
+	/// Column 1 general rate, verbatim.
+	public let general: String?
+	/// Column 1 special rate, verbatim.
+	public let special: String?
+	/// Column 2 rate, verbatim.
+	public let other: String?
+	/// The official release that answered (2026HTSRev17).
+	public let revision: String
+	public let deep: HtsDeep?
+}
+
+public struct HtsSearchHit: Codable, Sendable {
+	public let hts: String
+	public let description: String
+	public let general: String?
+}
+
+public struct HtsSearch: Codable, Sendable {
+	public let q: String
+	public let revision: String
+	/// Up to 20 lines, best match first.
+	public let codes: [HtsSearchHit]
+}
+
 public struct VinRecall: Codable, Sendable {
 	/// Government campaign number.
 	public let campaign: String
@@ -351,7 +406,7 @@ public struct VinRecall: Codable, Sendable {
 
 public struct VinDeep: Codable, Sendable {
 	/// Open recall campaigns for the decoded vehicle. Empty when none,
-	/// nil when the registry did not answer.
+	/// nil when the recall registry did not answer.
 	public let recalls: [VinRecall]?
 }
 
@@ -579,6 +634,30 @@ public struct Name: Codable, Sendable {
 	public let suffix: String?
 	public let gender: String?
 	public let salutation: String?
+}
+
+/// One official OFAC record, verbatim.
+public struct SanctionsMatch: Codable, Sendable {
+	/// OFAC uid, stable across publications.
+	public let id: Int
+	/// "sdn" or "consolidated".
+	public let list: String
+	/// "individual", "entity", "vessel", or "aircraft".
+	public let type: String
+	/// Listed primary name, verbatim.
+	public let name: String
+	/// Official sanctions program codes (SDGT, CUBA, IRGC).
+	public let programs: [String]
+}
+
+/// An OFAC screening result. Sanctioned false means not on the list as
+/// published. It is not clearance.
+public struct Sanctions: Codable, Sendable {
+	/// The name you passed, folded to its match key.
+	public let name: String
+	public let sanctioned: Bool
+	/// Official records matched. Empty when sanctioned is false.
+	public let matches: [SanctionsMatch]
 }
 
 public struct CurrencyRate: Codable, Sendable {
