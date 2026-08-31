@@ -87,7 +87,7 @@ func makeClient(
 	}
 
 	@Test func stateSendsCountry() async throws {
-		let stub = StubTransport(body: #"{"state":"NC","name":"North Carolina","local_name":null,"type":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"population":null,"area":null,"timezone":null}"#)
+		let stub = StubTransport(body: #"{"state":"NC","name":"North Carolina","local_name":null,"type":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"population":null,"area":null,"timezone":null,"timezones":[],"iso_3166_2":null,"fips":null,"capital":null,"area_codes":[],"tax":null,"tax_rate":null}"#)
 		_ = try await makeClient(stub).state("NC", country: "US")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/state/NC?country=US")
 	}
@@ -99,7 +99,7 @@ func makeClient(
 	}
 
 	@Test func cityIdPath() async throws {
-		let stub = StubTransport(body: #"{"name":"Charlotte","local_name":null,"state":"NC","state_name":null,"country":"US","latitude":null,"longitude":null,"population":null,"timezone":null,"id":"city_abcdefabcdef"}"#)
+		let stub = StubTransport(body: #"{"name":"Charlotte","local_name":null,"type":null,"capital":null,"state":"NC","state_name":null,"district":null,"district_name":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"elevation":null,"elevation_ft":null,"population":null,"land_area":null,"water_area":null,"timezone":null,"id":"city_abcdefabcdef"}"#)
 		_ = try await makeClient(stub).cityId("city_abcdefabcdef")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/city/id/city_abcdefabcdef")
 	}

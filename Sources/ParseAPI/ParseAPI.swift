@@ -120,16 +120,16 @@ public final class ParseAPI: Sendable {
 		try await get("/country/\(enc(code))/states")
 	}
 
-	public func state(_ code: String, country: String) async throws -> State {
+	public func state(_ code: String, country: String? = nil) async throws -> State {
 		try await get("/state/\(enc(code))", query: [("country", country)])
 	}
 
-	public func stateDistricts(_ code: String, country: String) async throws -> StateDistricts {
+	public func stateDistricts(_ code: String, country: String? = nil) async throws -> StateDistricts {
 		try await get("/state/\(enc(code))/districts", query: [("country", country)])
 	}
 
-	public func district(_ code: String, country: String? = nil) async throws -> District {
-		try await get("/district/\(enc(code))", query: [("country", country)])
+	public func district(_ code: String, country: String? = nil, state: String? = nil) async throws -> District {
+		try await get("/district/\(enc(code))", query: [("country", country), ("state", state)])
 	}
 
 	public func city(_ name: String, country: String? = nil, state: String? = nil) async throws -> City {
@@ -149,6 +149,16 @@ public final class ParseAPI: Sendable {
 		try await get("/city", query: [("lat", num(lat)), ("lon", num(lon))])
 	}
 
+	public func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil) async throws -> CityNearby {
+		try await get("/city/\(enc(name))/nearby", query: [
+			("radius", radius.map(num)),
+			("unit", unit),
+			("country", country),
+			("state", state),
+			("limit", limit.map(String.init)),
+		])
+	}
+
 	/// One language by BCP 47 shortest code (en) or ISO 639-3 (eng).
 	public func language(_ code: String) async throws -> Language {
 		try await get("/language/\(enc(code))")
@@ -159,15 +169,15 @@ public final class ParseAPI: Sendable {
 		try await get("/name/\(enc(name))")
 	}
 
-	public func postal(_ code: String, country: String) async throws -> Postal {
+	public func postal(_ code: String, country: String? = nil) async throws -> Postal {
 		try await get("/postal/\(enc(code))", query: [("country", country)])
 	}
 
-	public func postalNearby(_ code: String, country: String, radius: Double? = nil, unit: String? = nil) async throws -> PostalNearby {
+	public func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil) async throws -> PostalNearby {
 		try await get("/postal/\(enc(code))/nearby", query: [("country", country), ("radius", radius.map(num)), ("unit", unit)])
 	}
 
-	public func postalDistance(_ from: String, _ to: String, country: String) async throws -> PostalDistance {
+	public func postalDistance(_ from: String, _ to: String, country: String? = nil) async throws -> PostalDistance {
 		try await get("/postal/\(enc(from))/distance/\(enc(to))", query: [("country", country)])
 	}
 

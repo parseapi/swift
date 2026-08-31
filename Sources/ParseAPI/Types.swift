@@ -99,6 +99,13 @@ public struct State: Codable, Sendable {
 	public let population: Int?
 	public let area: Double?
 	public let timezone: String?
+	public let timezones: [String]
+	public let iso31662: String?
+	public let fips: String?
+	public let capital: String?
+	public let areaCodes: [String]
+	public let tax: String?
+	public let taxRate: Double?
 }
 
 public struct StateDistrictItem: Codable, Sendable {
@@ -128,17 +135,29 @@ public struct District: Codable, Sendable {
 	public let population: Int?
 	public let landArea: Double?
 	public let waterArea: Double?
+	public let seat: String?
+	public let timezone: String?
+	public let timezones: [String]
 }
 
 public struct City: Codable, Sendable {
 	public let name: String
 	public let localName: String?
+	public let type: String?
+	public let capital: String?
 	public let state: String?
 	public let stateName: String?
+	public let district: String?
+	public let districtName: String?
 	public let country: String
+	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
+	public let elevation: Double?
+	public let elevationFt: Double?
 	public let population: Int?
+	public let landArea: Double?
+	public let waterArea: Double?
 	public let timezone: String?
 	/// Minted parse id (city_ + 12 chars). Stable pin via cityId().
 	public let id: String
@@ -148,12 +167,21 @@ public struct City: Codable, Sendable {
 public struct CityNearest: Codable, Sendable {
 	public let name: String
 	public let localName: String?
+	public let type: String?
+	public let capital: String?
 	public let state: String?
 	public let stateName: String?
+	public let district: String?
+	public let districtName: String?
 	public let country: String
+	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
+	public let elevation: Double?
+	public let elevationFt: Double?
 	public let population: Int?
+	public let landArea: Double?
+	public let waterArea: Double?
 	public let timezone: String?
 	public let id: String
 	public let distance: Double
@@ -167,6 +195,15 @@ public struct CitySearch: Codable, Sendable {
 	public let cities: [City]
 }
 
+public struct CityNearby: Codable, Sendable {
+	public let city: String
+	public let state: String?
+	public let country: String
+	public let radius: Double
+	public let unit: String
+	public let nearby: [CityNearest]
+}
+
 public struct Postal: Codable, Sendable {
 	public let postal: String
 	public let city: String?
@@ -178,11 +215,14 @@ public struct Postal: Codable, Sendable {
 	public let stateName: String?
 	public let stateNameLocal: String?
 	public let country: String
+	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
+	public let landArea: Double?
+	public let waterArea: Double?
 	public let timezone: String?
 	public let currency: String?
 	public let neighbors: [String]
