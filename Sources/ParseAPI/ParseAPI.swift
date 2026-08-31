@@ -227,9 +227,9 @@ public final class ParseAPI: Sendable {
 		try await get("/currency/\(enc(code))")
 	}
 
-	/// Daily official reference cross rate.
-	public func currencyRate(_ base: String, _ quote: String) async throws -> CurrencyRate {
-		try await get("/currency/\(enc(base))/\(enc(quote))")
+	/// Daily official reference cross rate. Pass date for a past day, amount to convert.
+	public func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate {
+		try await get("/currency/\(enc(base))/\(enc(quote))", query: [("date", date), ("amount", amount.map(num))])
 	}
 
 	public func timezone(_ id: String, at: String? = nil) async throws -> Timezone {

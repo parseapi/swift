@@ -497,6 +497,8 @@ public struct CurrencyRate: Codable, Sendable {
 	public let quote: String
 	public let rate: Double
 	public let date: String
+	public let amount: Double?
+	public let converted: Double?
 	public let source: String?
 }
 
