@@ -24,6 +24,7 @@ One method per endpoint, named after the route. Async throughout.
 try await parse.ip("8.8.8.8")
 try await parse.ipSelf()
 try await parse.email("hello@gmail.com")
+try await parse.vat("DE136695976")
 try await parse.phone("+14155552671")
 try await parse.postal("SW1A 1AA")
 try await parse.postal("28202", country: "US")

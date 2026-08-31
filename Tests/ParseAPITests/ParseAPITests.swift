@@ -80,6 +80,12 @@ func makeClient(
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/email/a%40b.com")
 	}
 
+	@Test func vatFromDeep() async throws {
+		let stub = StubTransport(body: #"{"vat":"DE136695976","valid":true,"country":"DE"}"#)
+		_ = try await makeClient(stub).vat("DE136695976", from: "IE6388047V", deep: true)
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/vat/DE136695976?from=IE6388047V&deep=true")
+	}
+
 	@Test func phoneEncodesPlus() async throws {
 		let stub = StubTransport(body: #"{"phone":"+14155552671","valid":true,"country":"US"}"#)
 		_ = try await makeClient(stub).phone("+14155552671")

@@ -80,6 +80,7 @@ await expectOk("postal", { try await parse.postal("28202", country: "US") }) { $
 await expectOk("postalNearby", { try await parse.postalNearby("28202", country: "US", radius: 40) }) { $0.nearby.isEmpty ? "no nearby" : nil }
 await expectOk("postalDistance", { try await parse.postalDistance("28202", "10001", country: "US") }) { $0.distance > 800 && $0.distance < 1000 ? nil : "distance \($0.distance)" }
 await expectOk("email", { try await parse.email("hello@gmail.com") }) { $0.valid ? nil : "not valid" }
+await expectOk("vat", { try await parse.vat("DE136695976") }) { $0.valid && $0.country == "DE" ? nil : "not valid DE" }
 await expectOk("phone", { try await parse.phone("+14155552671") }) { $0.phone == "+14155552671" ? nil : "wrong phone" }
 // Metered core siblings: junk numbers answer 200 valid false, free, no vendor dip.
 await expectOk("carrier junk free", { try await parse.carrier("555-0100") }) { $0.valid == false ? nil : "expected invalid" }

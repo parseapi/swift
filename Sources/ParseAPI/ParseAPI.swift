@@ -185,6 +185,11 @@ public final class ParseAPI: Sendable {
 		try await get("/email/\(enc(email))", query: deepQuery(deep))
 	}
 
+	/// Format and checksum on every call. Deep asks the live EU registry.
+	public func vat(_ number: String, country: String? = nil, from: String? = nil, deep: Bool = false) async throws -> Vat {
+		try await get("/vat/\(enc(number))", query: [("country", country), ("from", from)] + deepQuery(deep))
+	}
+
 	public func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone {
 		try await get("/phone/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}

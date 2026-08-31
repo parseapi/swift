@@ -275,6 +275,29 @@ public struct Email: Codable, Sendable {
 	public let deep: EmailDeep?
 }
 
+public struct VatAddress: Codable, Sendable {
+	public let street: String?
+	public let city: String?
+	public let postal: String?
+	public let country: String?
+}
+
+public struct VatDeep: Codable, Sendable {
+	public let registered: Bool?
+	public let name: String?
+	public let address: VatAddress?
+	public let consultation: String?
+	public let consulted: String?
+}
+
+public struct Vat: Codable, Sendable {
+	public let vat: String?
+	public let valid: Bool
+	public let country: String?
+	public let from: String?
+	public let deep: VatDeep?
+}
+
 /// Always empty. The metered proves are their own endpoints: carrier, caller, hlr.
 public struct PhoneDeep: Codable, Sendable {}
 
