@@ -298,6 +298,18 @@ public struct Vat: Codable, Sendable {
 	public let deep: VatDeep?
 }
 
+public struct Iban: Codable, Sendable {
+	public let iban: String?
+	public let valid: Bool
+	public let country: String?
+	public let checksum: String?
+	/// Bank identifier parsed from the number, not a name.
+	public let bank: String?
+	/// Branch identifier when that country has one.
+	public let branch: String?
+	public let account: String?
+}
+
 /// Always empty. The metered proves are their own endpoints: carrier, caller, hlr.
 public struct PhoneDeep: Codable, Sendable {}
 

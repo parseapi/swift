@@ -190,6 +190,11 @@ public final class ParseAPI: Sendable {
 		try await get("/vat/\(enc(number))", query: [("country", country), ("from", from)] + deepQuery(deep))
 	}
 
+	/// Checksum and structure. bank and branch are codes inside the number, not names.
+	public func iban(_ iban: String, country: String? = nil) async throws -> Iban {
+		try await get("/iban/\(enc(iban))", query: [("country", country)])
+	}
+
 	public func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone {
 		try await get("/phone/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
