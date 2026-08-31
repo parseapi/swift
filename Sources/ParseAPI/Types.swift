@@ -302,6 +302,8 @@ public struct Iban: Codable, Sendable {
 	public let iban: String?
 	public let valid: Bool
 	public let country: String?
+	/// Print form in groups of four, for display. Nil when invalid.
+	public let formatted: String?
 	public let checksum: String?
 	/// Bank identifier parsed from the number, not a name.
 	public let bank: String?
