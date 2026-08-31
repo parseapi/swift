@@ -58,6 +58,7 @@ try await parse.weather(40.7128, -74.006)
 try await parse.domain("example.com")
 try await parse.mx("example.com")
 try await parse.useragent(uaString)
+try await parse.vin("1HGCM82633A004352")
 try await parse.emoji("rocket")
 try await parse.emojiSearch("fire")
 ```

@@ -312,6 +312,54 @@ public struct Iban: Codable, Sendable {
 	public let account: String?
 }
 
+public struct VinRecall: Codable, Sendable {
+	/// Government campaign number.
+	public let campaign: String
+	/// Report date, ISO YYYY-MM-DD.
+	public let date: String?
+	public let component: String?
+	/// The filed summary verbatim.
+	public let summary: String?
+}
+
+public struct VinDeep: Codable, Sendable {
+	/// Open recall campaigns for the decoded vehicle. Empty when none,
+	/// nil when the registry did not answer.
+	public let recalls: [VinRecall]?
+}
+
+public struct Vin: Codable, Sendable {
+	/// Normalized VIN, uppercase, no spaces. Invalid input still echoes the fold.
+	public let vin: String?
+	public let valid: Bool
+	public let year: Int?
+	public let make: String?
+	public let model: String?
+	public let trim: String?
+	public let series: String?
+	/// Body style (sedan, coupe, suv, pickup).
+	public let body: String?
+	/// Vehicle type (passenger car, truck, motorcycle, bus, trailer).
+	public let type: String?
+	public let doors: Int?
+	public let cylinders: Int?
+	/// Engine displacement in liters.
+	public let displacement: Double?
+	public let fuel: String?
+	public let horsepower: Double?
+	/// fwd, rwd, awd, 4wd.
+	public let drive: String?
+	/// automatic, manual, cvt.
+	public let transmission: String?
+	public let manufacturer: String?
+	public let plantCity: String?
+	public let plantState: String?
+	public let plantCountry: String?
+	/// Gross vehicle weight rating class as filed.
+	public let gvwr: String?
+	public let deep: VinDeep?
+}
+
 /// Always empty. The metered proves are their own endpoints: carrier, caller, hlr.
 public struct PhoneDeep: Codable, Sendable {}
 

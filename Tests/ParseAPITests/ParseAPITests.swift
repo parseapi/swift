@@ -162,6 +162,15 @@ func makeClient(
 		_ = try await makeClient(stub).useragent("SomeAgent/1.0")
 		#expect(stub.requests[0].value(forHTTPHeaderField: "User-Agent") == "SomeAgent/1.0")
 	}
+
+	@Test func vinDeep() async throws {
+		let stub = StubTransport(body: #"{"vin":"1HGCM82633A004352","valid":true,"year":2003,"make":"Honda","plant_city":"Marysville","deep":{"recalls":[]}}"#)
+		let decoded = try await makeClient(stub).vin("1HGCM82633A004352", deep: true)
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/vin/1HGCM82633A004352?deep=true")
+		#expect(decoded.year == 2003)
+		#expect(decoded.plantCity == "Marysville")
+		#expect(decoded.deep?.recalls?.isEmpty == true)
+	}
 }
 
 @Suite struct Errors {

@@ -93,6 +93,10 @@ await expectOk("hlr junk free", { try await parse.hlr("555-0100") }) { $0.valid 
 await expectOk("domain", { try await parse.domain("gmail.com") }) { $0.available == false ? nil : "gmail available?" }
 await expectOk("mx", { try await parse.mx("gmail.com") }) { $0.mx.isEmpty ? "no mx" : nil }
 await expectOk("useragent", { try await parse.useragent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") }) { $0.browser == "Chrome" ? nil : "browser \($0.browser ?? "nil")" }
+await expectOk("vin", { try await parse.vin("1HGCM82633A004352") }) {
+	$0.valid && $0.make == "Honda" && $0.year == 2003 ? nil : "wrong decode"
+}
+await expectOk("vin junk", { try await parse.vin("1HGCM82613A004352") }) { $0.valid ? "expected invalid" : nil }
 await expectOk("currency", { try await parse.currency("USD") }) { $0.symbol == "$" ? nil : "wrong symbol" }
 await expectOk("currencyRate", { try await parse.currencyRate("USD", "EUR") }) { $0.rate > 0 && $0.rate < 10 ? nil : "rate \($0.rate)" }
 await expectOk("language", { try await parse.language("en") }) { $0.language == "en" && $0.name == "English" ? nil : "wrong language" }
