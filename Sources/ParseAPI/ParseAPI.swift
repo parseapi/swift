@@ -195,6 +195,11 @@ public final class ParseAPI: Sendable {
 		try await get("/iban/\(enc(iban))", query: [("country", country)])
 	}
 
+	/// NPI lookup in the CMS NPPES registry of US healthcare providers.
+	public func npi(_ npi: String) async throws -> Npi {
+		try await get("/npi/\(enc(npi))")
+	}
+
 	public func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone {
 		try await get("/phone/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}

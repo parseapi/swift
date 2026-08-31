@@ -92,6 +92,13 @@ func makeClient(
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/iban/89370400440532013000?country=DE")
 	}
 
+	@Test func npi() async throws {
+		let stub = StubTransport(body: #"{"npi":"1881018208","valid":true,"registered":true,"type":"organization","name":"Mayo Clinic"}"#)
+		let record = try await makeClient(stub).npi("1881018208")
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/npi/1881018208")
+		#expect(record.registered == true)
+	}
+
 	@Test func phoneEncodesPlus() async throws {
 		let stub = StubTransport(body: #"{"phone":"+14155552671","valid":true,"country":"US"}"#)
 		_ = try await makeClient(stub).phone("+14155552671")

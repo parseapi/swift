@@ -312,6 +312,33 @@ public struct Iban: Codable, Sendable {
 	public let account: String?
 }
 
+public struct Npi: Codable, Sendable {
+	/// Normalized 10-digit NPI. Invalid input still echoes the fold.
+	public let npi: String?
+	public let valid: Bool
+	/// Exists in the CMS NPPES registry.
+	public let registered: Bool?
+	public let active: Bool?
+	/// On the OIG exclusion list.
+	public let excluded: Bool?
+	/// individual or organization.
+	public let type: String?
+	public let name: String?
+	public let first: String?
+	public let last: String?
+	public let credential: String?
+	public let specialty: String?
+	/// NUCC taxonomy code.
+	public let taxonomy: String?
+	public let address: String?
+	public let city: String?
+	public let state: String?
+	public let stateName: String?
+	public let postal: String?
+	public let country: String?
+	public let phone: String?
+}
+
 public struct VinRecall: Codable, Sendable {
 	/// Government campaign number.
 	public let campaign: String
