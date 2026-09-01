@@ -636,30 +636,6 @@ public struct Name: Codable, Sendable {
 	public let salutation: String?
 }
 
-/// One official OFAC record, verbatim.
-public struct SanctionsMatch: Codable, Sendable {
-	/// OFAC uid, stable across publications.
-	public let id: Int
-	/// "sdn" or "consolidated".
-	public let list: String
-	/// "individual", "entity", "vessel", or "aircraft".
-	public let type: String
-	/// Listed primary name, verbatim.
-	public let name: String
-	/// Official sanctions program codes (SDGT, CUBA, IRGC).
-	public let programs: [String]
-}
-
-/// An OFAC screening result. Sanctioned false means not on the list as
-/// published. It is not clearance.
-public struct Sanctions: Codable, Sendable {
-	/// The name you passed, folded to its match key.
-	public let name: String
-	public let sanctioned: Bool
-	/// Official records matched. Empty when sanctioned is false.
-	public let matches: [SanctionsMatch]
-}
-
 public struct CurrencyRate: Codable, Sendable {
 	public let base: String
 	public let quote: String

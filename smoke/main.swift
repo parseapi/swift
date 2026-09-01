@@ -105,8 +105,6 @@ await expectOk("currency", { try await parse.currency("USD") }) { $0.symbol == "
 await expectOk("currencyRate", { try await parse.currencyRate("USD", "EUR") }) { $0.rate > 0 && $0.rate < 10 ? nil : "rate \($0.rate)" }
 await expectOk("language", { try await parse.language("en") }) { $0.language == "en" && $0.name == "English" ? nil : "wrong language" }
 await expectOk("name", { try await parse.name("BILLY O'SHALL") }) { $0.name == "Billy O'Shall" && $0.valid && $0.gender == "male" ? nil : "wrong name" }
-await expectOk("ofac", { try await parse.ofac("AEROCARIBBEAN AIRLINES") }) { $0.sanctioned && $0.matches.first?.list == "sdn" ? nil : "expected sdn match" }
-await expectOk("ofac clean", { try await parse.ofac("Jane Smith") }) { !$0.sanctioned && $0.matches.isEmpty ? nil : "expected no match" }
 await expectOk("timezone", { try await parse.timezone("America/New_York") }) { $0.offsetMinutes == -240 || $0.offsetMinutes == -300 ? nil : "offset \($0.offsetMinutes.map(String.init) ?? "nil")" }
 await expectOk("timezoneAt", { try await parse.timezoneAt(40.7128, -74.006) }) { $0.timezone == "America/New_York" ? nil : "zone \($0.timezone ?? "nil")" }
 await expectOk("holiday", { try await parse.holiday("US") }) { $0.holidays.count > 5 ? nil : "too few holidays" }
