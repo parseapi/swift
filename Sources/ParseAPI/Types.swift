@@ -352,6 +352,23 @@ public struct Npi: Codable, Sendable {
 	public let postal: String?
 	public let country: String?
 	public let phone: String?
+	public let deep: NpiDeep?
+}
+
+public struct NpiEnrollment: Codable, Sendable {
+	/// part_a, part_b, practitioner, dme, order_refer, mdpp. Nil when unknown.
+	public let type: String?
+	public let specialty: String?
+	public let state: String?
+}
+
+public struct NpiDeep: Codable, Sendable {
+	/// In the published Medicare FFS enrollment extract.
+	public let medicare: Bool?
+	/// On the CMS opt-out affidavit list. Matched by NPI only.
+	public let optOut: Bool?
+	/// Enrollment rows. Empty when medicare is false.
+	public let enrollments: [NpiEnrollment]?
 }
 
 public struct HtsMeasure: Codable, Sendable {

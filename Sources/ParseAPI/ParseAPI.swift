@@ -196,8 +196,9 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// NPI lookup in the CMS NPPES registry of US healthcare providers.
-	public func npi(_ npi: String) async throws -> Npi {
-		try await get("/npi/\(enc(npi))")
+	/// Deep adds Medicare enrollment on paid plans.
+	public func npi(_ npi: String, deep: Bool = false) async throws -> Npi {
+		try await get("/npi/\(enc(npi))", query: deepQuery(deep))
 	}
 
 	public func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone {
