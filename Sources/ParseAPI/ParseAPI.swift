@@ -171,8 +171,8 @@ public final class ParseAPI: Sendable {
 
 	/// Screen a name against the official OFAC lists. Exact match after
 	/// normalization, never fuzzy. Sanctioned false is not clearance.
-	public func sanctions(_ name: String) async throws -> Sanctions {
-		try await get("/sanctions/\(enc(name))")
+	public func ofac(_ name: String) async throws -> Sanctions {
+		try await get("/ofac/\(enc(name))")
 	}
 
 	public func postal(_ code: String, country: String? = nil) async throws -> Postal {
