@@ -133,7 +133,11 @@ public struct District: Codable, Sendable {
 	public let latitude: Double?
 	public let longitude: Double?
 	public let population: Int?
+	/// Total area in km2 (land + water, or the official total).
+	public let area: Double?
+	/// Land area in km2. Nil when the source publishes total only.
 	public let landArea: Double?
+	/// Water area in km2. Nil when the source publishes total only.
 	public let waterArea: Double?
 	public let seat: String?
 	public let timezone: String?
@@ -144,7 +148,8 @@ public struct City: Codable, Sendable {
 	public let name: String
 	public let localName: String?
 	public let type: String?
-	public let capital: String?
+	/// What this city is the capital of: country, state, or nil.
+	public let capitalOf: String?
 	public let state: String?
 	public let stateName: String?
 	public let district: String?
@@ -156,7 +161,11 @@ public struct City: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
+	/// Total area in km2 (land + water, or the official total).
+	public let area: Double?
+	/// Land area in km2. Nil when the source publishes total only.
 	public let landArea: Double?
+	/// Water area in km2. Nil when the source publishes total only.
 	public let waterArea: Double?
 	public let timezone: String?
 	/// Minted parse id (city_ + 12 chars). Stable pin via cityId().
@@ -168,7 +177,7 @@ public struct CityNearest: Codable, Sendable {
 	public let name: String
 	public let localName: String?
 	public let type: String?
-	public let capital: String?
+	public let capitalOf: String?
 	public let state: String?
 	public let stateName: String?
 	public let district: String?
@@ -180,6 +189,7 @@ public struct CityNearest: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
+	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
 	public let timezone: String?
@@ -221,7 +231,11 @@ public struct Postal: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
+	/// Total area in km2. Nil when the source has no water split.
+	public let area: Double?
+	/// Land area in km2, where the source has it.
 	public let landArea: Double?
+	/// Water area in km2, where the source has it.
 	public let waterArea: Double?
 	public let timezone: String?
 	public let currency: String?
@@ -287,7 +301,8 @@ public struct VatDeep: Codable, Sendable {
 	public let name: String?
 	public let address: VatAddress?
 	public let consultation: String?
-	public let consulted: String?
+	/// Registry timestamp of this check, ISO.
+	public let consultedAt: String?
 }
 
 public struct Vat: Codable, Sendable {
@@ -390,8 +405,8 @@ public struct HtsSearchHit: Codable, Sendable {
 public struct HtsSearch: Codable, Sendable {
 	public let q: String
 	public let revision: String
-	/// Up to 20 lines, best match first.
-	public let codes: [HtsSearchHit]
+	/// Up to 20 tariff lines, best match first.
+	public let lines: [HtsSearchHit]
 }
 
 public struct VinRecall: Codable, Sendable {
@@ -448,13 +463,13 @@ public struct PhoneDeep: Codable, Sendable {}
 public struct Phone: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
+	public let country: String?
 	/// What the numbering plan can see: mobile, landline, toll_free, unknown.
-	/// Never voip (that is the carrier field's word). Present when valid.
+	/// Never voip (that is the carrier field's word). Nil when invalid.
 	public let type: String?
-	/// NPA-derived state code (US/CA). Present when valid.
+	/// NPA-derived state code (US/CA).
 	public let state: String?
 	public let stateName: String?
-	public let country: String?
 	public let national: String?
 	public let international: String?
 	public let deep: PhoneDeep?
@@ -464,7 +479,7 @@ public struct Carrier: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
 	public let country: String?
-	/// The network's word, including voip. Present when valid.
+	/// The network's word, including voip. Nil when invalid.
 	public let type: String?
 	/// Current carrier display name. Nil when the probe had no answer.
 	public let carrier: String?
@@ -480,8 +495,8 @@ public struct Caller: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
 	public let country: String?
-	/// CNAM record verbatim (all-caps telco artifact). Nil when no record
-	/// or outside NANP. Present when valid.
+	/// CNAM record verbatim (all-caps telco artifact). Nil when no record,
+	/// outside NANP, or invalid.
 	public let caller: String?
 }
 
@@ -489,7 +504,7 @@ public struct HLR: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
 	public let country: String?
-	/// Assigned to a subscriber. Present when valid.
+	/// Assigned to a subscriber. Nil when invalid.
 	public let live: Bool?
 	/// Handset reachable right now. Nil means unconfirmed, never no.
 	public let connected: Bool?

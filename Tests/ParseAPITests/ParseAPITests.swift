@@ -127,7 +127,7 @@ func makeClient(
 	}
 
 	@Test func cityIdPath() async throws {
-		let stub = StubTransport(body: #"{"name":"Charlotte","local_name":null,"type":null,"capital":null,"state":"NC","state_name":null,"district":null,"district_name":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"elevation":null,"elevation_ft":null,"population":null,"land_area":null,"water_area":null,"timezone":null,"id":"city_abcdefabcdef"}"#)
+		let stub = StubTransport(body: #"{"name":"Charlotte","local_name":null,"type":null,"capital_of":null,"state":"NC","state_name":null,"district":null,"district_name":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"elevation":null,"elevation_ft":null,"population":null,"area":null,"land_area":null,"water_area":null,"timezone":null,"id":"city_abcdefabcdef"}"#)
 		_ = try await makeClient(stub).cityId("city_abcdefabcdef")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/city/id/city_abcdefabcdef")
 	}
