@@ -27,7 +27,7 @@ public typealias ParseAPITransport = @Sendable (URLRequest) async throws -> (Dat
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "0.1.0"
+	static let version = "0.2.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
 	private static let retryAfterCapSeconds: Double = 5
 
