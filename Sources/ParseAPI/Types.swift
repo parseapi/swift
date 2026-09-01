@@ -334,6 +334,8 @@ public struct Npi: Codable, Sendable {
 	/// Exists in the CMS NPPES registry.
 	public let registered: Bool?
 	public let active: Bool?
+	/// Date CMS deactivated the NPI, YYYY-MM-DD. Nil when still active.
+	public let deactivatedAt: String?
 	/// On the OIG exclusion list.
 	public let excluded: Bool?
 	/// individual or organization.
