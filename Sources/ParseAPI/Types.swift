@@ -489,6 +489,8 @@ public struct Phone: Codable, Sendable {
 	/// NPA-derived state code (US/CA).
 	public let state: String?
 	public let stateName: String?
+	/// Numbering-plan IANA zone. Nil when the prefix covers more than one zone.
+	public let timezone: String?
 	public let national: String?
 	public let international: String?
 	public let deep: PhoneDeep?
