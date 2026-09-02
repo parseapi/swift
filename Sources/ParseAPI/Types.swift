@@ -322,6 +322,10 @@ public struct Iban: Codable, Sendable {
 	public let checksum: String?
 	/// Bank identifier parsed from the number, not a name.
 	public let bank: String?
+	/// Institution name from the national bank-code directory. Nil when unsourced.
+	public let bankName: String?
+	/// BIC from that same directory. Nil when unsourced or missing.
+	public let bic: String?
 	/// Branch identifier when that country has one.
 	public let branch: String?
 	public let account: String?
