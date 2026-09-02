@@ -239,15 +239,15 @@ public final class ParseAPI: Sendable {
 		try await get("/vin/\(enc(vin))", query: deepQuery(deep))
 	}
 
-	/// Looks up a US Harmonized Tariff Schedule code. Deep with an origin
+	/// Looks up US import duty for an HTS code. Deep with an origin
 	/// resolves the Chapter 99 tariff measures that apply from that country.
-	public func hts(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Hts {
-		try await get("/hts/\(enc(code))", query: [("origin", origin)] + deepQuery(deep))
+	public func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Hts {
+		try await get("/tariff/\(enc(code))", query: [("origin", origin)] + deepQuery(deep))
 	}
 
 	/// Searches tariff schedule descriptions by product.
-	public func htsSearch(_ q: String) async throws -> HtsSearch {
-		try await get("/hts", query: [("q", q)])
+	public func tariffSearch(_ q: String) async throws -> HtsSearch {
+		try await get("/tariff", query: [("q", q)])
 	}
 
 	public func currency(_ code: String) async throws -> Currency {
