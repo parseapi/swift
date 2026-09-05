@@ -19,7 +19,7 @@ func check(_ name: String, _ ok: Bool, _ detail: String = "") {
 }
 
 @MainActor
-func expectOk<T>(_ name: String, _ call: () async throws -> T, _ assert: (T) -> String?) async {
+func expectOk<T: Sendable>(_ name: String, _ call: () async throws -> T, _ assert: (T) -> String?) async {
 	do {
 		let result = try await call()
 		let problem = assert(result)
@@ -32,7 +32,7 @@ func expectOk<T>(_ name: String, _ call: () async throws -> T, _ assert: (T) -> 
 }
 
 @MainActor
-func expectError<T>(_ name: String, _ call: () async throws -> T, code: String) async {
+func expectError<T: Sendable>(_ name: String, _ call: () async throws -> T, code: String) async {
 	do {
 		_ = try await call()
 		check(name, false, "expected error, got 200")
