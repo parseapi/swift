@@ -22,12 +22,22 @@ public struct ParseAPIError: Error, LocalizedError, Sendable {
 /// returns the raw body and response.
 public typealias ParseAPITransport = @Sendable (URLRequest) async throws -> (Data, HTTPURLResponse)
 
+// API requests carry credentials. Surface 3xx responses through the usual error
+// path instead of forwarding the request to a different destination.
+final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
+	func urlSession(_ session: URLSession, task: URLSessionTask,
+		willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest,
+		completionHandler: @escaping @Sendable (URLRequest?) -> Void) {
+		completionHandler(nil)
+	}
+}
+
 /// parseAPI client. One instance keeps one connection pool alive.
 ///
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "0.2.1"
+	static let version = "0.3.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
 	private static let retryAfterCapSeconds: Double = 5
 
@@ -35,8 +45,9 @@ public final class ParseAPI: Sendable {
 	private let appId: String?
 	private let baseURL: String
 	private let timeout: TimeInterval
-	private let retries: Int
+	private let retries: Int?
 	private let transport: ParseAPITransport
+	private let ownedSession: URLSession?
 
 	/// - Parameters:
 	///   - key: API key. Falls back to the PARSEAPI_KEY environment variable.
@@ -46,14 +57,15 @@ public final class ParseAPI: Sendable {
 	///     Also read from PARSEAPI_BASE_URL.
 	///   - timeout: Per-attempt timeout in seconds. Default 10.
 	///   - retries: Retries after the first attempt on network errors / 429 / 5xx.
-	///     Default 2, 0 disables.
+	///     Defaults to 2 for ordinary lookups and 0 for metered lookups.
+	///     An explicit count overrides both defaults, 0 disables.
 	///   - transport: Custom transport (tests, instrumentation).
 	public init(
 		_ key: String? = nil,
 		appId: String? = Bundle.main.bundleIdentifier,
 		baseURL: String? = nil,
 		timeout: TimeInterval = 10,
-		retries: Int = 2,
+		retries: Int? = nil,
 		transport: ParseAPITransport? = nil
 	) throws {
 		guard let resolved = key ?? Self.env("PARSEAPI_KEY"), !resolved.isEmpty else {
@@ -65,17 +77,26 @@ public final class ParseAPI: Sendable {
 				requestId: nil
 			)
 		}
+		guard timeout.isFinite, timeout > 0, retries == nil || retries! >= 0 else {
+			throw Self.invalidConfiguration("timeout must be finite and positive, retries must be nonnegative")
+		}
 		self.key = resolved
 		self.appId = appId
 		var base = baseURL ?? Self.env("PARSEAPI_BASE_URL") ?? "https://api.parseapi.com"
 		while base.hasSuffix("/") { base.removeLast() }
+		guard let url = URLComponents(string: base), ["http", "https"].contains(url.scheme?.lowercased() ?? ""),
+			let host = url.host, !host.isEmpty, url.user == nil, url.password == nil, url.query == nil, url.fragment == nil else {
+			throw Self.invalidConfiguration("baseURL must be an absolute HTTP(S) URL without credentials, query, or fragment")
+		}
 		self.baseURL = base
 		self.timeout = timeout
 		self.retries = retries
 		if let transport {
 			self.transport = transport
+			self.ownedSession = nil
 		} else {
-			let session = URLSession(configuration: .ephemeral)
+			let session = URLSession(configuration: .ephemeral, delegate: ParseAPIRedirectDelegate(), delegateQueue: nil)
+			self.ownedSession = session
 			self.transport = { request in
 				let (data, response) = try await session.data(for: request)
 				guard let http = response as? HTTPURLResponse else {
@@ -84,6 +105,14 @@ public final class ParseAPI: Sendable {
 				return (data, http)
 			}
 		}
+	}
+
+	deinit {
+		ownedSession?.invalidateAndCancel()
+	}
+
+	private static func invalidConfiguration(_ message: String) -> ParseAPIError {
+		ParseAPIError(status: 0, code: "invalid_configuration", message: message, docs: nil, requestId: nil)
 	}
 
 	// Live read via getenv so tests can set and unset between constructions.
@@ -116,6 +145,14 @@ public final class ParseAPI: Sendable {
 		try await get("/country/\(enc(code))")
 	}
 
+	public func bloc(_ code: String) async throws -> Bloc {
+		try await get("/bloc/\(enc(code))")
+	}
+
+	public func blocCountries(_ code: String) async throws -> BlocCountries {
+		try await get("/bloc/\(enc(code))/countries")
+	}
+
 	public func countryStates(_ code: String) async throws -> CountryStates {
 		try await get("/country/\(enc(code))/states")
 	}
@@ -141,8 +178,8 @@ public final class ParseAPI: Sendable {
 		try await get("/city/id/\(enc(id))")
 	}
 
-	public func citySearch(_ q: String, country: String? = nil, state: String? = nil, limit: Int? = nil) async throws -> CitySearch {
-		try await get("/city", query: [("q", q), ("country", country), ("state", state), ("limit", limit.map(String.init))])
+	public func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil) async throws -> CitySearch {
+		try await get("/city", query: [("q", query), ("country", country), ("state", state), ("limit", limit.map(String.init))])
 	}
 
 	public func cityNearest(_ lat: Double, _ lon: Double) async throws -> CityNearest {
@@ -195,7 +232,7 @@ public final class ParseAPI: Sendable {
 		try await get("/iban/\(enc(iban))", query: [("country", country)])
 	}
 
-	/// NPI lookup in the CMS NPPES registry of US healthcare providers.
+	/// Look up a US healthcare provider by NPI.
 	/// Deep adds Medicare enrollment on paid plans.
 	public func npi(_ npi: String, deep: Bool = false) async throws -> Npi {
 		try await get("/npi/\(enc(npi))", query: deepQuery(deep))
@@ -224,6 +261,14 @@ public final class ParseAPI: Sendable {
 		try await get("/domain/\(enc(domain))", query: deepQuery(deep))
 	}
 
+	public func asn(_ asn: String) async throws -> ASN {
+		try await get("/asn/\(enc(asn))")
+	}
+
+	public func mac(_ mac: String) async throws -> MAC {
+		try await get("/mac/\(enc(mac))")
+	}
+
 	public func mx(_ domain: String) async throws -> MX {
 		try await get("/mx/\(enc(domain))")
 	}
@@ -241,13 +286,13 @@ public final class ParseAPI: Sendable {
 
 	/// Looks up US import duty for an HTS code. Deep with an origin
 	/// resolves the Chapter 99 tariff measures that apply from that country.
-	public func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Hts {
+	public func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff {
 		try await get("/tariff/\(enc(code))", query: [("origin", origin)] + deepQuery(deep))
 	}
 
 	/// Searches tariff schedule descriptions by product.
-	public func tariffSearch(_ q: String) async throws -> HtsSearch {
-		try await get("/tariff", query: [("q", q)])
+	public func tariffSearch(_ query: String) async throws -> TariffSearch {
+		try await get("/tariff", query: [("q", query)])
 	}
 
 	public func currency(_ code: String) async throws -> Currency {
@@ -259,8 +304,9 @@ public final class ParseAPI: Sendable {
 		try await get("/currency/\(enc(base))/\(enc(quote))", query: [("date", date), ("amount", amount.map(num))])
 	}
 
-	public func timezone(_ id: String, at: String? = nil) async throws -> Timezone {
-		try await get("/timezone/\(enc(id))", query: [("at", at)])
+	/// Look up a named timezone, or convert a wall time with to.
+	public func timezone(_ id: String, at: String? = nil, to: String? = nil) async throws -> Timezone {
+		try await get("/timezone/\(enc(id))", query: [("at", at), ("to", to)])
 	}
 
 	/// Coords in, zone out.
@@ -270,6 +316,16 @@ public final class ParseAPI: Sendable {
 
 	public func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear {
 		try await get("/holiday/\(enc(country))", query: [("year", year.map(String.init))])
+	}
+
+	/// Calendar facts for a date. Use format to resolve month-first or day-first input.
+	public func date(_ date: String, format: String? = nil, to: String? = nil) async throws -> DateInfo {
+		try await get("/date/\(enc(date))", query: [("format", format), ("to", to)])
+	}
+
+	/// Today's calendar date in UTC. Pass to for the signed day difference.
+	public func dateToday(to: String? = nil) async throws -> DateInfo {
+		try await get("/date", query: [("to", to)])
 	}
 
 	/// One date. A covered date that is not a holiday answers holiday nil.
@@ -285,16 +341,30 @@ public final class ParseAPI: Sendable {
 		try await get("/point", query: [("lat", num(lat)), ("lon", num(lon))] + deepQuery(deep))
 	}
 
-	public func weather(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Weather {
-		try await get("/weather", query: [("lat", num(lat)), ("lon", num(lon))] + deepQuery(deep))
+	/// Current conditions. A past date adds that day's summary in deep.history.
+	public func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather {
+		try await get("/weather", query: [("lat", num(lat)), ("lon", num(lon)), ("date", date)] + deepQuery(deep))
 	}
 
 	public func emoji(_ emoji: String) async throws -> Emoji {
 		try await get("/emoji/\(enc(emoji))")
 	}
 
-	public func emojiSearch(_ q: String, limit: Int? = nil) async throws -> EmojiSearch {
-		try await get("/emoji", query: [("q", q), ("limit", limit.map(String.init))])
+	public func emojiSearch(_ query: String, limit: Int? = nil) async throws -> EmojiSearch {
+		try await get("/emoji", query: [("q", query), ("limit", limit.map(String.init))])
+	}
+
+
+	public func address(_ address: String, country: String? = nil, deep: Bool = false) async throws -> Address {
+		try await get("/address/\(enc(address))", query: [("country", country)] + deepQuery(deep))
+	}
+
+	public func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch {
+		try await get("/address", query: [("q", query), ("country", country), ("postal", postal), ("city", city), ("state", state), ("ip", ip)])
+	}
+
+	public func company(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Company {
+		try await get("/company/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
 
 	// MARK: - Transport
@@ -326,8 +396,13 @@ public final class ParseAPI: Sendable {
 			throw URLError(.badURL)
 		}
 
+		let product = path.split(separator: "/").first.map(String.init) ?? ""
+		let metered = ["carrier", "caller", "hlr", "litigator", "reassigned"].contains(product) ||
+			(["email", "vat", "address"].contains(product) && query.contains { $0.0 == "deep" && $0.1 == "true" })
+		let retryLimit = retries ?? (metered ? 0 : 2)
 		var attempt = 0
 		while true {
+			try Task.checkCancellation()
 			var request = URLRequest(url: requestURL)
 			request.timeoutInterval = timeout
 			request.setValue(key, forHTTPHeaderField: "X-API-Key")
@@ -341,13 +416,18 @@ public final class ParseAPI: Sendable {
 			do {
 				(data, response) = try await transport(request)
 			} catch {
-				if attempt < retries {
+				if error is CancellationError || (error as? URLError)?.code == .cancelled {
+					throw error
+				}
+				try Task.checkCancellation()
+				if attempt < retryLimit {
 					try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: nil))
 					attempt += 1
 					continue
 				}
 				throw error
 			}
+			try Task.checkCancellation()
 
 			if (200..<300).contains(response.statusCode) {
 				let decoder = JSONDecoder()
@@ -355,7 +435,7 @@ public final class ParseAPI: Sendable {
 				return try decoder.decode(T.self, from: data)
 			}
 
-			if Self.retryStatus.contains(response.statusCode), attempt < retries {
+			if Self.retryStatus.contains(response.statusCode), attempt < retryLimit {
 				let retryAfter = response.value(forHTTPHeaderField: "Retry-After")
 				try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: retryAfter))
 				attempt += 1
@@ -373,11 +453,23 @@ public final class ParseAPI: Sendable {
 		}
 	}
 
-	private static func retryDelayNanos(attempt: Int, retryAfter: String?) -> UInt64 {
-		if let retryAfter, let seconds = Double(retryAfter), seconds >= 0 {
+	static func retryDelayNanos(attempt: Int, retryAfter: String?) -> UInt64 {
+		if let retryAfter, let seconds = Double(retryAfter), seconds.isFinite, seconds >= 0 {
 			return UInt64(min(seconds, retryAfterCapSeconds) * 1_000_000_000)
 		}
-		let jitter = Double.random(in: 0..<1) * 0.25 * pow(2, Double(attempt))
+		if let retryAfter {
+			let formatter = DateFormatter()
+			formatter.locale = Locale(identifier: "en_US_POSIX")
+			formatter.timeZone = TimeZone(secondsFromGMT: 0)
+			formatter.isLenient = false
+			for pattern in ["EEE, dd MMM yyyy HH:mm:ss zzz", "EEEE, dd-MMM-yy HH:mm:ss zzz", "EEE MMM d HH:mm:ss yyyy"] {
+				formatter.dateFormat = pattern
+				if let date = formatter.date(from: retryAfter) {
+					return UInt64(max(0, min(date.timeIntervalSinceNow, retryAfterCapSeconds)) * 1_000_000_000)
+				}
+			}
+		}
+		let jitter = Double.random(in: 0..<1) * min(0.25 * pow(2, Double(attempt)), retryAfterCapSeconds)
 		return UInt64(jitter * 1_000_000_000)
 	}
 }

@@ -1,0 +1,1348 @@
+ASN.asn: let asn: UInt32
+ASN.country: let country: String?
+ASN.countryName: let countryName: String?
+ASN.init(from:): init(from decoder: any Decoder) throws
+ASN.name: let name: String?
+ASN: conformsTo Swift.Decodable
+ASN: conformsTo Swift.Encodable
+ASN: conformsTo Swift.Sendable
+ASN: conformsTo Swift.SendableMetatype
+ASN: struct ASN
+Address.address: let address: String?
+Address.city: let city: String?
+Address.country: let country: String?
+Address.countryName: let countryName: String?
+Address.deep: let deep: AddressDeep?
+Address.district: let district: String?
+Address.districtName: let districtName: String?
+Address.init(from:): init(from decoder: any Decoder) throws
+Address.latitude: let latitude: Double?
+Address.longitude: let longitude: Double?
+Address.number: let number: String?
+Address.postal: let postal: String?
+Address.registered: let registered: Bool?
+Address.state: let state: String?
+Address.stateName: let stateName: String?
+Address.street: let street: String?
+Address.unit: let unit: String?
+Address.valid: let valid: Bool
+Address: conformsTo Swift.Decodable
+Address: conformsTo Swift.Encodable
+Address: conformsTo Swift.Sendable
+Address: conformsTo Swift.SendableMetatype
+Address: struct Address
+AddressDeep.init(from:): init(from decoder: any Decoder) throws
+AddressDeep: conformsTo Swift.Decodable
+AddressDeep: conformsTo Swift.Encodable
+AddressDeep: conformsTo Swift.Sendable
+AddressDeep: conformsTo Swift.SendableMetatype
+AddressDeep: struct AddressDeep
+AddressSearch.addresses: let addresses: [AddressSuggestion]
+AddressSearch.city: let city: String?
+AddressSearch.country: let country: String?
+AddressSearch.init(from:): init(from decoder: any Decoder) throws
+AddressSearch.postal: let postal: String?
+AddressSearch.q: let q: String
+AddressSearch.state: let state: String?
+AddressSearch: conformsTo Swift.Decodable
+AddressSearch: conformsTo Swift.Encodable
+AddressSearch: conformsTo Swift.Sendable
+AddressSearch: conformsTo Swift.SendableMetatype
+AddressSearch: struct AddressSearch
+AddressSuggestion.address: let address: String
+AddressSuggestion.city: let city: String?
+AddressSuggestion.init(from:): init(from decoder: any Decoder) throws
+AddressSuggestion.latitude: let latitude: Double?
+AddressSuggestion.longitude: let longitude: Double?
+AddressSuggestion.number: let number: String?
+AddressSuggestion.postal: let postal: String?
+AddressSuggestion.state: let state: String?
+AddressSuggestion.street: let street: String?
+AddressSuggestion.unit: let unit: String?
+AddressSuggestion: conformsTo Swift.Decodable
+AddressSuggestion: conformsTo Swift.Encodable
+AddressSuggestion: conformsTo Swift.Sendable
+AddressSuggestion: conformsTo Swift.SendableMetatype
+AddressSuggestion: struct AddressSuggestion
+Bloc.bloc: let bloc: String
+Bloc.init(from:): init(from decoder: any Decoder) throws
+Bloc.members: let members: Int
+Bloc.name: let name: String
+Bloc: conformsTo Swift.Decodable
+Bloc: conformsTo Swift.Encodable
+Bloc: conformsTo Swift.Sendable
+Bloc: conformsTo Swift.SendableMetatype
+Bloc: struct Bloc
+BlocCountries.bloc: let bloc: String
+BlocCountries.countries: let countries: [BlocCountryItem]
+BlocCountries.init(from:): init(from decoder: any Decoder) throws
+BlocCountries: conformsTo Swift.Decodable
+BlocCountries: conformsTo Swift.Encodable
+BlocCountries: conformsTo Swift.Sendable
+BlocCountries: conformsTo Swift.SendableMetatype
+BlocCountries: struct BlocCountries
+BlocCountryItem.callingCode: let callingCode: String?
+BlocCountryItem.country: let country: String
+BlocCountryItem.emoji: let emoji: String?
+BlocCountryItem.init(from:): init(from decoder: any Decoder) throws
+BlocCountryItem.name: let name: String
+BlocCountryItem: conformsTo Swift.Decodable
+BlocCountryItem: conformsTo Swift.Encodable
+BlocCountryItem: conformsTo Swift.Sendable
+BlocCountryItem: conformsTo Swift.SendableMetatype
+BlocCountryItem: struct BlocCountryItem
+Caller.caller: let caller: String?
+Caller.country: let country: String?
+Caller.init(from:): init(from decoder: any Decoder) throws
+Caller.phone: let phone: String?
+Caller.valid: let valid: Bool
+Caller: conformsTo Swift.Decodable
+Caller: conformsTo Swift.Encodable
+Caller: conformsTo Swift.Sendable
+Caller: conformsTo Swift.SendableMetatype
+Caller: struct Caller
+Carrier.burner: let burner: Bool?
+Carrier.carrier: let carrier: String?
+Carrier.city: let city: String?
+Carrier.country: let country: String?
+Carrier.init(from:): init(from decoder: any Decoder) throws
+Carrier.phone: let phone: String?
+Carrier.state: let state: String?
+Carrier.stateName: let stateName: String?
+Carrier.type: let type: String?
+Carrier.valid: let valid: Bool
+Carrier: conformsTo Swift.Decodable
+Carrier: conformsTo Swift.Encodable
+Carrier: conformsTo Swift.Sendable
+Carrier: conformsTo Swift.SendableMetatype
+Carrier: struct Carrier
+City.area: let area: Double?
+City.capitalOf: let capitalOf: String?
+City.country: let country: String
+City.countryName: let countryName: String?
+City.district: let district: String?
+City.districtName: let districtName: String?
+City.elevation: let elevation: Double?
+City.elevationFt: let elevationFt: Double?
+City.id: let id: String
+City.init(from:): init(from decoder: any Decoder) throws
+City.landArea: let landArea: Double?
+City.latitude: let latitude: Double?
+City.localName: let localName: String?
+City.longitude: let longitude: Double?
+City.name: let name: String
+City.population: let population: Int?
+City.state: let state: String?
+City.stateName: let stateName: String?
+City.timezone: let timezone: String?
+City.type: let type: String?
+City.waterArea: let waterArea: Double?
+City: conformsTo Swift.Decodable
+City: conformsTo Swift.Encodable
+City: conformsTo Swift.Sendable
+City: conformsTo Swift.SendableMetatype
+City: struct City
+CityNearby.city: let city: String
+CityNearby.country: let country: String
+CityNearby.init(from:): init(from decoder: any Decoder) throws
+CityNearby.nearby: let nearby: [CityNearest]
+CityNearby.radius: let radius: Double
+CityNearby.state: let state: String?
+CityNearby.unit: let unit: String
+CityNearby: conformsTo Swift.Decodable
+CityNearby: conformsTo Swift.Encodable
+CityNearby: conformsTo Swift.Sendable
+CityNearby: conformsTo Swift.SendableMetatype
+CityNearby: struct CityNearby
+CityNearest.area: let area: Double?
+CityNearest.capitalOf: let capitalOf: String?
+CityNearest.country: let country: String
+CityNearest.countryName: let countryName: String?
+CityNearest.distance: let distance: Double
+CityNearest.distanceMi: let distanceMi: Double
+CityNearest.district: let district: String?
+CityNearest.districtName: let districtName: String?
+CityNearest.elevation: let elevation: Double?
+CityNearest.elevationFt: let elevationFt: Double?
+CityNearest.id: let id: String
+CityNearest.init(from:): init(from decoder: any Decoder) throws
+CityNearest.landArea: let landArea: Double?
+CityNearest.latitude: let latitude: Double?
+CityNearest.localName: let localName: String?
+CityNearest.longitude: let longitude: Double?
+CityNearest.name: let name: String
+CityNearest.population: let population: Int?
+CityNearest.state: let state: String?
+CityNearest.stateName: let stateName: String?
+CityNearest.timezone: let timezone: String?
+CityNearest.type: let type: String?
+CityNearest.waterArea: let waterArea: Double?
+CityNearest: conformsTo Swift.Decodable
+CityNearest: conformsTo Swift.Encodable
+CityNearest: conformsTo Swift.Sendable
+CityNearest: conformsTo Swift.SendableMetatype
+CityNearest: struct CityNearest
+CitySearch.cities: let cities: [City]
+CitySearch.country: let country: String?
+CitySearch.init(from:): init(from decoder: any Decoder) throws
+CitySearch.q: let q: String
+CitySearch.state: let state: String?
+CitySearch: conformsTo Swift.Decodable
+CitySearch: conformsTo Swift.Encodable
+CitySearch: conformsTo Swift.Sendable
+CitySearch: conformsTo Swift.SendableMetatype
+CitySearch: struct CitySearch
+Company.acn: let acn: String?
+Company.active: let active: Bool?
+Company.activity: let activity: String?
+Company.address: let address: String?
+Company.city: let city: String?
+Company.company: let company: String?
+Company.country: let country: String?
+Company.countryName: let countryName: String?
+Company.deep: let deep: CompanyDeep?
+Company.gst: let gst: Bool?
+Company.init(from:): init(from decoder: any Decoder) throws
+Company.invoice: let invoice: String?
+Company.kind: let kind: String?
+Company.name: let name: String?
+Company.postal: let postal: String?
+Company.registered: let registered: Bool?
+Company.siege: let siege: Bool?
+Company.siren: let siren: String?
+Company.state: let state: String?
+Company.stateName: let stateName: String?
+Company.type: let type: String?
+Company.valid: let valid: Bool
+Company.vat: let vat: String?
+Company: conformsTo Swift.Decodable
+Company: conformsTo Swift.Encodable
+Company: conformsTo Swift.Sendable
+Company: conformsTo Swift.SendableMetatype
+Company: struct Company
+CompanyCountry.blocs: let blocs: [String]
+CompanyCountry.init(from:): init(from decoder: any Decoder) throws
+CompanyCountry.name: let name: String?
+CompanyCountry.tax: let tax: String?
+CompanyCountry: conformsTo Swift.Decodable
+CompanyCountry: conformsTo Swift.Encodable
+CompanyCountry: conformsTo Swift.Sendable
+CompanyCountry: conformsTo Swift.SendableMetatype
+CompanyCountry: struct CompanyCountry
+CompanyDeep.city: let city: City?
+CompanyDeep.country: let country: CompanyCountry?
+CompanyDeep.init(from:): init(from decoder: any Decoder) throws
+CompanyDeep.postal: let postal: Postal?
+CompanyDeep: conformsTo Swift.Decodable
+CompanyDeep: conformsTo Swift.Encodable
+CompanyDeep: conformsTo Swift.Sendable
+CompanyDeep: conformsTo Swift.SendableMetatype
+CompanyDeep: struct CompanyDeep
+Continent.area: let area: Double?
+Continent.continent: let continent: String
+Continent.emoji: let emoji: String
+Continent.init(from:): init(from decoder: any Decoder) throws
+Continent.name: let name: String
+Continent.population: let population: Int?
+Continent.region: let region: String
+Continent.subregion: let subregion: String
+Continent: conformsTo Swift.Decodable
+Continent: conformsTo Swift.Encodable
+Continent: conformsTo Swift.Sendable
+Continent: conformsTo Swift.SendableMetatype
+Continent: struct Continent
+ContinentCountries.continent: let continent: String
+ContinentCountries.countries: let countries: [ContinentCountryItem]
+ContinentCountries.init(from:): init(from decoder: any Decoder) throws
+ContinentCountries: conformsTo Swift.Decodable
+ContinentCountries: conformsTo Swift.Encodable
+ContinentCountries: conformsTo Swift.Sendable
+ContinentCountries: conformsTo Swift.SendableMetatype
+ContinentCountries: struct ContinentCountries
+ContinentCountryItem.callingCode: let callingCode: String?
+ContinentCountryItem.country: let country: String
+ContinentCountryItem.emoji: let emoji: String?
+ContinentCountryItem.init(from:): init(from decoder: any Decoder) throws
+ContinentCountryItem.name: let name: String
+ContinentCountryItem: conformsTo Swift.Decodable
+ContinentCountryItem: conformsTo Swift.Encodable
+ContinentCountryItem: conformsTo Swift.Sendable
+ContinentCountryItem: conformsTo Swift.SendableMetatype
+ContinentCountryItem: struct ContinentCountryItem
+Country.area: let area: Double?
+Country.blocs: let blocs: [String]
+Country.borders: let borders: [String]
+Country.callingCode: let callingCode: String?
+Country.capital: let capital: String?
+Country.capitalLat: let capitalLat: Double?
+Country.capitalLon: let capitalLon: Double?
+Country.continent: let continent: String
+Country.country: let country: String
+Country.currency: let currency: String?
+Country.currencyName: let currencyName: String?
+Country.currencySymbol: let currencySymbol: String?
+Country.demonym: let demonym: String?
+Country.emoji: let emoji: String?
+Country.fullName: let fullName: String?
+Country.init(from:): init(from decoder: any Decoder) throws
+Country.iso3: let iso3: String
+Country.languages: let languages: [String]
+Country.localName: let localName: String?
+Country.name: let name: String
+Country.numeric: let numeric: Int
+Country.population: let population: Int?
+Country.region: let region: String?
+Country.subregion: let subregion: String?
+Country.tld: let tld: String?
+Country: conformsTo Swift.Decodable
+Country: conformsTo Swift.Encodable
+Country: conformsTo Swift.Sendable
+Country: conformsTo Swift.SendableMetatype
+Country: struct Country
+CountryStateItem.init(from:): init(from decoder: any Decoder) throws
+CountryStateItem.name: let name: String
+CountryStateItem.state: let state: String
+CountryStateItem.type: let type: String?
+CountryStateItem: conformsTo Swift.Decodable
+CountryStateItem: conformsTo Swift.Encodable
+CountryStateItem: conformsTo Swift.Sendable
+CountryStateItem: conformsTo Swift.SendableMetatype
+CountryStateItem: struct CountryStateItem
+CountryStates.country: let country: String
+CountryStates.init(from:): init(from decoder: any Decoder) throws
+CountryStates.states: let states: [CountryStateItem]
+CountryStates: conformsTo Swift.Decodable
+CountryStates: conformsTo Swift.Encodable
+CountryStates: conformsTo Swift.Sendable
+CountryStates: conformsTo Swift.SendableMetatype
+CountryStates: struct CountryStates
+Currency.countries: let countries: [String]
+Currency.currency: let currency: String
+Currency.digits: let digits: Int?
+Currency.init(from:): init(from decoder: any Decoder) throws
+Currency.name: let name: String
+Currency.namePlural: let namePlural: String?
+Currency.numeric: let numeric: Int?
+Currency.symbol: let symbol: String?
+Currency.symbolNative: let symbolNative: String?
+Currency: conformsTo Swift.Decodable
+Currency: conformsTo Swift.Encodable
+Currency: conformsTo Swift.Sendable
+Currency: conformsTo Swift.SendableMetatype
+Currency: struct Currency
+CurrencyRate.amount: let amount: Double?
+CurrencyRate.base: let base: String
+CurrencyRate.converted: let converted: Double?
+CurrencyRate.date: let date: String
+CurrencyRate.init(from:): init(from decoder: any Decoder) throws
+CurrencyRate.quote: let quote: String
+CurrencyRate.rate: let rate: Double
+CurrencyRate.source: let source: String?
+CurrencyRate: conformsTo Swift.Decodable
+CurrencyRate: conformsTo Swift.Encodable
+CurrencyRate: conformsTo Swift.Sendable
+CurrencyRate: conformsTo Swift.SendableMetatype
+CurrencyRate: struct CurrencyRate
+DateInfo.date: let date: String
+DateInfo.day: let day: Int?
+DateInfo.dayOfYear: let dayOfYear: Int?
+DateInfo.days: let days: Int?
+DateInfo.daysInMonth: let daysInMonth: Int?
+DateInfo.init(from:): init(from decoder: any Decoder) throws
+DateInfo.leap: let leap: Bool?
+DateInfo.month: let month: Int?
+DateInfo.monthName: let monthName: String?
+DateInfo.quarter: let quarter: Int?
+DateInfo.to: let to: String?
+DateInfo.unix: let unix: Int64?
+DateInfo.valid: let valid: Bool
+DateInfo.week: let week: Int?
+DateInfo.weekYear: let weekYear: Int?
+DateInfo.weekday: let weekday: Int?
+DateInfo.weekdayName: let weekdayName: String?
+DateInfo.year: let year: Int?
+DateInfo: conformsTo Swift.Decodable
+DateInfo: conformsTo Swift.Encodable
+DateInfo: conformsTo Swift.Sendable
+DateInfo: conformsTo Swift.SendableMetatype
+DateInfo: struct DateInfo
+District.area: let area: Double?
+District.country: let country: String
+District.countryName: let countryName: String?
+District.district: let district: String
+District.init(from:): init(from decoder: any Decoder) throws
+District.landArea: let landArea: Double?
+District.latitude: let latitude: Double?
+District.longitude: let longitude: Double?
+District.name: let name: String
+District.population: let population: Int?
+District.seat: let seat: String?
+District.state: let state: String?
+District.stateName: let stateName: String?
+District.timezone: let timezone: String?
+District.timezones: let timezones: [String]
+District.type: let type: String?
+District.waterArea: let waterArea: Double?
+District: conformsTo Swift.Decodable
+District: conformsTo Swift.Encodable
+District: conformsTo Swift.Sendable
+District: conformsTo Swift.SendableMetatype
+District: struct District
+Domain.available: let available: Bool
+Domain.deep: let deep: DomainDeep?
+Domain.domain: let domain: String
+Domain.init(from:): init(from decoder: any Decoder) throws
+Domain: conformsTo Swift.Decodable
+Domain: conformsTo Swift.Encodable
+Domain: conformsTo Swift.Sendable
+Domain: conformsTo Swift.SendableMetatype
+Domain: struct Domain
+DomainDeep.a: let a: [String]?
+DomainDeep.aaaa: let aaaa: [String]?
+DomainDeep.init(from:): init(from decoder: any Decoder) throws
+DomainDeep.mailhost: let mailhost: String?
+DomainDeep.mx: let mx: [MXRecord]?
+DomainDeep.ns: let ns: [String]?
+DomainDeep.registration: let registration: DomainRegistration?
+DomainDeep.txt: let txt: [String]?
+DomainDeep: conformsTo Swift.Decodable
+DomainDeep: conformsTo Swift.Encodable
+DomainDeep: conformsTo Swift.Sendable
+DomainDeep: conformsTo Swift.SendableMetatype
+DomainDeep: struct DomainDeep
+DomainRegistration.created: let created: String?
+DomainRegistration.dnssec: let dnssec: Bool?
+DomainRegistration.expires: let expires: String?
+DomainRegistration.init(from:): init(from decoder: any Decoder) throws
+DomainRegistration.registered: let registered: Bool?
+DomainRegistration.registrar: let registrar: String?
+DomainRegistration.status: let status: [String]?
+DomainRegistration.updated: let updated: String?
+DomainRegistration: conformsTo Swift.Decodable
+DomainRegistration: conformsTo Swift.Encodable
+DomainRegistration: conformsTo Swift.Sendable
+DomainRegistration: conformsTo Swift.SendableMetatype
+DomainRegistration: struct DomainRegistration
+Elevation.elevation: let elevation: Double?
+Elevation.elevationFt: let elevationFt: Double?
+Elevation.init(from:): init(from decoder: any Decoder) throws
+Elevation.latitude: let latitude: Double
+Elevation.longitude: let longitude: Double
+Elevation.resolution: let resolution: Double?
+Elevation: conformsTo Swift.Decodable
+Elevation: conformsTo Swift.Encodable
+Elevation: conformsTo Swift.Sendable
+Elevation: conformsTo Swift.SendableMetatype
+Elevation: struct Elevation
+Email.deep: let deep: EmailDeep?
+Email.didyoumean: let didyoumean: String?
+Email.disposable: let disposable: Bool
+Email.domain: let domain: String?
+Email.domainValid: let domainValid: Bool?
+Email.email: let email: String
+Email.init(from:): init(from decoder: any Decoder) throws
+Email.role: let role: Bool
+Email.valid: let valid: Bool
+Email: conformsTo Swift.Decodable
+Email: conformsTo Swift.Encodable
+Email: conformsTo Swift.Sendable
+Email: conformsTo Swift.SendableMetatype
+Email: struct Email
+EmailDeep.catchall: let catchall: Bool?
+EmailDeep.deliverable: let deliverable: Bool?
+EmailDeep.init(from:): init(from decoder: any Decoder) throws
+EmailDeep: conformsTo Swift.Decodable
+EmailDeep: conformsTo Swift.Encodable
+EmailDeep: conformsTo Swift.Sendable
+EmailDeep: conformsTo Swift.SendableMetatype
+EmailDeep: struct EmailDeep
+Emoji.category: let category: String?
+Emoji.codepoints: let codepoints: [String]
+Emoji.emoji: let emoji: String
+Emoji.hex: let hex: String
+Emoji.init(from:): init(from decoder: any Decoder) throws
+Emoji.keywords: let keywords: [String]
+Emoji.name: let name: String
+Emoji.shortcodes: let shortcodes: [String]
+Emoji.skins: let skins: [EmojiSkin]
+Emoji.status: let status: String?
+Emoji.version: let version: String?
+Emoji: conformsTo Swift.Decodable
+Emoji: conformsTo Swift.Encodable
+Emoji: conformsTo Swift.Sendable
+Emoji: conformsTo Swift.SendableMetatype
+Emoji: struct Emoji
+EmojiSearch.emojis: let emojis: [Emoji]
+EmojiSearch.init(from:): init(from decoder: any Decoder) throws
+EmojiSearch.q: let q: String
+EmojiSearch: conformsTo Swift.Decodable
+EmojiSearch: conformsTo Swift.Encodable
+EmojiSearch: conformsTo Swift.Sendable
+EmojiSearch: conformsTo Swift.SendableMetatype
+EmojiSearch: struct EmojiSearch
+EmojiSkin.emoji: let emoji: String
+EmojiSkin.hex: let hex: String?
+EmojiSkin.init(from:): init(from decoder: any Decoder) throws
+EmojiSkin.tone: let tone: String
+EmojiSkin.unicode: let unicode: String?
+EmojiSkin: conformsTo Swift.Decodable
+EmojiSkin: conformsTo Swift.Encodable
+EmojiSkin: conformsTo Swift.Sendable
+EmojiSkin: conformsTo Swift.SendableMetatype
+EmojiSkin: struct EmojiSkin
+HLR.connected: let connected: Bool?
+HLR.country: let country: String?
+HLR.init(from:): init(from decoder: any Decoder) throws
+HLR.live: let live: Bool?
+HLR.mcc: let mcc: String?
+HLR.mnc: let mnc: String?
+HLR.network: let network: String?
+HLR.originalNetwork: let originalNetwork: String?
+HLR.phone: let phone: String?
+HLR.roaming: let roaming: Bool?
+HLR.roamingCountry: let roamingCountry: String?
+HLR.roamingNetwork: let roamingNetwork: String?
+HLR.valid: let valid: Bool
+HLR: conformsTo Swift.Decodable
+HLR: conformsTo Swift.Encodable
+HLR: conformsTo Swift.Sendable
+HLR: conformsTo Swift.SendableMetatype
+HLR: struct HLR
+Holiday.date: let date: String
+Holiday.init(from:): init(from decoder: any Decoder) throws
+Holiday.localName: let localName: String?
+Holiday.name: let name: String
+Holiday.regions: let regions: [String]?
+Holiday.substitute: let substitute: Bool
+Holiday.type: let type: String
+Holiday: conformsTo Swift.Decodable
+Holiday: conformsTo Swift.Encodable
+Holiday: conformsTo Swift.Sendable
+Holiday: conformsTo Swift.SendableMetatype
+Holiday: struct Holiday
+HolidayDate.country: let country: String
+HolidayDate.date: let date: String
+HolidayDate.holiday: let holiday: Holiday?
+HolidayDate.init(from:): init(from decoder: any Decoder) throws
+HolidayDate: conformsTo Swift.Decodable
+HolidayDate: conformsTo Swift.Encodable
+HolidayDate: conformsTo Swift.Sendable
+HolidayDate: conformsTo Swift.SendableMetatype
+HolidayDate: struct HolidayDate
+HolidayYear.country: let country: String
+HolidayYear.holidays: let holidays: [Holiday]
+HolidayYear.init(from:): init(from decoder: any Decoder) throws
+HolidayYear.year: let year: Int
+HolidayYear: conformsTo Swift.Decodable
+HolidayYear: conformsTo Swift.Encodable
+HolidayYear: conformsTo Swift.Sendable
+HolidayYear: conformsTo Swift.SendableMetatype
+HolidayYear: struct HolidayYear
+IP.asn: let asn: String?
+IP.asnName: let asnName: String?
+IP.continent: let continent: String?
+IP.country: let country: String?
+IP.countryName: let countryName: String?
+IP.deep: let deep: IPDeep?
+IP.init(from:): init(from decoder: any Decoder) throws
+IP.ip: let ip: String
+IP: conformsTo Swift.Decodable
+IP: conformsTo Swift.Encodable
+IP: conformsTo Swift.Sendable
+IP: conformsTo Swift.SendableMetatype
+IP: struct IP
+IPDeep.city: let city: String?
+IPDeep.datacenter: let datacenter: Bool?
+IPDeep.init(from:): init(from decoder: any Decoder) throws
+IPDeep.provider: let provider: String?
+IPDeep.registry: let registry: String?
+IPDeep.relay: let relay: Bool?
+IPDeep.state: let state: String?
+IPDeep.tor: let tor: Bool?
+IPDeep.vpn: let vpn: Bool?
+IPDeep: conformsTo Swift.Decodable
+IPDeep: conformsTo Swift.Encodable
+IPDeep: conformsTo Swift.Sendable
+IPDeep: conformsTo Swift.SendableMetatype
+IPDeep: struct IPDeep
+Iban.account: let account: String?
+Iban.bank: let bank: String?
+Iban.bankName: let bankName: String?
+Iban.bic: let bic: String?
+Iban.branch: let branch: String?
+Iban.checksum: let checksum: String?
+Iban.country: let country: String?
+Iban.formatted: let formatted: String?
+Iban.iban: let iban: String?
+Iban.init(from:): init(from decoder: any Decoder) throws
+Iban.valid: let valid: Bool
+Iban: conformsTo Swift.Decodable
+Iban: conformsTo Swift.Encodable
+Iban: conformsTo Swift.Sendable
+Iban: conformsTo Swift.SendableMetatype
+Iban: struct Iban
+Language.countries: let countries: [String]
+Language.direction: let direction: String
+Language.init(from:): init(from decoder: any Decoder) throws
+Language.iso3: let iso3: String?
+Language.language: let language: String
+Language.localName: let localName: String?
+Language.name: let name: String
+Language.script: let script: String?
+Language: conformsTo Swift.Decodable
+Language: conformsTo Swift.Encodable
+Language: conformsTo Swift.Sendable
+Language: conformsTo Swift.SendableMetatype
+Language: struct Language
+MAC.init(from:): init(from decoder: any Decoder) throws
+MAC.local: let local: Bool?
+MAC.mac: let mac: String
+MAC.multicast: let multicast: Bool?
+MAC.valid: let valid: Bool
+MAC.vendor: let vendor: String?
+MAC: conformsTo Swift.Decodable
+MAC: conformsTo Swift.Encodable
+MAC: conformsTo Swift.Sendable
+MAC: conformsTo Swift.SendableMetatype
+MAC: struct MAC
+MX.domain: let domain: String
+MX.init(from:): init(from decoder: any Decoder) throws
+MX.mx: let mx: [MXRecord]
+MX: conformsTo Swift.Decodable
+MX: conformsTo Swift.Encodable
+MX: conformsTo Swift.Sendable
+MX: conformsTo Swift.SendableMetatype
+MX: struct MX
+MXRecord.host: let host: String
+MXRecord.init(from:): init(from decoder: any Decoder) throws
+MXRecord.priority: let priority: Int
+MXRecord: conformsTo Swift.Decodable
+MXRecord: conformsTo Swift.Encodable
+MXRecord: conformsTo Swift.Sendable
+MXRecord: conformsTo Swift.SendableMetatype
+MXRecord: struct MXRecord
+Name.first: let first: String?
+Name.gender: let gender: String?
+Name.init(from:): init(from decoder: any Decoder) throws
+Name.last: let last: String?
+Name.middle: let middle: String?
+Name.name: let name: String
+Name.prefix: let prefix: String?
+Name.salutation: let salutation: String?
+Name.suffix: let suffix: String?
+Name.valid: let valid: Bool
+Name: conformsTo Swift.Decodable
+Name: conformsTo Swift.Encodable
+Name: conformsTo Swift.Sendable
+Name: conformsTo Swift.SendableMetatype
+Name: struct Name
+Npi.active: let active: Bool?
+Npi.address: let address: String?
+Npi.city: let city: String?
+Npi.country: let country: String?
+Npi.credential: let credential: String?
+Npi.deactivatedAt: let deactivatedAt: String?
+Npi.deep: let deep: NpiDeep?
+Npi.excluded: let excluded: Bool?
+Npi.first: let first: String?
+Npi.init(from:): init(from decoder: any Decoder) throws
+Npi.last: let last: String?
+Npi.name: let name: String?
+Npi.npi: let npi: String?
+Npi.phone: let phone: String?
+Npi.postal: let postal: String?
+Npi.registered: let registered: Bool?
+Npi.specialty: let specialty: String?
+Npi.state: let state: String?
+Npi.stateName: let stateName: String?
+Npi.taxonomy: let taxonomy: String?
+Npi.type: let type: String?
+Npi.valid: let valid: Bool
+Npi: conformsTo Swift.Decodable
+Npi: conformsTo Swift.Encodable
+Npi: conformsTo Swift.Sendable
+Npi: conformsTo Swift.SendableMetatype
+Npi: struct Npi
+NpiDeep.enrollments: let enrollments: [NpiEnrollment]?
+NpiDeep.init(from:): init(from decoder: any Decoder) throws
+NpiDeep.medicare: let medicare: Bool?
+NpiDeep.optOut: let optOut: Bool?
+NpiDeep: conformsTo Swift.Decodable
+NpiDeep: conformsTo Swift.Encodable
+NpiDeep: conformsTo Swift.Sendable
+NpiDeep: conformsTo Swift.SendableMetatype
+NpiDeep: struct NpiDeep
+NpiEnrollment.init(from:): init(from decoder: any Decoder) throws
+NpiEnrollment.specialty: let specialty: String?
+NpiEnrollment.state: let state: String?
+NpiEnrollment.type: let type: String?
+NpiEnrollment: conformsTo Swift.Decodable
+NpiEnrollment: conformsTo Swift.Encodable
+NpiEnrollment: conformsTo Swift.Sendable
+NpiEnrollment: conformsTo Swift.SendableMetatype
+NpiEnrollment: struct NpiEnrollment
+ParseAPI.address(_:country:deep:): func address(_ address: String, country: String? = nil, deep: Bool = false) async throws -> Address
+ParseAPI.addressSearch(_:country:postal:city:state:ip:): func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch
+ParseAPI.asn(_:): func asn(_ asn: String) async throws -> ASN
+ParseAPI.bloc(_:): func bloc(_ code: String) async throws -> Bloc
+ParseAPI.blocCountries(_:): func blocCountries(_ code: String) async throws -> BlocCountries
+ParseAPI.caller(_:country:): func caller(_ number: String, country: String? = nil) async throws -> Caller
+ParseAPI.carrier(_:country:): func carrier(_ number: String, country: String? = nil) async throws -> Carrier
+ParseAPI.city(_:country:state:): func city(_ name: String, country: String? = nil, state: String? = nil) async throws -> City
+ParseAPI.cityId(_:): func cityId(_ id: String) async throws -> City
+ParseAPI.cityNearby(_:radius:unit:country:state:limit:): func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil) async throws -> CityNearby
+ParseAPI.cityNearest(_:_:): func cityNearest(_ lat: Double, _ lon: Double) async throws -> CityNearest
+ParseAPI.citySearch(_:country:state:limit:): func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil) async throws -> CitySearch
+ParseAPI.company(_:country:deep:): func company(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Company
+ParseAPI.continent(_:): func continent(_ code: String) async throws -> Continent
+ParseAPI.continentCountries(_:): func continentCountries(_ code: String) async throws -> ContinentCountries
+ParseAPI.country(_:): func country(_ code: String) async throws -> Country
+ParseAPI.countryStates(_:): func countryStates(_ code: String) async throws -> CountryStates
+ParseAPI.currency(_:): func currency(_ code: String) async throws -> Currency
+ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
+ParseAPI.date(_:format:to:): func date(_ date: String, format: String? = nil, to: String? = nil) async throws -> DateInfo
+ParseAPI.dateToday(to:): func dateToday(to: String? = nil) async throws -> DateInfo
+ParseAPI.district(_:country:state:): func district(_ code: String, country: String? = nil, state: String? = nil) async throws -> District
+ParseAPI.domain(_:deep:): func domain(_ domain: String, deep: Bool = false) async throws -> Domain
+ParseAPI.elevation(_:_:): func elevation(_ lat: Double, _ lon: Double) async throws -> Elevation
+ParseAPI.email(_:deep:): func email(_ email: String, deep: Bool = false) async throws -> Email
+ParseAPI.emoji(_:): func emoji(_ emoji: String) async throws -> Emoji
+ParseAPI.emojiSearch(_:limit:): func emojiSearch(_ query: String, limit: Int? = nil) async throws -> EmojiSearch
+ParseAPI.hlr(_:country:): func hlr(_ number: String, country: String? = nil) async throws -> HLR
+ParseAPI.holiday(_:year:): func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear
+ParseAPI.holidayDate(_:_:): func holidayDate(_ country: String, _ date: String) async throws -> HolidayDate
+ParseAPI.iban(_:country:): func iban(_ iban: String, country: String? = nil) async throws -> Iban
+ParseAPI.init(_:appId:baseURL:timeout:retries:transport:): init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, timeout: TimeInterval = 10, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
+ParseAPI.ip(_:deep:): func ip(_ ip: String, deep: Bool = false) async throws -> IP
+ParseAPI.ipSelf(deep:): func ipSelf(deep: Bool = false) async throws -> IP
+ParseAPI.language(_:): func language(_ code: String) async throws -> Language
+ParseAPI.mac(_:): func mac(_ mac: String) async throws -> MAC
+ParseAPI.mx(_:): func mx(_ domain: String) async throws -> MX
+ParseAPI.name(_:): func name(_ name: String) async throws -> Name
+ParseAPI.npi(_:deep:): func npi(_ npi: String, deep: Bool = false) async throws -> Npi
+ParseAPI.phone(_:country:deep:): func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone
+ParseAPI.point(_:_:deep:): func point(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Point
+ParseAPI.postal(_:country:): func postal(_ code: String, country: String? = nil) async throws -> Postal
+ParseAPI.postalDistance(_:_:country:): func postalDistance(_ from: String, _ to: String, country: String? = nil) async throws -> PostalDistance
+ParseAPI.postalNearby(_:country:radius:unit:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil) async throws -> PostalNearby
+ParseAPI.state(_:country:): func state(_ code: String, country: String? = nil) async throws -> State
+ParseAPI.stateDistricts(_:country:): func stateDistricts(_ code: String, country: String? = nil) async throws -> StateDistricts
+ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff
+ParseAPI.tariffSearch(_:): func tariffSearch(_ query: String) async throws -> TariffSearch
+ParseAPI.timezone(_:at:to:): func timezone(_ id: String, at: String? = nil, to: String? = nil) async throws -> Timezone
+ParseAPI.timezoneAt(_:_:at:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil) async throws -> Timezone
+ParseAPI.useragent(_:deep:): func useragent(_ ua: String, deep: Bool = false) async throws -> Useragent
+ParseAPI.vat(_:country:from:deep:): func vat(_ number: String, country: String? = nil, from: String? = nil, deep: Bool = false) async throws -> Vat
+ParseAPI.vin(_:deep:): func vin(_ vin: String, deep: Bool = false) async throws -> Vin
+ParseAPI.weather(_:_:deep:date:): func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather
+ParseAPI: conformsTo Swift.Sendable
+ParseAPI: conformsTo Swift.SendableMetatype
+ParseAPI: final class ParseAPI
+ParseAPIError.code: let code: String
+ParseAPIError.docs: let docs: String?
+ParseAPIError.errorDescription: var errorDescription: String? { get }
+ParseAPIError.message: let message: String
+ParseAPIError.requestId: let requestId: String?
+ParseAPIError.status: let status: Int
+ParseAPIError: conformsTo Foundation.LocalizedError
+ParseAPIError: conformsTo Swift.Error
+ParseAPIError: conformsTo Swift.Sendable
+ParseAPIError: conformsTo Swift.SendableMetatype
+ParseAPIError: struct ParseAPIError
+ParseAPITransport: typealias ParseAPITransport = @Sendable (URLRequest) async throws -> (Data, HTTPURLResponse)
+Phone.country: let country: String?
+Phone.deep: let deep: PhoneDeep?
+Phone.init(from:): init(from decoder: any Decoder) throws
+Phone.international: let international: String?
+Phone.national: let national: String?
+Phone.phone: let phone: String?
+Phone.state: let state: String?
+Phone.stateName: let stateName: String?
+Phone.timezone: let timezone: String?
+Phone.type: let type: String?
+Phone.valid: let valid: Bool
+Phone: conformsTo Swift.Decodable
+Phone: conformsTo Swift.Encodable
+Phone: conformsTo Swift.Sendable
+Phone: conformsTo Swift.SendableMetatype
+Phone: struct Phone
+PhoneDeep.init(from:): init(from decoder: any Decoder) throws
+PhoneDeep: conformsTo Swift.Decodable
+PhoneDeep: conformsTo Swift.Encodable
+PhoneDeep: conformsTo Swift.Sendable
+PhoneDeep: conformsTo Swift.SendableMetatype
+PhoneDeep: struct PhoneDeep
+Point.country: let country: String?
+Point.countryName: let countryName: String?
+Point.deep: let deep: PointDeep?
+Point.district: let district: String?
+Point.districtName: let districtName: String?
+Point.elevation: let elevation: Double?
+Point.elevationFt: let elevationFt: Double?
+Point.init(from:): init(from decoder: any Decoder) throws
+Point.latitude: let latitude: Double
+Point.longitude: let longitude: Double
+Point.resolution: let resolution: Double?
+Point.state: let state: String?
+Point.stateName: let stateName: String?
+Point: conformsTo Swift.Decodable
+Point: conformsTo Swift.Encodable
+Point: conformsTo Swift.Sendable
+Point: conformsTo Swift.SendableMetatype
+Point: struct Point
+PointDeep.city: let city: CityNearest?
+PointDeep.init(from:): init(from decoder: any Decoder) throws
+PointDeep.timezone: let timezone: Timezone?
+PointDeep: conformsTo Swift.Decodable
+PointDeep: conformsTo Swift.Encodable
+PointDeep: conformsTo Swift.Sendable
+PointDeep: conformsTo Swift.SendableMetatype
+PointDeep: struct PointDeep
+Postal.area: let area: Double?
+Postal.city: let city: String?
+Postal.cityLocal: let cityLocal: String?
+Postal.country: let country: String
+Postal.countryName: let countryName: String?
+Postal.currency: let currency: String?
+Postal.district: let district: String?
+Postal.districtName: let districtName: String?
+Postal.districtNameLocal: let districtNameLocal: String?
+Postal.elevation: let elevation: Double?
+Postal.elevationFt: let elevationFt: Double?
+Postal.init(from:): init(from decoder: any Decoder) throws
+Postal.landArea: let landArea: Double?
+Postal.latitude: let latitude: Double?
+Postal.longitude: let longitude: Double?
+Postal.neighbors: let neighbors: [String]
+Postal.population: let population: Int?
+Postal.postal: let postal: String
+Postal.state: let state: String?
+Postal.stateName: let stateName: String?
+Postal.stateNameLocal: let stateNameLocal: String?
+Postal.timezone: let timezone: String?
+Postal.waterArea: let waterArea: Double?
+Postal: conformsTo Swift.Decodable
+Postal: conformsTo Swift.Encodable
+Postal: conformsTo Swift.Sendable
+Postal: conformsTo Swift.SendableMetatype
+Postal: struct Postal
+PostalDistance.country: let country: String
+PostalDistance.distance: let distance: Double
+PostalDistance.distanceMi: let distanceMi: Double
+PostalDistance.from: let from: PostalDistanceEnd
+PostalDistance.init(from:): init(from decoder: any Decoder) throws
+PostalDistance.to: let to: PostalDistanceEnd
+PostalDistance: conformsTo Swift.Decodable
+PostalDistance: conformsTo Swift.Encodable
+PostalDistance: conformsTo Swift.Sendable
+PostalDistance: conformsTo Swift.SendableMetatype
+PostalDistance: struct PostalDistance
+PostalDistanceEnd.city: let city: String?
+PostalDistanceEnd.init(from:): init(from decoder: any Decoder) throws
+PostalDistanceEnd.postal: let postal: String
+PostalDistanceEnd: conformsTo Swift.Decodable
+PostalDistanceEnd: conformsTo Swift.Encodable
+PostalDistanceEnd: conformsTo Swift.Sendable
+PostalDistanceEnd: conformsTo Swift.SendableMetatype
+PostalDistanceEnd: struct PostalDistanceEnd
+PostalNearby.country: let country: String
+PostalNearby.init(from:): init(from decoder: any Decoder) throws
+PostalNearby.nearby: let nearby: [PostalNearbyItem]
+PostalNearby.postal: let postal: String
+PostalNearby.radius: let radius: Double
+PostalNearby.unit: let unit: String
+PostalNearby: conformsTo Swift.Decodable
+PostalNearby: conformsTo Swift.Encodable
+PostalNearby: conformsTo Swift.Sendable
+PostalNearby: conformsTo Swift.SendableMetatype
+PostalNearby: struct PostalNearby
+PostalNearbyItem.city: let city: String?
+PostalNearbyItem.country: let country: String
+PostalNearbyItem.distance: let distance: Double
+PostalNearbyItem.distanceMi: let distanceMi: Double
+PostalNearbyItem.init(from:): init(from decoder: any Decoder) throws
+PostalNearbyItem.postal: let postal: String
+PostalNearbyItem.state: let state: String?
+PostalNearbyItem: conformsTo Swift.Decodable
+PostalNearbyItem: conformsTo Swift.Encodable
+PostalNearbyItem: conformsTo Swift.Sendable
+PostalNearbyItem: conformsTo Swift.SendableMetatype
+PostalNearbyItem: struct PostalNearbyItem
+State.area: let area: Double?
+State.areaCodes: let areaCodes: [String]
+State.capital: let capital: String?
+State.country: let country: String
+State.countryName: let countryName: String?
+State.fips: let fips: String?
+State.init(from:): init(from decoder: any Decoder) throws
+State.iso31662: let iso31662: String?
+State.latitude: let latitude: Double?
+State.localName: let localName: String?
+State.longitude: let longitude: Double?
+State.name: let name: String
+State.population: let population: Int?
+State.state: let state: String
+State.tax: let tax: String?
+State.taxRate: let taxRate: Double?
+State.timezone: let timezone: String?
+State.timezones: let timezones: [String]
+State.type: let type: String?
+State: conformsTo Swift.Decodable
+State: conformsTo Swift.Encodable
+State: conformsTo Swift.Sendable
+State: conformsTo Swift.SendableMetatype
+State: struct State
+StateDistrictItem.district: let district: String
+StateDistrictItem.init(from:): init(from decoder: any Decoder) throws
+StateDistrictItem.name: let name: String
+StateDistrictItem.type: let type: String?
+StateDistrictItem: conformsTo Swift.Decodable
+StateDistrictItem: conformsTo Swift.Encodable
+StateDistrictItem: conformsTo Swift.Sendable
+StateDistrictItem: conformsTo Swift.SendableMetatype
+StateDistrictItem: struct StateDistrictItem
+StateDistricts.country: let country: String
+StateDistricts.countryName: let countryName: String?
+StateDistricts.districts: let districts: [StateDistrictItem]
+StateDistricts.init(from:): init(from decoder: any Decoder) throws
+StateDistricts.state: let state: String
+StateDistricts.stateName: let stateName: String?
+StateDistricts: conformsTo Swift.Decodable
+StateDistricts: conformsTo Swift.Encodable
+StateDistricts: conformsTo Swift.Sendable
+StateDistricts: conformsTo Swift.SendableMetatype
+StateDistricts: struct StateDistricts
+Tariff.deep: let deep: TariffDeep?
+Tariff.description: let description: String
+Tariff.general: let general: String?
+Tariff.hts: let hts: String
+Tariff.init(from:): init(from decoder: any Decoder) throws
+Tariff.lineage: let lineage: [String]
+Tariff.other: let other: String?
+Tariff.revision: let revision: String
+Tariff.special: let special: String?
+Tariff.units: let units: [String]
+Tariff: conformsTo Swift.Decodable
+Tariff: conformsTo Swift.Encodable
+Tariff: conformsTo Swift.Sendable
+Tariff: conformsTo Swift.SendableMetatype
+Tariff: struct Tariff
+TariffDeep.effectiveRate: let effectiveRate: Double?
+TariffDeep.init(from:): init(from decoder: any Decoder) throws
+TariffDeep.measures: let measures: [TariffMeasure]?
+TariffDeep.origin: let origin: String?
+TariffDeep: conformsTo Swift.Decodable
+TariffDeep: conformsTo Swift.Encodable
+TariffDeep: conformsTo Swift.Sendable
+TariffDeep: conformsTo Swift.SendableMetatype
+TariffDeep: struct TariffDeep
+TariffMeasure.description: let description: String
+TariffMeasure.from: let from: String?
+TariffMeasure.heading: let heading: String
+TariffMeasure.init(from:): init(from decoder: any Decoder) throws
+TariffMeasure.rate: let rate: String?
+TariffMeasure.until: let until: String?
+TariffMeasure: conformsTo Swift.Decodable
+TariffMeasure: conformsTo Swift.Encodable
+TariffMeasure: conformsTo Swift.Sendable
+TariffMeasure: conformsTo Swift.SendableMetatype
+TariffMeasure: struct TariffMeasure
+TariffSearch.init(from:): init(from decoder: any Decoder) throws
+TariffSearch.lines: let lines: [TariffSearchHit]
+TariffSearch.q: let q: String
+TariffSearch.revision: let revision: String
+TariffSearch: conformsTo Swift.Decodable
+TariffSearch: conformsTo Swift.Encodable
+TariffSearch: conformsTo Swift.Sendable
+TariffSearch: conformsTo Swift.SendableMetatype
+TariffSearch: struct TariffSearch
+TariffSearchHit.description: let description: String
+TariffSearchHit.general: let general: String?
+TariffSearchHit.hts: let hts: String
+TariffSearchHit.init(from:): init(from decoder: any Decoder) throws
+TariffSearchHit: conformsTo Swift.Decodable
+TariffSearchHit: conformsTo Swift.Encodable
+TariffSearchHit: conformsTo Swift.Sendable
+TariffSearchHit: conformsTo Swift.SendableMetatype
+TariffSearchHit: struct TariffSearchHit
+Timezone.abbreviation: let abbreviation: String?
+Timezone.at: let at: String?
+Timezone.dst: let dst: Bool?
+Timezone.init(from:): init(from decoder: any Decoder) throws
+Timezone.latitude: let latitude: Double?
+Timezone.longitude: let longitude: Double?
+Timezone.name: let name: String?
+Timezone.nextDst: let nextDst: TimezoneNextDST?
+Timezone.offset: let offset: String?
+Timezone.offsetMinutes: let offsetMinutes: Int?
+Timezone.timezone: let timezone: String?
+Timezone.to: let to: TimezoneConversionTarget?
+Timezone: conformsTo Swift.Decodable
+Timezone: conformsTo Swift.Encodable
+Timezone: conformsTo Swift.Sendable
+Timezone: conformsTo Swift.SendableMetatype
+Timezone: struct Timezone
+TimezoneConversionTarget.abbreviation: let abbreviation: String?
+TimezoneConversionTarget.at: let at: String
+TimezoneConversionTarget.dst: let dst: Bool
+TimezoneConversionTarget.init(from:): init(from decoder: any Decoder) throws
+TimezoneConversionTarget.name: let name: String?
+TimezoneConversionTarget.offset: let offset: String
+TimezoneConversionTarget.offsetMinutes: let offsetMinutes: Int
+TimezoneConversionTarget.timezone: let timezone: String
+TimezoneConversionTarget: conformsTo Swift.Decodable
+TimezoneConversionTarget: conformsTo Swift.Encodable
+TimezoneConversionTarget: conformsTo Swift.Sendable
+TimezoneConversionTarget: conformsTo Swift.SendableMetatype
+TimezoneConversionTarget: struct TimezoneConversionTarget
+TimezoneNextDST.abbreviation: let abbreviation: String
+TimezoneNextDST.at: let at: String
+TimezoneNextDST.dst: let dst: Bool
+TimezoneNextDST.init(from:): init(from decoder: any Decoder) throws
+TimezoneNextDST.offset: let offset: String
+TimezoneNextDST: conformsTo Swift.Decodable
+TimezoneNextDST: conformsTo Swift.Encodable
+TimezoneNextDST: conformsTo Swift.Sendable
+TimezoneNextDST: conformsTo Swift.SendableMetatype
+TimezoneNextDST: struct TimezoneNextDST
+Useragent.bot: let bot: Bool
+Useragent.browser: let browser: String?
+Useragent.deep: let deep: UseragentDeep?
+Useragent.device: let device: String?
+Useragent.init(from:): init(from decoder: any Decoder) throws
+Useragent.mobile: let mobile: Bool
+Useragent.os: let os: String?
+Useragent.useragent: let useragent: String
+Useragent: conformsTo Swift.Decodable
+Useragent: conformsTo Swift.Encodable
+Useragent: conformsTo Swift.Sendable
+Useragent: conformsTo Swift.SendableMetatype
+Useragent: struct Useragent
+UseragentBot.category: let category: String?
+UseragentBot.init(from:): init(from decoder: any Decoder) throws
+UseragentBot.name: let name: String?
+UseragentBot.url: let url: String?
+UseragentBot.vendor: let vendor: String?
+UseragentBot: conformsTo Swift.Decodable
+UseragentBot: conformsTo Swift.Encodable
+UseragentBot: conformsTo Swift.Sendable
+UseragentBot: conformsTo Swift.SendableMetatype
+UseragentBot: struct UseragentBot
+UseragentBrowserBrand.brand: let brand: String
+UseragentBrowserBrand.init(from:): init(from decoder: any Decoder) throws
+UseragentBrowserBrand.version: let version: String
+UseragentBrowserBrand: conformsTo Swift.Decodable
+UseragentBrowserBrand: conformsTo Swift.Encodable
+UseragentBrowserBrand: conformsTo Swift.Sendable
+UseragentBrowserBrand: conformsTo Swift.SendableMetatype
+UseragentBrowserBrand: struct UseragentBrowserBrand
+UseragentBrowserDeep.brands: let brands: [UseragentBrowserBrand]?
+UseragentBrowserDeep.init(from:): init(from decoder: any Decoder) throws
+UseragentBrowserDeep.name: let name: String?
+UseragentBrowserDeep.type: let type: String?
+UseragentBrowserDeep.version: let version: String?
+UseragentBrowserDeep: conformsTo Swift.Decodable
+UseragentBrowserDeep: conformsTo Swift.Encodable
+UseragentBrowserDeep: conformsTo Swift.Sendable
+UseragentBrowserDeep: conformsTo Swift.SendableMetatype
+UseragentBrowserDeep: struct UseragentBrowserDeep
+UseragentDeep.ai: let ai: Bool?
+UseragentDeep.bot: let bot: UseragentBot?
+UseragentDeep.browser: let browser: UseragentBrowserDeep?
+UseragentDeep.device: let device: UseragentDeviceDeep?
+UseragentDeep.engine: let engine: UseragentEngineDeep?
+UseragentDeep.headless: let headless: Bool?
+UseragentDeep.init(from:): init(from decoder: any Decoder) throws
+UseragentDeep.os: let os: UseragentOSDeep?
+UseragentDeep: conformsTo Swift.Decodable
+UseragentDeep: conformsTo Swift.Encodable
+UseragentDeep: conformsTo Swift.Sendable
+UseragentDeep: conformsTo Swift.SendableMetatype
+UseragentDeep: struct UseragentDeep
+UseragentDeviceDeep.brand: let brand: String?
+UseragentDeviceDeep.cpu: let cpu: String?
+UseragentDeviceDeep.init(from:): init(from decoder: any Decoder) throws
+UseragentDeviceDeep.model: let model: String?
+UseragentDeviceDeep.touchscreen: let touchscreen: Bool?
+UseragentDeviceDeep.type: let type: String?
+UseragentDeviceDeep: conformsTo Swift.Decodable
+UseragentDeviceDeep: conformsTo Swift.Encodable
+UseragentDeviceDeep: conformsTo Swift.Sendable
+UseragentDeviceDeep: conformsTo Swift.SendableMetatype
+UseragentDeviceDeep: struct UseragentDeviceDeep
+UseragentEngineDeep.init(from:): init(from decoder: any Decoder) throws
+UseragentEngineDeep.name: let name: String?
+UseragentEngineDeep.version: let version: String?
+UseragentEngineDeep: conformsTo Swift.Decodable
+UseragentEngineDeep: conformsTo Swift.Encodable
+UseragentEngineDeep: conformsTo Swift.Sendable
+UseragentEngineDeep: conformsTo Swift.SendableMetatype
+UseragentEngineDeep: struct UseragentEngineDeep
+UseragentOSDeep.init(from:): init(from decoder: any Decoder) throws
+UseragentOSDeep.name: let name: String?
+UseragentOSDeep.platform: let platform: String?
+UseragentOSDeep.version: let version: String?
+UseragentOSDeep: conformsTo Swift.Decodable
+UseragentOSDeep: conformsTo Swift.Encodable
+UseragentOSDeep: conformsTo Swift.Sendable
+UseragentOSDeep: conformsTo Swift.SendableMetatype
+UseragentOSDeep: struct UseragentOSDeep
+Vat.country: let country: String?
+Vat.deep: let deep: VatDeep?
+Vat.from: let from: String?
+Vat.init(from:): init(from decoder: any Decoder) throws
+Vat.valid: let valid: Bool
+Vat.vat: let vat: String?
+Vat: conformsTo Swift.Decodable
+Vat: conformsTo Swift.Encodable
+Vat: conformsTo Swift.Sendable
+Vat: conformsTo Swift.SendableMetatype
+Vat: struct Vat
+VatAddress.city: let city: String?
+VatAddress.country: let country: String?
+VatAddress.init(from:): init(from decoder: any Decoder) throws
+VatAddress.postal: let postal: String?
+VatAddress.street: let street: String?
+VatAddress: conformsTo Swift.Decodable
+VatAddress: conformsTo Swift.Encodable
+VatAddress: conformsTo Swift.Sendable
+VatAddress: conformsTo Swift.SendableMetatype
+VatAddress: struct VatAddress
+VatDeep.address: let address: VatAddress?
+VatDeep.consultation: let consultation: String?
+VatDeep.consultedAt: let consultedAt: String?
+VatDeep.init(from:): init(from decoder: any Decoder) throws
+VatDeep.name: let name: String?
+VatDeep.registered: let registered: Bool?
+VatDeep: conformsTo Swift.Decodable
+VatDeep: conformsTo Swift.Encodable
+VatDeep: conformsTo Swift.Sendable
+VatDeep: conformsTo Swift.SendableMetatype
+VatDeep: struct VatDeep
+Vin.body: let body: String?
+Vin.cylinders: let cylinders: Int?
+Vin.deep: let deep: VinDeep?
+Vin.displacement: let displacement: Double?
+Vin.doors: let doors: Int?
+Vin.drive: let drive: String?
+Vin.fuel: let fuel: String?
+Vin.gvwr: let gvwr: String?
+Vin.horsepower: let horsepower: Double?
+Vin.init(from:): init(from decoder: any Decoder) throws
+Vin.make: let make: String?
+Vin.manufacturer: let manufacturer: String?
+Vin.model: let model: String?
+Vin.plantCity: let plantCity: String?
+Vin.plantCountry: let plantCountry: String?
+Vin.plantState: let plantState: String?
+Vin.series: let series: String?
+Vin.transmission: let transmission: String?
+Vin.trim: let trim: String?
+Vin.type: let type: String?
+Vin.valid: let valid: Bool
+Vin.vin: let vin: String?
+Vin.year: let year: Int?
+Vin: conformsTo Swift.Decodable
+Vin: conformsTo Swift.Encodable
+Vin: conformsTo Swift.Sendable
+Vin: conformsTo Swift.SendableMetatype
+Vin: struct Vin
+VinDeep.init(from:): init(from decoder: any Decoder) throws
+VinDeep.recalls: let recalls: [VinRecall]?
+VinDeep: conformsTo Swift.Decodable
+VinDeep: conformsTo Swift.Encodable
+VinDeep: conformsTo Swift.Sendable
+VinDeep: conformsTo Swift.SendableMetatype
+VinDeep: struct VinDeep
+VinRecall.campaign: let campaign: String
+VinRecall.component: let component: String?
+VinRecall.date: let date: String?
+VinRecall.init(from:): init(from decoder: any Decoder) throws
+VinRecall.summary: let summary: String?
+VinRecall: conformsTo Swift.Decodable
+VinRecall: conformsTo Swift.Encodable
+VinRecall: conformsTo Swift.Sendable
+VinRecall: conformsTo Swift.SendableMetatype
+VinRecall: struct VinRecall
+Weather.current: let current: WeatherCurrent
+Weather.deep: let deep: WeatherDeep?
+Weather.init(from:): init(from decoder: any Decoder) throws
+Weather.latitude: let latitude: Double
+Weather.longitude: let longitude: Double
+Weather.source: let source: WeatherSource
+Weather.station: let station: WeatherStation?
+Weather: conformsTo Swift.Decodable
+Weather: conformsTo Swift.Encodable
+Weather: conformsTo Swift.Sendable
+Weather: conformsTo Swift.SendableMetatype
+Weather: struct Weather
+WeatherAir.aqi: let aqi: Double?
+WeatherAir.aqiName: let aqiName: String?
+WeatherAir.init(from:): init(from decoder: any Decoder) throws
+WeatherAir.pm10: let pm10: Double?
+WeatherAir.pm25: let pm25: Double?
+WeatherAir: conformsTo Swift.Decodable
+WeatherAir: conformsTo Swift.Encodable
+WeatherAir: conformsTo Swift.Sendable
+WeatherAir: conformsTo Swift.SendableMetatype
+WeatherAir: struct WeatherAir
+WeatherAlert.event: let event: String
+WeatherAlert.expires: let expires: String?
+WeatherAlert.headline: let headline: String?
+WeatherAlert.init(from:): init(from decoder: any Decoder) throws
+WeatherAlert.onset: let onset: String?
+WeatherAlert.severity: let severity: String?
+WeatherAlert.urgency: let urgency: String?
+WeatherAlert: conformsTo Swift.Decodable
+WeatherAlert: conformsTo Swift.Encodable
+WeatherAlert: conformsTo Swift.Sendable
+WeatherAlert: conformsTo Swift.SendableMetatype
+WeatherAlert: struct WeatherAlert
+WeatherCurrent.condition: let condition: String?
+WeatherCurrent.conditionEmoji: let conditionEmoji: String?
+WeatherCurrent.conditionName: let conditionName: String?
+WeatherCurrent.dewpoint: let dewpoint: Double?
+WeatherCurrent.dewpointF: let dewpointF: Double?
+WeatherCurrent.feelsLike: let feelsLike: Double?
+WeatherCurrent.feelsLikeF: let feelsLikeF: Double?
+WeatherCurrent.humidity: let humidity: Double?
+WeatherCurrent.init(from:): init(from decoder: any Decoder) throws
+WeatherCurrent.observedAt: let observedAt: String?
+WeatherCurrent.pressure: let pressure: Double?
+WeatherCurrent.pressureInhg: let pressureInhg: Double?
+WeatherCurrent.temperature: let temperature: Double?
+WeatherCurrent.temperatureF: let temperatureF: Double?
+WeatherCurrent.visibility: let visibility: Double?
+WeatherCurrent.visibilityMi: let visibilityMi: Double?
+WeatherCurrent.windDirection: let windDirection: Double?
+WeatherCurrent.windGust: let windGust: Double?
+WeatherCurrent.windGustMph: let windGustMph: Double?
+WeatherCurrent.windSpeed: let windSpeed: Double?
+WeatherCurrent.windSpeedMph: let windSpeedMph: Double?
+WeatherCurrent: conformsTo Swift.Decodable
+WeatherCurrent: conformsTo Swift.Encodable
+WeatherCurrent: conformsTo Swift.Sendable
+WeatherCurrent: conformsTo Swift.SendableMetatype
+WeatherCurrent: struct WeatherCurrent
+WeatherDay.condition: let condition: String?
+WeatherDay.conditionEmoji: let conditionEmoji: String?
+WeatherDay.conditionName: let conditionName: String?
+WeatherDay.date: let date: String?
+WeatherDay.high: let high: Double?
+WeatherDay.highF: let highF: Double?
+WeatherDay.init(from:): init(from decoder: any Decoder) throws
+WeatherDay.low: let low: Double?
+WeatherDay.lowF: let lowF: Double?
+WeatherDay.moonPhase: let moonPhase: String?
+WeatherDay.moonPhaseEmoji: let moonPhaseEmoji: String?
+WeatherDay.moonPhaseName: let moonPhaseName: String?
+WeatherDay.precipitationChance: let precipitationChance: Double?
+WeatherDay.sunrise: let sunrise: String?
+WeatherDay.sunset: let sunset: String?
+WeatherDay: conformsTo Swift.Decodable
+WeatherDay: conformsTo Swift.Encodable
+WeatherDay: conformsTo Swift.Sendable
+WeatherDay: conformsTo Swift.SendableMetatype
+WeatherDay: struct WeatherDay
+WeatherDeep.air: let air: WeatherAir?
+WeatherDeep.alerts: let alerts: [WeatherAlert]?
+WeatherDeep.days: let days: [WeatherDay]?
+WeatherDeep.forecast: let forecast: [WeatherForecastPeriod]?
+WeatherDeep.history: let history: WeatherHistory?
+WeatherDeep.hours: let hours: [WeatherHour]?
+WeatherDeep.init(from:): init(from decoder: any Decoder) throws
+WeatherDeep.minutes: let minutes: [WeatherMinute]?
+WeatherDeep: conformsTo Swift.Decodable
+WeatherDeep: conformsTo Swift.Encodable
+WeatherDeep: conformsTo Swift.Sendable
+WeatherDeep: conformsTo Swift.SendableMetatype
+WeatherDeep: struct WeatherDeep
+WeatherForecastPeriod.condition: let condition: String?
+WeatherForecastPeriod.conditionEmoji: let conditionEmoji: String?
+WeatherForecastPeriod.conditionName: let conditionName: String?
+WeatherForecastPeriod.daytime: let daytime: Bool?
+WeatherForecastPeriod.end: let end: String?
+WeatherForecastPeriod.init(from:): init(from decoder: any Decoder) throws
+WeatherForecastPeriod.name: let name: String
+WeatherForecastPeriod.precipitationChance: let precipitationChance: Double?
+WeatherForecastPeriod.start: let start: String?
+WeatherForecastPeriod.temperature: let temperature: Double?
+WeatherForecastPeriod.temperatureF: let temperatureF: Double?
+WeatherForecastPeriod.windDirection: let windDirection: Double?
+WeatherForecastPeriod.windSpeed: let windSpeed: Double?
+WeatherForecastPeriod.windSpeedMph: let windSpeedMph: Double?
+WeatherForecastPeriod: conformsTo Swift.Decodable
+WeatherForecastPeriod: conformsTo Swift.Encodable
+WeatherForecastPeriod: conformsTo Swift.Sendable
+WeatherForecastPeriod: conformsTo Swift.SendableMetatype
+WeatherForecastPeriod: struct WeatherForecastPeriod
+WeatherHistory.date: let date: String?
+WeatherHistory.high: let high: Double?
+WeatherHistory.highF: let highF: Double?
+WeatherHistory.init(from:): init(from decoder: any Decoder) throws
+WeatherHistory.low: let low: Double?
+WeatherHistory.lowF: let lowF: Double?
+WeatherHistory.moonPhase: let moonPhase: String?
+WeatherHistory.moonPhaseEmoji: let moonPhaseEmoji: String?
+WeatherHistory.moonPhaseName: let moonPhaseName: String?
+WeatherHistory.precipitation: let precipitation: Double?
+WeatherHistory.precipitationIn: let precipitationIn: Double?
+WeatherHistory.sunrise: let sunrise: String?
+WeatherHistory.sunset: let sunset: String?
+WeatherHistory.windMax: let windMax: Double?
+WeatherHistory.windMaxMph: let windMaxMph: Double?
+WeatherHistory: conformsTo Swift.Decodable
+WeatherHistory: conformsTo Swift.Encodable
+WeatherHistory: conformsTo Swift.Sendable
+WeatherHistory: conformsTo Swift.SendableMetatype
+WeatherHistory: struct WeatherHistory
+WeatherHour.at: let at: String?
+WeatherHour.condition: let condition: String?
+WeatherHour.conditionEmoji: let conditionEmoji: String?
+WeatherHour.conditionName: let conditionName: String?
+WeatherHour.daytime: let daytime: Bool?
+WeatherHour.feelsLike: let feelsLike: Double?
+WeatherHour.feelsLikeF: let feelsLikeF: Double?
+WeatherHour.humidity: let humidity: Double?
+WeatherHour.init(from:): init(from decoder: any Decoder) throws
+WeatherHour.precipitationChance: let precipitationChance: Double?
+WeatherHour.temperature: let temperature: Double?
+WeatherHour.temperatureF: let temperatureF: Double?
+WeatherHour.windDirection: let windDirection: Double?
+WeatherHour.windGust: let windGust: Double?
+WeatherHour.windGustMph: let windGustMph: Double?
+WeatherHour.windSpeed: let windSpeed: Double?
+WeatherHour.windSpeedMph: let windSpeedMph: Double?
+WeatherHour: conformsTo Swift.Decodable
+WeatherHour: conformsTo Swift.Encodable
+WeatherHour: conformsTo Swift.Sendable
+WeatherHour: conformsTo Swift.SendableMetatype
+WeatherHour: struct WeatherHour
+WeatherMinute.at: let at: String?
+WeatherMinute.init(from:): init(from decoder: any Decoder) throws
+WeatherMinute.precipitation: let precipitation: Double?
+WeatherMinute.precipitationIn: let precipitationIn: Double?
+WeatherMinute.type: let type: String?
+WeatherMinute: conformsTo Swift.Decodable
+WeatherMinute: conformsTo Swift.Encodable
+WeatherMinute: conformsTo Swift.Sendable
+WeatherMinute: conformsTo Swift.SendableMetatype
+WeatherMinute: struct WeatherMinute
+WeatherSource.id: let id: String
+WeatherSource.init(from:): init(from decoder: any Decoder) throws
+WeatherSource.name: let name: String?
+WeatherSource: conformsTo Swift.Decodable
+WeatherSource: conformsTo Swift.Encodable
+WeatherSource: conformsTo Swift.Sendable
+WeatherSource: conformsTo Swift.SendableMetatype
+WeatherSource: struct WeatherSource
+WeatherStation.distance: let distance: Double?
+WeatherStation.distanceMi: let distanceMi: Double?
+WeatherStation.id: let id: String
+WeatherStation.init(from:): init(from decoder: any Decoder) throws
+WeatherStation.name: let name: String?
+WeatherStation: conformsTo Swift.Decodable
+WeatherStation: conformsTo Swift.Encodable
+WeatherStation: conformsTo Swift.Sendable
+WeatherStation: conformsTo Swift.SendableMetatype
+WeatherStation: struct WeatherStation

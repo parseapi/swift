@@ -1,10 +1,6 @@
-# parseapi Swift
-
-Official parseAPI client for Swift. iOS, macOS, watchOS, tvOS.
-
 ```swift
 // Package.swift dependencies
-.package(url: "https://github.com/parseapi/swift", from: "0.1.0")
+.package(url: "https://github.com/parseapi/swift", from: "0.3.0")
 ```
 
 ```swift
@@ -45,26 +41,39 @@ try await parse.stateDistricts("NC", country: "US")
 try await parse.district("37081")
 try await parse.continent("NA")
 try await parse.continentCountries("NA")
+try await parse.bloc("EU")
+try await parse.blocCountries("EU")
 try await parse.currency("USD")
 try await parse.currencyRate("USD", "EUR")
 try await parse.language("en")
 try await parse.name("BILLY OSHALL")
 try await parse.timezone("America/New_York")
 try await parse.timezoneAt(40.7128, -74.006)
+try await parse.date("03/04/2026", format: "mdy")
+try await parse.dateToday()
 try await parse.holiday("US", year: 2026)
 try await parse.holidayDate("US", "2026-12-25")
 try await parse.elevation(35.2271, -80.8431)
 try await parse.point(36.0726, -79.792)
 try await parse.weather(40.7128, -74.006)
 try await parse.domain("example.com")
+try await parse.asn("AS13335")
+try await parse.mac("00:1B:63:84:45:E6")
 try await parse.mx("example.com")
 try await parse.useragent(uaString)
 try await parse.vin("1HGCM82633A004352")
+try await parse.tariff("8471.30.01.00")
+try await parse.tariffSearch("sunglasses")
 try await parse.emoji("rocket")
 try await parse.emojiSearch("fire")
+try await parse.address("123 Main St", country: "US")
+try await parse.addressSearch("123 Main", country: "US", postal: "28202")
+try await parse.company("01234567", country: "GB")
 ```
 
-Every response is a typed struct. Nullable fields are optionals.
+Every response is a typed struct. Nullable fields are optionals. Unknown response fields are ignored.
+
+Reuse a client across calls. Each method performs its own lookup and returns data. `countryStates("US")` fetches the states directly. It does not fetch the country first.
 
 `carrier`, `caller`, and `hlr` are metered lookups for secret keys on a server. App keys answer them with a 403.
 
@@ -98,12 +107,22 @@ let parse = try ParseAPI(
     "parse_app_...",
     appId: "com.example.weather", // sent as X-App-Id, defaults to your bundle identifier
     timeout: 10,                  // per-attempt timeout in seconds
-    retries: 2                    // automatic retries on network errors, 429, and 5xx
+    retries: nil                  // use the retry default for each endpoint
 )
 ```
 
-Requires Swift 5.9 or later. iOS 15, macOS 12, watchOS 8, tvOS 15. Foundation only, zero dependencies.
+Ordinary lookups retry up to twice on network failures, 429, 500, 502, 503, and 504. Carrier, caller, HLR, and email/VAT deep lookups do not retry automatically. Address deep also uses zero retries, reserved for future verification. An explicit `retries` value applies to every lookup, including metered requests. A retry may count as another lookup.
+
+Cancelled tasks stop the lookup and are not retried. Redirects are returned as errors.
+
+Requires Swift 6.0 or later. iOS 15, macOS 12, watchOS 8, tvOS 15. Foundation only, zero dependencies.
 
 ## Docs
 
 Full field reference for every endpoint: [parseapi.com/docs](https://parseapi.com/docs)
+
+## Compatibility checks
+
+Run `swift test` and `python3 scripts/check-api.py` before a release. The API check compares compiler-exported declarations with `api/ParseAPI.api`. Use `python3 scripts/check-api.py --update` only after reviewing an intentional API addition.
+
+Pushes and pull requests run the tests on Swift 6.0 and 6.3.3. The API check uses Swift 6.3.3, the compiler used for the baseline. Device-platform validation remains a release check.

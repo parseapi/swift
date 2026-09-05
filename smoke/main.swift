@@ -95,6 +95,8 @@ await expectOk("carrier junk free", { try await parse.carrier("555-0100") }) { $
 await expectOk("caller junk free", { try await parse.caller("555-0100") }) { $0.valid == false ? nil : "expected invalid" }
 await expectOk("hlr junk free", { try await parse.hlr("555-0100") }) { $0.valid == false ? nil : "expected invalid" }
 await expectOk("domain", { try await parse.domain("gmail.com") }) { $0.available == false ? nil : "gmail available?" }
+await expectOk("asn", { try await parse.asn("AS13335") }) { $0.asn == 13335 ? nil : "wrong ASN" }
+await expectOk("mac", { try await parse.mac("00:1B:63:84:45:E6") }) { $0.valid && $0.mac == "00:1B:63:84:45:E6" && $0.local == false && $0.multicast == false ? nil : "wrong MAC" }
 await expectOk("mx", { try await parse.mx("gmail.com") }) { $0.mx.isEmpty ? "no mx" : nil }
 await expectOk("useragent", { try await parse.useragent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") }) { $0.browser == "Chrome" ? nil : "browser \($0.browser ?? "nil")" }
 await expectOk("vin", { try await parse.vin("1HGCM82633A004352") }) {
