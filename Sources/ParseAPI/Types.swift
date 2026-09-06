@@ -1,6 +1,6 @@
 import Foundation
 
-// Response types for the parseAPI public API. Shapes are append-only
+// Response types for the ParseAPI public API. Shapes are append-only
 // upstream, so these only ever grow. Nullable fields are optionals.
 // Deep objects follow the triad: nil when not requested, empty when
 // requested but locked, populated when unlocked, so every field inside

@@ -32,7 +32,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 	}
 }
 
-/// parseAPI client. One instance keeps one connection pool alive.
+/// ParseAPI client. One instance keeps one connection pool alive.
 ///
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
