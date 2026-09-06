@@ -241,6 +241,17 @@ public struct CityNearby: Codable, Sendable {
 	public let nearby: [CityNearest]
 }
 
+/// An area's share of ZIP addresses, with category shares measured independently.
+public struct PostalMetro: Codable, Sendable {
+	public let code: String
+	public let name: String
+	public let type: String
+	public let share: Double?
+	public let residentialShare: Double?
+	public let businessShare: Double?
+	public let otherShare: Double?
+}
+
 public struct Postal: Codable, Sendable {
 	public let postal: String
 	public let city: String?
@@ -267,6 +278,8 @@ public struct Postal: Codable, Sendable {
 	public let timezone: String?
 	public let currency: String?
 	public let neighbors: [String]
+	/// Nil is unknown; [] is observed outside all covered areas.
+	public let metros: [PostalMetro]?
 }
 
 public struct PostalNearbyItem: Codable, Sendable {
@@ -276,6 +289,7 @@ public struct PostalNearbyItem: Codable, Sendable {
 	public let country: String
 	public let distance: Double
 	public let distanceMi: Double
+	public let metros: [PostalMetro]?
 }
 
 public struct PostalNearby: Codable, Sendable {
@@ -283,12 +297,14 @@ public struct PostalNearby: Codable, Sendable {
 	public let country: String
 	public let radius: Double
 	public let unit: String
+	public let metros: [PostalMetro]?
 	public let nearby: [PostalNearbyItem]
 }
 
 public struct PostalDistanceEnd: Codable, Sendable {
 	public let postal: String
 	public let city: String?
+	public let metros: [PostalMetro]?
 }
 
 public struct PostalDistance: Codable, Sendable {

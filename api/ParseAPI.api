@@ -813,6 +813,7 @@ Postal.init(from:): init(from decoder: any Decoder) throws
 Postal.landArea: let landArea: Double?
 Postal.latitude: let latitude: Double?
 Postal.longitude: let longitude: Double?
+Postal.metros: let metros: [PostalMetro]?
 Postal.neighbors: let neighbors: [String]
 Postal.population: let population: Int?
 Postal.postal: let postal: String
@@ -839,14 +840,29 @@ PostalDistance: conformsTo Swift.SendableMetatype
 PostalDistance: struct PostalDistance
 PostalDistanceEnd.city: let city: String?
 PostalDistanceEnd.init(from:): init(from decoder: any Decoder) throws
+PostalDistanceEnd.metros: let metros: [PostalMetro]?
 PostalDistanceEnd.postal: let postal: String
 PostalDistanceEnd: conformsTo Swift.Decodable
 PostalDistanceEnd: conformsTo Swift.Encodable
 PostalDistanceEnd: conformsTo Swift.Sendable
 PostalDistanceEnd: conformsTo Swift.SendableMetatype
 PostalDistanceEnd: struct PostalDistanceEnd
+PostalMetro.businessShare: let businessShare: Double?
+PostalMetro.code: let code: String
+PostalMetro.init(from:): init(from decoder: any Decoder) throws
+PostalMetro.name: let name: String
+PostalMetro.otherShare: let otherShare: Double?
+PostalMetro.residentialShare: let residentialShare: Double?
+PostalMetro.share: let share: Double?
+PostalMetro.type: let type: String
+PostalMetro: conformsTo Swift.Decodable
+PostalMetro: conformsTo Swift.Encodable
+PostalMetro: conformsTo Swift.Sendable
+PostalMetro: conformsTo Swift.SendableMetatype
+PostalMetro: struct PostalMetro
 PostalNearby.country: let country: String
 PostalNearby.init(from:): init(from decoder: any Decoder) throws
+PostalNearby.metros: let metros: [PostalMetro]?
 PostalNearby.nearby: let nearby: [PostalNearbyItem]
 PostalNearby.postal: let postal: String
 PostalNearby.radius: let radius: Double
@@ -861,6 +877,7 @@ PostalNearbyItem.country: let country: String
 PostalNearbyItem.distance: let distance: Double
 PostalNearbyItem.distanceMi: let distanceMi: Double
 PostalNearbyItem.init(from:): init(from decoder: any Decoder) throws
+PostalNearbyItem.metros: let metros: [PostalMetro]?
 PostalNearbyItem.postal: let postal: String
 PostalNearbyItem.state: let state: String?
 PostalNearbyItem: conformsTo Swift.Decodable
