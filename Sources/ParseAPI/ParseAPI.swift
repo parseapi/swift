@@ -123,12 +123,12 @@ public final class ParseAPI: Sendable {
 
 	// MARK: - Methods (mirror routes exactly, flattened like Go)
 
+	/// Look up an IP. Deep enrichment is included with a paid plan, without a separate check meter.
 	public func ip(_ ip: String, deep: Bool = false) async throws -> IP {
 		try await get("/ip/\(enc(ip))", query: deepQuery(deep))
 	}
 
-	/// Bare /ip: the caller's own IP record. The SDK always sends its key,
-	/// so this rides the keyed path.
+	/// Look up the public IP making this request. On a server, this is the server's IP.
 	public func ipSelf(deep: Bool = false) async throws -> IP {
 		try await get("/ip", query: deepQuery(deep))
 	}
@@ -206,6 +206,8 @@ public final class ParseAPI: Sendable {
 		try await get("/name/\(enc(name))")
 	}
 
+	/// Look up a postal area. Pass country when known. Check nullable coordinates before another
+	/// location lookup.
 	public func postal(_ code: String, country: String? = nil) async throws -> Postal {
 		try await get("/postal/\(enc(code))", query: [("country", country)])
 	}
@@ -218,11 +220,17 @@ public final class ParseAPI: Sendable {
 		try await get("/postal/\(enc(from))/distance/\(enc(to))", query: [("country", country)])
 	}
 
+	/// Parse an email and check its format and domain. Deep explicitly requests a metered
+	/// deliverability check. Deep checks use one attempt by default. An explicit retry count can
+	/// repeat paid usage. Metered checks require a secret key on a server. App keys return empty
+	/// deep.
 	public func email(_ email: String, deep: Bool = false) async throws -> Email {
 		try await get("/email/\(enc(email))", query: deepQuery(deep))
 	}
 
-	/// Format and checksum on every call. Deep asks the live EU registry.
+	/// Check VAT format and checksum. Deep requests a metered registry check where supported. Deep
+	/// checks use one attempt by default. Supply your own VAT number for a consultation reference
+	/// when supported. Metered checks require a secret key on a server. App keys return empty deep.
 	public func vat(_ number: String, country: String? = nil, from: String? = nil, deep: Bool = false) async throws -> Vat {
 		try await get("/vat/\(enc(number))", query: [("country", country), ("from", from)] + deepQuery(deep))
 	}
@@ -238,21 +246,26 @@ public final class ParseAPI: Sendable {
 		try await get("/npi/\(enc(npi))", query: deepQuery(deep))
 	}
 
+	/// Parse a phone number and its formats. Pass country for national numbers when needed. Deep
+	/// returns an empty object. Carrier, caller, and HLR are separate metered lookups.
 	public func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone {
 		try await get("/phone/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
 
-	/// Metered core. Not available on app keys, use a secret key server-side.
+	/// Request a metered carrier lookup. No automatic retries by default. Use a secret key on a
+	/// server. App keys return a 403.
 	public func carrier(_ number: String, country: String? = nil) async throws -> Carrier {
 		try await get("/carrier/\(enc(number))", query: [("country", country)])
 	}
 
-	/// Metered core, NANP only. Not available on app keys.
+	/// Request a metered caller-name lookup for a NANP number. No automatic retries by default. Use
+	/// a secret key on a server. App keys return a 403.
 	public func caller(_ number: String, country: String? = nil) async throws -> Caller {
 		try await get("/caller/\(enc(number))", query: [("country", country)])
 	}
 
-	/// Metered core, worldwide. Not available on app keys.
+	/// Request a metered live-status lookup. Nil status means unconfirmed. No automatic retries by
+	/// default. Use a secret key on a server. App keys return a 403.
 	public func hlr(_ number: String, country: String? = nil) async throws -> HLR {
 		try await get("/hlr/\(enc(number))", query: [("country", country)])
 	}
@@ -341,7 +354,8 @@ public final class ParseAPI: Sendable {
 		try await get("/point", query: [("lat", num(lat)), ("lon", num(lon))] + deepQuery(deep))
 	}
 
-	/// Current conditions. A past date adds that day's summary in deep.history.
+	/// Get weather for a point. Both unit systems are returned. Pass known coordinates from a
+	/// postal, city, or location result.
 	public func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather {
 		try await get("/weather", query: [("lat", num(lat)), ("lon", num(lon)), ("date", date)] + deepQuery(deep))
 	}
