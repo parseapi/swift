@@ -287,6 +287,17 @@ public final class ParseAPI: Sendable {
 		try await get("/mac/\(enc(mac))")
 	}
 
+	/// Parse or convert a measurement. Amount is a decimal string. Without to, use the
+	/// type's canonical unit. Locale and system (us or imperial) resolve explicit ambiguity.
+	public func measure(_ measure: String, to: String? = nil, locale: String? = nil, system: String? = nil) async throws -> Measure {
+		try await get("/measure/\(enc(measure))", query: [("to", to), ("locale", locale), ("system", system)])
+	}
+
+	/// Discover reviewed units. unit filters compatible conversion targets.
+	public func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil) async throws -> MeasureUnits {
+		try await get("/measure/units", query: [("q", query), ("type", type), ("unit", unit)])
+	}
+
 	public func mx(_ domain: String) async throws -> MX {
 		try await get("/mx/\(enc(domain))")
 	}

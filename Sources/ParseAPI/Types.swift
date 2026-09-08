@@ -1123,3 +1123,30 @@ public struct Company: Codable, Sendable {
 }
 
 public struct AddressDeep: Codable, Sendable {}
+
+public struct MeasureChoice: Codable, Sendable {
+	public let unit: String
+	public let name: String
+}
+
+public struct Measure: Codable, Sendable {
+	public let measure: String
+	public let valid: Bool
+	public let type: String?
+	/// Decimal string preserving the API's precision.
+	public let amount: String?
+	public let unit: String?
+	public let reason: String?
+	public let choices: [MeasureChoice]
+}
+
+public struct MeasureUnit: Codable, Sendable {
+	public let unit: String
+	public let name: String
+	public let type: String
+	public let aliases: [String]
+}
+
+public struct MeasureUnits: Codable, Sendable {
+	public let units: [MeasureUnit]
+}

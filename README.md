@@ -100,6 +100,17 @@ Reuse a client across calls. Each method performs its own lookup and returns dat
 
 `carrier`, `caller`, and `hlr` are metered lookups for secret keys on a server. App keys answer them with a 403.
 
+## Measurements
+
+```swift
+let result = try await parse.measure("5 ft 11 in", to: "cm")
+let units = try await parse.measureUnits(unit: "m")
+```
+
+`amount` is a decimal string, such as `"180.34"`. Without `to`, the API returns the canonical unit for the measurement type. Pass `locale` for number formatting and `system` (`us` or `imperial`) when a customary unit needs context. Ambiguous input returns `valid: false`, a `reason`, and available `choices`. Invalid or incompatible target units use the normal API error.
+
+Unit discovery accepts optional `query`, `type`, and `unit` filters. `unit` selects compatible targets. Omit the filters for the reviewed catalog. Both operations use pooled requests.
+
 ## Deep
 
 Choose enrichment for the question you need answered.

@@ -621,6 +621,44 @@ MXRecord: conformsTo Swift.Encodable
 MXRecord: conformsTo Swift.Sendable
 MXRecord: conformsTo Swift.SendableMetatype
 MXRecord: struct MXRecord
+Measure.amount: let amount: String?
+Measure.choices: let choices: [MeasureChoice]
+Measure.init(from:): init(from decoder: any Decoder) throws
+Measure.measure: let measure: String
+Measure.reason: let reason: String?
+Measure.type: let type: String?
+Measure.unit: let unit: String?
+Measure.valid: let valid: Bool
+Measure: conformsTo Swift.Decodable
+Measure: conformsTo Swift.Encodable
+Measure: conformsTo Swift.Sendable
+Measure: conformsTo Swift.SendableMetatype
+Measure: struct Measure
+MeasureChoice.init(from:): init(from decoder: any Decoder) throws
+MeasureChoice.name: let name: String
+MeasureChoice.unit: let unit: String
+MeasureChoice: conformsTo Swift.Decodable
+MeasureChoice: conformsTo Swift.Encodable
+MeasureChoice: conformsTo Swift.Sendable
+MeasureChoice: conformsTo Swift.SendableMetatype
+MeasureChoice: struct MeasureChoice
+MeasureUnit.aliases: let aliases: [String]
+MeasureUnit.init(from:): init(from decoder: any Decoder) throws
+MeasureUnit.name: let name: String
+MeasureUnit.type: let type: String
+MeasureUnit.unit: let unit: String
+MeasureUnit: conformsTo Swift.Decodable
+MeasureUnit: conformsTo Swift.Encodable
+MeasureUnit: conformsTo Swift.Sendable
+MeasureUnit: conformsTo Swift.SendableMetatype
+MeasureUnit: struct MeasureUnit
+MeasureUnits.init(from:): init(from decoder: any Decoder) throws
+MeasureUnits.units: let units: [MeasureUnit]
+MeasureUnits: conformsTo Swift.Decodable
+MeasureUnits: conformsTo Swift.Encodable
+MeasureUnits: conformsTo Swift.Sendable
+MeasureUnits: conformsTo Swift.SendableMetatype
+MeasureUnits: struct MeasureUnits
 Name.countries: let countries: [String]
 Name.first: let first: String?
 Name.gender: let gender: String?
@@ -719,6 +757,8 @@ ParseAPI.ip(_:deep:): func ip(_ ip: String, deep: Bool = false) async throws -> 
 ParseAPI.ipSelf(deep:): func ipSelf(deep: Bool = false) async throws -> IP
 ParseAPI.language(_:): func language(_ code: String) async throws -> Language
 ParseAPI.mac(_:): func mac(_ mac: String) async throws -> MAC
+ParseAPI.measure(_:to:locale:system:): func measure(_ measure: String, to: String? = nil, locale: String? = nil, system: String? = nil) async throws -> Measure
+ParseAPI.measureUnits(query:type:unit:): func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil) async throws -> MeasureUnits
 ParseAPI.mx(_:): func mx(_ domain: String) async throws -> MX
 ParseAPI.name(_:): func name(_ name: String) async throws -> Name
 ParseAPI.name(_:country:): func name(_ name: String, country: String?) async throws -> Name
