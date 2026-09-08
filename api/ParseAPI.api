@@ -621,9 +621,11 @@ MXRecord: conformsTo Swift.Encodable
 MXRecord: conformsTo Swift.Sendable
 MXRecord: conformsTo Swift.SendableMetatype
 MXRecord: struct MXRecord
+Name.countries: let countries: [String]
 Name.first: let first: String?
 Name.gender: let gender: String?
 Name.init(from:): init(from decoder: any Decoder) throws
+Name.known: let known: Bool
 Name.last: let last: String?
 Name.middle: let middle: String?
 Name.name: let name: String
@@ -719,6 +721,7 @@ ParseAPI.language(_:): func language(_ code: String) async throws -> Language
 ParseAPI.mac(_:): func mac(_ mac: String) async throws -> MAC
 ParseAPI.mx(_:): func mx(_ domain: String) async throws -> MX
 ParseAPI.name(_:): func name(_ name: String) async throws -> Name
+ParseAPI.name(_:country:): func name(_ name: String, country: String?) async throws -> Name
 ParseAPI.npi(_:deep:): func npi(_ npi: String, deep: Bool = false) async throws -> Npi
 ParseAPI.phone(_:country:deep:): func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone
 ParseAPI.point(_:_:deep:): func point(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Point

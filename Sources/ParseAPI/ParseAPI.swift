@@ -203,7 +203,12 @@ public final class ParseAPI: Sendable {
 
 	/// Parse a person's name. Junk input returns valid false, never an error.
 	public func name(_ name: String) async throws -> Name {
-		try await get("/name/\(enc(name))")
+		try await self.name(name, country: nil)
+	}
+
+	/// Country is an ISO2 context for gender, not a nationality claim.
+	public func name(_ name: String, country: String?) async throws -> Name {
+		try await get("/name/\(enc(name))", query: [("country", country)])
 	}
 
 	/// Look up a postal area. Pass country when known. Check nullable coordinates before another

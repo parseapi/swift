@@ -725,6 +725,10 @@ public struct Language: Codable, Sendable {
 public struct Name: Codable, Sendable {
 	public let name: String
 	public let valid: Bool
+	/// Name membership, independent of gender.
+	public let known: Bool
+	/// Name associations, not the person's nationality.
+	public let countries: [String]
 	public let prefix: String?
 	public let first: String?
 	public let middle: String?
@@ -732,6 +736,25 @@ public struct Name: Codable, Sendable {
 	public let suffix: String?
 	public let gender: String?
 	public let salutation: String?
+
+	private enum CodingKeys: String, CodingKey {
+		case name, valid, known, countries, prefix, first, middle, last, suffix, gender, salutation
+	}
+
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		name = try values.decode(String.self, forKey: .name)
+		valid = try values.decode(Bool.self, forKey: .valid)
+		known = try values.decodeIfPresent(Bool.self, forKey: .known) ?? false
+		countries = try values.decode([String].self, forKey: .countries)
+		prefix = try values.decodeIfPresent(String.self, forKey: .prefix)
+		first = try values.decodeIfPresent(String.self, forKey: .first)
+		middle = try values.decodeIfPresent(String.self, forKey: .middle)
+		last = try values.decodeIfPresent(String.self, forKey: .last)
+		suffix = try values.decodeIfPresent(String.self, forKey: .suffix)
+		gender = try values.decodeIfPresent(String.self, forKey: .gender)
+		salutation = try values.decodeIfPresent(String.self, forKey: .salutation)
+	}
 }
 
 public struct CurrencyRate: Codable, Sendable {
