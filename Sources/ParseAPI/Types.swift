@@ -635,6 +635,19 @@ public struct MAC: Codable, Sendable {
 	public let multicast: Bool?
 }
 
+/// A published DNS record. Value retains DNS presentation syntax, including TXT quoting.
+public struct DNSRecord: Codable, Sendable {
+	public let name: String
+	public let type: String
+	public let ttl: UInt32
+	public let value: String
+}
+
+public struct DNS: Codable, Sendable {
+	public let domain: String
+	public let records: [DNSRecord]
+}
+
 public struct MX: Codable, Sendable {
 	public let domain: String
 	public let mx: [MXRecord]

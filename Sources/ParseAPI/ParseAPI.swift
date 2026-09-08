@@ -298,6 +298,12 @@ public final class ParseAPI: Sendable {
 		try await get("/measure/units", query: [("q", query), ("type", type), ("unit", unit)])
 	}
 
+	/// Published DNS records with TTLs. Omit type to check all supported types.
+	/// Type selects the question, including its CNAME chain. Pooled on every plan.
+	public func dns(_ domain: String, type: String? = nil) async throws -> DNS {
+		try await get("/dns/\(enc(domain))", query: [("type", type)])
+	}
+
 	public func mx(_ domain: String) async throws -> MX {
 		try await get("/mx/\(enc(domain))")
 	}

@@ -83,6 +83,8 @@ try await parse.domain("example.com")
 try await parse.asn("AS13335")
 try await parse.mac("00:1B:63:84:45:E6")
 try await parse.mx("example.com")
+try await parse.dns("example.com")
+try await parse.dns("_dmarc.example.com", type: "TXT")
 try await parse.useragent(uaString)
 try await parse.vin("1HGCM82633A004352")
 try await parse.tariff("8471.30.01.00")
@@ -99,6 +101,8 @@ Every response is a typed struct. Nullable fields are optionals. Unknown respons
 Reuse a client across calls. Each method performs its own lookup and returns data. `countryStates("US")` fetches the states directly. It does not fetch the country first.
 
 `carrier`, `caller`, and `hlr` are metered lookups for secret keys on a server. App keys answer them with a 403.
+
+DNS uses pooled requests on every plan. Omit `type` to check A, AAAA, CNAME, MX, NS, TXT, SOA, CAA, SRV and PTR. Records contain `name`, `type`, `ttl` in seconds and a DNS presentation `value`. TXT values retain quoting and chunk boundaries. A selected question can include its CNAME chain. Empty records mean no records. Lookup failures remain errors.
 
 ## Measurements
 

@@ -343,6 +343,24 @@ CurrencyRate: conformsTo Swift.Encodable
 CurrencyRate: conformsTo Swift.Sendable
 CurrencyRate: conformsTo Swift.SendableMetatype
 CurrencyRate: struct CurrencyRate
+DNS.domain: let domain: String
+DNS.init(from:): init(from decoder: any Decoder) throws
+DNS.records: let records: [DNSRecord]
+DNS: conformsTo Swift.Decodable
+DNS: conformsTo Swift.Encodable
+DNS: conformsTo Swift.Sendable
+DNS: conformsTo Swift.SendableMetatype
+DNS: struct DNS
+DNSRecord.init(from:): init(from decoder: any Decoder) throws
+DNSRecord.name: let name: String
+DNSRecord.ttl: let ttl: UInt32
+DNSRecord.type: let type: String
+DNSRecord.value: let value: String
+DNSRecord: conformsTo Swift.Decodable
+DNSRecord: conformsTo Swift.Encodable
+DNSRecord: conformsTo Swift.Sendable
+DNSRecord: conformsTo Swift.SendableMetatype
+DNSRecord: struct DNSRecord
 DateInfo.date: let date: String
 DateInfo.day: let day: Int?
 DateInfo.dayOfYear: let dayOfYear: Int?
@@ -743,6 +761,7 @@ ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quo
 ParseAPI.date(_:format:to:): func date(_ date: String, format: String? = nil, to: String? = nil) async throws -> DateInfo
 ParseAPI.dateToday(to:): func dateToday(to: String? = nil) async throws -> DateInfo
 ParseAPI.district(_:country:state:): func district(_ code: String, country: String? = nil, state: String? = nil) async throws -> District
+ParseAPI.dns(_:type:): func dns(_ domain: String, type: String? = nil) async throws -> DNS
 ParseAPI.domain(_:deep:): func domain(_ domain: String, deep: Bool = false) async throws -> Domain
 ParseAPI.elevation(_:_:): func elevation(_ lat: Double, _ lon: Double) async throws -> Elevation
 ParseAPI.email(_:deep:): func email(_ email: String, deep: Bool = false) async throws -> Email

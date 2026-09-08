@@ -99,6 +99,7 @@ await expectOk("asn", { try await parse.asn("AS13335") }) { $0.asn == 13335 ? ni
 await expectOk("mac", { try await parse.mac("00:1B:63:84:45:E6") }) { $0.valid && $0.mac == "00:1B:63:84:45:E6" && $0.local == false && $0.multicast == false ? nil : "wrong MAC" }
 await expectOk("measure", { try await parse.measure("5 ft 11 in", to: "cm") }) { $0.valid && $0.amount == "180.34" && $0.unit == "cm" ? nil : "wrong conversion" }
 await expectOk("measureUnits", { try await parse.measureUnits(unit: "m") }) { $0.units.contains { $0.unit == "m" } ? nil : "missing metre" }
+await expectOk("dns", { try await parse.dns("example.com", type: "A") }) { $0.records.contains { $0.type == "A" } ? nil : "no A records" }
 await expectOk("mx", { try await parse.mx("gmail.com") }) { $0.mx.isEmpty ? "no mx" : nil }
 await expectOk("useragent", { try await parse.useragent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") }) { $0.browser == "Chrome" ? nil : "browser \($0.browser ?? "nil")" }
 await expectOk("vin", { try await parse.vin("1HGCM82633A004352") }) {
