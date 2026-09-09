@@ -534,13 +534,6 @@ public struct Bin: Codable, Sendable {
 	public let deep: BinDeep?
 }
 
-/// A SWIFT/BIC format check and partial institution lookup. Valid means syntax only.
-public struct SwiftCode: Codable, Sendable {
-	public let swift: String
-	public let valid: Bool
-	public let country: String?
-	public let name: String?
-}
 
 /// A published DNS record. Value retains DNS presentation syntax, including TXT quoting.
 public struct DNSRecord: Codable, Sendable {

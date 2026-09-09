@@ -299,10 +299,6 @@ public final class ParseAPI: Sendable {
 		try await get("/bin/\(enc(bin))", query: deepQuery(deep))
 	}
 
-	/// Check SWIFT/BIC syntax and look up the institution where available.
-	public func swift(_ code: String) async throws -> SwiftCode {
-		try await get("/swift/\(enc(code))")
-	}
 
 	/// Parse or convert a measurement. Amount is a decimal string. Without to, use the
 	/// type's canonical unit. Locale and system (us or imperial) resolve explicit ambiguity.
