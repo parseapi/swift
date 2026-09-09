@@ -12,21 +12,21 @@ private actor CallCount {
 
 @Suite struct Stability {
 	@Test func dateEncodingAndCalendarFields() async throws {
-		let stub = StubTransport(body: #"{"date":"2026-03-04","valid":true,"month_name":"March","week_year":2026,"days_in_month":31,"unix":1772582400,"to":"2026-03-09","days":5}"#)
+		let stub = StubTransport(body: #"{"date":"2026-03-04","valid":true,"unix":1772582400,"to":"2026-03-09","days":5,"deep":{"month_name":"March","week_year":2026,"days_in_month":31}}"#)
 		let value = try await makeClient(stub).date("03/04/2026", format: "mdy", to: "2026-03-09")
 		#expect(stub.requests.count == 1)
 		#expect(stub.requests[0].url?.absoluteString == "https://api.parseapi.com/date/03%2F04%2F2026?format=mdy&to=2026-03-09")
-		#expect(value.monthName == "March")
-		#expect(value.weekYear == 2026)
-		#expect(value.daysInMonth == 31)
+		#expect(value.deep?.monthName == "March")
+		#expect(value.deep?.weekYear == 2026)
+		#expect(value.deep?.daysInMonth == 31)
 		#expect(value.days == 5)
 	}
 
 	@Test func invalidDateAndTodayAreSeparateCalls() async throws {
-		let invalid = StubTransport(body: #"{"date":"03/04/2026","valid":false,"year":null}"#)
+		let invalid = StubTransport(body: #"{"date":"03/04/2026","valid":false,"deep":{"year":null}}"#)
 		let value = try await makeClient(invalid).date("03/04/2026")
 		#expect(value.valid == false)
-		#expect(value.year == nil)
+		#expect(value.deep?.year == nil)
 		let today = StubTransport(body: #"{"date":"2026-09-05","valid":true}"#)
 		_ = try await makeClient(today).dateToday(to: "2026-12-25")
 		#expect(today.requests[0].url?.absoluteString == "https://api.parseapi.com/date?to=2026-12-25")
@@ -50,7 +50,7 @@ private actor CallCount {
 	}
 
 	@Test func timezoneConversionIsOptional() async throws {
-		let stub = StubTransport(body: #"{"timezone":"America/New_York","at":"2026-09-05T09:00:00-04:00","to":{"timezone":"Europe/London","offset":"+01:00","offset_minutes":60,"dst":true,"at":"2026-09-05T14:00:00+01:00"}}"#)
+		let stub = StubTransport(body: #"{"timezone":"America/New_York","at":"2026-09-05T09:00:00-04:00","to":{"timezone":"Europe/London","offset":"+01:00","dst":true,"at":"2026-09-05T14:00:00+01:00","deep":{"offset_minutes":60}}}"#)
 		let value = try await makeClient(stub).timezone("America/New_York", at: "2026-09-05T09:00:00", to: "Europe/London")
 		#expect(value.to?.at == "2026-09-05T14:00:00+01:00")
 		#expect(stub.requests[0].url?.absoluteString.hasSuffix("&to=Europe%2FLondon") == true)

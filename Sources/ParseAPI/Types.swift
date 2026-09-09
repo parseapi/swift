@@ -1,7 +1,7 @@
 import Foundation
 
-// Response types for the ParseAPI public API. Shapes are append-only
-// upstream, so these only ever grow. Nullable fields are optionals.
+// Response types for the reviewed ParseAPI public API contract.
+// Nullable fields are optionals; optional detail belongs to its owning entity.
 // Deep objects follow the triad: nil when not requested, empty when
 // requested but locked, populated when unlocked, so every field inside
 // a deep type is optional. Unknown fields are ignored by Codable.
@@ -60,29 +60,17 @@ public struct ContinentCountries: Codable, Sendable {
 
 public struct Country: Codable, Sendable {
 	public let country: String
-	public let iso3: String
-	public let numeric: Int
 	public let name: String
-	public let fullName: String?
 	public let localName: String?
-	public let demonym: String?
-	public let capital: String?
-	public let capitalLat: Double?
-	public let capitalLon: Double?
-	public let continent: String
-	public let region: String?
-	public let subregion: String?
-	public let population: Int?
-	public let area: Double?
+	public let continent: String?
 	public let currency: String?
 	public let currencyName: String?
 	public let currencySymbol: String?
-	public let tld: String?
 	public let callingCode: String?
 	public let emoji: String?
 	public let languages: [String]
-	public let borders: [String]
-	public let blocs: [String]
+	public let deep: CountryDeep?
+	public let timezones: [String]?
 }
 
 public struct Bloc: Codable, Sendable {
@@ -123,22 +111,17 @@ public struct State: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let population: Int?
-	public let area: Double?
 	public let timezone: String?
 	public let timezones: [String]
 	public let iso31662: String?
-	public let fips: String?
-	public let capital: String?
-	public let areaCodes: [String]
-	public let tax: String?
-	public let taxRate: Double?
+	public let deep: StateDeep?
 }
 
 public struct StateDistrictItem: Codable, Sendable {
 	public let district: String
 	public let name: String
 	public let type: String?
+	public let deep: StateDistrictDeep?
 }
 
 public struct StateDistricts: Codable, Sendable {
@@ -159,24 +142,15 @@ public struct District: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let population: Int?
-	/// Total area in km2 (land + water, or the official total).
-	public let area: Double?
-	/// Land area in km2. Nil when the source publishes total only.
-	public let landArea: Double?
-	/// Water area in km2. Nil when the source publishes total only.
-	public let waterArea: Double?
-	public let seat: String?
 	public let timezone: String?
 	public let timezones: [String]
+	public let deep: DistrictDeep?
 }
 
 public struct City: Codable, Sendable {
 	public let name: String
 	public let localName: String?
 	public let type: String?
-	/// What this city is the capital of: country, state, or nil.
-	public let capitalOf: String?
 	public let state: String?
 	public let stateName: String?
 	public let district: String?
@@ -185,18 +159,9 @@ public struct City: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let elevation: Double?
-	public let elevationFt: Double?
-	public let population: Int?
-	/// Total area in km2 (land + water, or the official total).
-	public let area: Double?
-	/// Land area in km2. Nil when the source publishes total only.
-	public let landArea: Double?
-	/// Water area in km2. Nil when the source publishes total only.
-	public let waterArea: Double?
 	public let timezone: String?
-	/// Minted parse id (city_ + 12 chars). Stable pin via cityId().
-	public let id: String
+	public let id: String?
+	public let deep: CityDeep?
 }
 
 /// Nearest-city lookups add the distance from the query point.
@@ -204,7 +169,6 @@ public struct CityNearest: Codable, Sendable {
 	public let name: String
 	public let localName: String?
 	public let type: String?
-	public let capitalOf: String?
 	public let state: String?
 	public let stateName: String?
 	public let district: String?
@@ -213,16 +177,11 @@ public struct CityNearest: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let elevation: Double?
-	public let elevationFt: Double?
-	public let population: Int?
-	public let area: Double?
-	public let landArea: Double?
-	public let waterArea: Double?
 	public let timezone: String?
-	public let id: String
+	public let id: String?
 	public let distance: Double
 	public let distanceMi: Double
+	public let deep: CityDeep?
 }
 
 public struct CitySearch: Codable, Sendable {
@@ -266,20 +225,8 @@ public struct Postal: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let elevation: Double?
-	public let elevationFt: Double?
-	public let population: Int?
-	/// Total area in km2. Nil when the source has no water split.
-	public let area: Double?
-	/// Land area in km2, where the source has it.
-	public let landArea: Double?
-	/// Water area in km2, where the source has it.
-	public let waterArea: Double?
 	public let timezone: String?
-	public let currency: String?
-	public let neighbors: [String]
-	/// Nil is unknown; [] is observed outside all covered areas.
-	public let metros: [PostalMetro]?
+	public let deep: PostalDeep?
 }
 
 public struct PostalNearbyItem: Codable, Sendable {
@@ -289,7 +236,7 @@ public struct PostalNearbyItem: Codable, Sendable {
 	public let country: String
 	public let distance: Double
 	public let distanceMi: Double
-	public let metros: [PostalMetro]?
+	public let deep: PostalMetroDeep?
 }
 
 public struct PostalNearby: Codable, Sendable {
@@ -297,14 +244,14 @@ public struct PostalNearby: Codable, Sendable {
 	public let country: String
 	public let radius: Double
 	public let unit: String
-	public let metros: [PostalMetro]?
 	public let nearby: [PostalNearbyItem]
+	public let deep: PostalMetroDeep?
 }
 
 public struct PostalDistanceEnd: Codable, Sendable {
 	public let postal: String
 	public let city: String?
-	public let metros: [PostalMetro]?
+	public let deep: PostalMetroDeep?
 }
 
 public struct PostalDistance: Codable, Sendable {
@@ -360,39 +307,25 @@ public struct Iban: Codable, Sendable {
 	public let iban: String?
 	public let valid: Bool
 	public let country: String?
-	/// Print form in groups of four, for display. Nil when invalid.
 	public let formatted: String?
-	public let checksum: String?
-	/// Bank identifier parsed from the number, not a name.
 	public let bank: String?
-	/// Institution name from the national bank-code directory. Nil when unsourced.
 	public let bankName: String?
-	/// BIC from that same directory. Nil when unsourced or missing.
 	public let bic: String?
-	/// Branch identifier when that country has one.
-	public let branch: String?
-	public let account: String?
+	public let deep: IbanDeep?
 }
 
 public struct Npi: Codable, Sendable {
-	/// Normalized 10-digit NPI. Invalid input still echoes the fold.
 	public let npi: String?
 	public let valid: Bool
-	/// Exists in the CMS NPPES registry.
 	public let registered: Bool?
 	public let active: Bool?
-	/// Date CMS deactivated the NPI, YYYY-MM-DD. Nil when still active.
-	public let deactivatedAt: String?
-	/// On the OIG exclusion list.
 	public let excluded: Bool?
-	/// individual or organization.
 	public let type: String?
 	public let name: String?
 	public let first: String?
 	public let last: String?
 	public let credential: String?
 	public let specialty: String?
-	/// NUCC taxonomy code.
 	public let taxonomy: String?
 	public let address: String?
 	public let city: String?
@@ -412,52 +345,35 @@ public struct NpiEnrollment: Codable, Sendable {
 }
 
 public struct NpiDeep: Codable, Sendable {
-	/// In the published Medicare FFS enrollment extract.
 	public let medicare: Bool?
-	/// On the CMS opt-out affidavit list. Matched by NPI only.
 	public let optOut: Bool?
-	/// Enrollment rows. Empty when medicare is false.
 	public let enrollments: [NpiEnrollment]?
+	public let deactivatedAt: String?
 }
 
 public struct TariffMeasure: Codable, Sendable {
-	/// Chapter 99 heading, dotted (9903.01.24).
 	public let heading: String
-	/// The measure text verbatim.
 	public let description: String
-	/// The rate string verbatim.
 	public let rate: String?
-	/// Effective from, ISO YYYY-MM-DD. Nil when the schedule states none.
 	public let from: String?
-	/// Expires, ISO YYYY-MM-DD. Nil when open-ended.
 	public let until: String?
+	public let conditional: Bool?
 }
 
 public struct TariffDeep: Codable, Sendable {
-	/// The origin country the measures were resolved for.
 	public let origin: String?
-	/// Composed ad valorem percent. Nil when the components do not compose cleanly.
 	public let effectiveRate: Double?
-	/// Every Chapter 99 tariff measure that applies to this code from this origin.
 	public let measures: [TariffMeasure]?
+	public let units: [String]?
+	public let special: String?
+	public let other: String?
 }
 
 public struct Tariff: Codable, Sendable {
-	/// Normalized code with dots (8471.30.01.00).
 	public let hts: String
-	/// The schedule line verbatim.
 	public let description: String
-	/// Parent descriptions from the schedule outline, outermost first.
 	public let lineage: [String]
-	/// Units of quantity (No., kg).
-	public let units: [String]
-	/// Column 1 general rate, verbatim.
 	public let general: String?
-	/// Column 1 special rate, verbatim.
-	public let special: String?
-	/// Column 2 rate, verbatim.
-	public let other: String?
-	/// The official release that answered (2026HTSRev17).
 	public let revision: String
 	public let deep: TariffDeep?
 }
@@ -486,58 +402,46 @@ public struct VinRecall: Codable, Sendable {
 }
 
 public struct VinDeep: Codable, Sendable {
-	/// Open recall campaigns for the decoded vehicle. Empty when none,
-	/// nil when the recall registry did not answer.
 	public let recalls: [VinRecall]?
+	public let series: String?
+	public let doors: Int?
+	public let cylinders: Int?
+	public let displacement: Double?
+	public let fuel: String?
+	public let horsepower: Double?
+	public let drive: String?
+	public let transmission: String?
+	public let manufacturer: String?
+	public let plantCity: String?
+	public let plantState: String?
+	public let plantCountry: String?
+	public let gvwr: String?
 }
 
 public struct Vin: Codable, Sendable {
-	/// Normalized VIN, uppercase, no spaces. Invalid input still echoes the fold.
 	public let vin: String?
 	public let valid: Bool
 	public let year: Int?
 	public let make: String?
 	public let model: String?
 	public let trim: String?
-	public let series: String?
-	/// Body style (sedan, coupe, suv, pickup).
 	public let body: String?
-	/// Vehicle type (passenger car, truck, motorcycle, bus, trailer).
 	public let type: String?
-	public let doors: Int?
-	public let cylinders: Int?
-	/// Engine displacement in liters.
-	public let displacement: Double?
-	public let fuel: String?
-	public let horsepower: Double?
-	/// fwd, rwd, awd, 4wd.
-	public let drive: String?
-	/// automatic, manual, cvt.
-	public let transmission: String?
-	public let manufacturer: String?
-	public let plantCity: String?
-	public let plantState: String?
-	public let plantCountry: String?
-	/// Gross vehicle weight rating class as filed.
-	public let gvwr: String?
 	public let deep: VinDeep?
 }
 
-/// Always empty. The metered proves are their own endpoints: carrier, caller, hlr.
-public struct PhoneDeep: Codable, Sendable {}
+/// Optional numbering-plan location context, pooled on every plan.
+public struct PhoneDeep: Codable, Sendable {
+	public let state: String?
+	public let stateName: String?
+	public let timezone: String?
+}
 
 public struct Phone: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
 	public let country: String?
-	/// What the numbering plan can see: mobile, landline, toll_free, unknown.
-	/// Never voip (that is the carrier field's word). Nil when invalid.
 	public let type: String?
-	/// NPA-derived state code (US/CA).
-	public let state: String?
-	public let stateName: String?
-	/// Numbering-plan IANA zone. Nil when the prefix covers more than one zone.
-	public let timezone: String?
 	public let national: String?
 	public let international: String?
 	public let deep: PhoneDeep?
@@ -547,16 +451,10 @@ public struct Carrier: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
 	public let country: String?
-	/// The network's word, including voip. Nil when invalid.
 	public let type: String?
-	/// Current carrier display name. Nil when the probe had no answer.
 	public let carrier: String?
-	/// Carrier is a known burner number app. Nil when carrier is unknown.
 	public let burner: Bool?
-	/// Issuing rate-center city.
-	public let city: String?
-	public let state: String?
-	public let stateName: String?
+	public let deep: CarrierDeep?
 }
 
 public struct Caller: Codable, Sendable {
@@ -572,20 +470,9 @@ public struct HLR: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
 	public let country: String?
-	/// Assigned to a subscriber. Nil when invalid.
 	public let live: Bool?
-	/// Handset reachable right now. Nil means unconfirmed, never no.
 	public let connected: Bool?
-	/// The six network extras fill on live HLR dips only. Nil elsewhere (NANP, failover).
-	public let roaming: Bool?
-	public let roamingNetwork: String?
-	/// ISO2, uppercase.
-	public let roamingCountry: String?
-	/// Current serving network name.
-	public let network: String?
-	public let originalNetwork: String?
-	public let mcc: String?
-	public let mnc: String?
+	public let deep: HLRDeep?
 }
 
 public struct MXRecord: Codable, Sendable {
@@ -604,13 +491,6 @@ public struct DomainRegistration: Codable, Sendable {
 }
 
 public struct DomainDeep: Codable, Sendable {
-	public let a: [String]?
-	public let aaaa: [String]?
-	public let ns: [String]?
-	public let mx: [MXRecord]?
-	public let txt: [String]?
-	/// The brand behind the MX (Google, Microsoft).
-	public let mailhost: String?
 	public let registration: DomainRegistration?
 }
 
@@ -648,6 +528,14 @@ public struct Bin: Codable, Sendable {
 	public let type: String?
 	public let prepaid: Bool?
 	public let deep: BinDeep?
+}
+
+/// A SWIFT/BIC format check and partial institution lookup. Valid means syntax only.
+public struct SwiftCode: Codable, Sendable {
+	public let swift: String
+	public let valid: Bool
+	public let country: String?
+	public let name: String?
 }
 
 /// A published DNS record. Value retains DNS presentation syntax, including TXT quoting.
@@ -728,24 +616,21 @@ public struct Useragent: Codable, Sendable {
 
 public struct Currency: Codable, Sendable {
 	public let currency: String
-	public let numeric: Int?
 	public let name: String
-	public let namePlural: String?
 	public let symbol: String?
 	public let symbolNative: String?
 	public let digits: Int?
-	public let countries: [String]
+	public let deep: CurrencyDeep?
 }
 
 /// One language by BCP 47 shortest code (en) or ISO 639-3 (eng). Codes are lowercase.
 public struct Language: Codable, Sendable {
 	public let language: String
-	public let iso3: String?
 	public let name: String
 	public let localName: String?
 	public let script: String?
 	public let direction: String
-	public let countries: [String]
+	public let deep: LanguageDeep?
 }
 
 /// A parsed person name. Junk input returns valid false, never an error.
@@ -753,36 +638,12 @@ public struct Language: Codable, Sendable {
 public struct Name: Codable, Sendable {
 	public let name: String
 	public let valid: Bool
-	/// Name membership, independent of gender.
-	public let known: Bool
-	/// Name associations, not the person's nationality.
-	public let countries: [String]
 	public let prefix: String?
 	public let first: String?
 	public let middle: String?
 	public let last: String?
 	public let suffix: String?
-	public let gender: String?
-	public let salutation: String?
-
-	private enum CodingKeys: String, CodingKey {
-		case name, valid, known, countries, prefix, first, middle, last, suffix, gender, salutation
-	}
-
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		name = try values.decode(String.self, forKey: .name)
-		valid = try values.decode(Bool.self, forKey: .valid)
-		known = try values.decodeIfPresent(Bool.self, forKey: .known) ?? false
-		countries = try values.decode([String].self, forKey: .countries)
-		prefix = try values.decodeIfPresent(String.self, forKey: .prefix)
-		first = try values.decodeIfPresent(String.self, forKey: .first)
-		middle = try values.decodeIfPresent(String.self, forKey: .middle)
-		last = try values.decodeIfPresent(String.self, forKey: .last)
-		suffix = try values.decodeIfPresent(String.self, forKey: .suffix)
-		gender = try values.decodeIfPresent(String.self, forKey: .gender)
-		salutation = try values.decodeIfPresent(String.self, forKey: .salutation)
-	}
+	public let deep: NameDeep?
 }
 
 public struct CurrencyRate: Codable, Sendable {
@@ -805,56 +666,36 @@ public struct TimezoneNextDST: Codable, Sendable {
 public typealias Time = Timezone
 
 public struct Timezone: Codable, Sendable {
-	/// Echoed on coordinate lookups only.
 	public let latitude: Double?
 	public let longitude: Double?
 	public let timezone: String?
-	public let name: String?
 	public let abbreviation: String?
 	public let offset: String?
-	public let offsetSeconds: Int?
-	public let offsetMinutes: Int?
 	public let dst: Bool?
-	public let nextDst: TimezoneNextDST?
-	/// Resolved local ISO time with its UTC offset.
 	public let at: String?
 	public let unix: Int64?
 	public let to: TimezoneConversionTarget?
+	public let deep: TimezoneDeep?
 }
 
 public struct TimezoneConversionTarget: Codable, Sendable {
 	public let timezone: String
-	public let name: String?
 	public let abbreviation: String?
 	public let offset: String
-	public let offsetSeconds: Int?
-	public let offsetMinutes: Int
 	public let dst: Bool
 	public let at: String
 	public let unix: Int64?
+	public let deep: TimezoneConversionTargetDeep?
 }
 
 /// Calendar facts. Ambiguous or invalid input has valid false and nil calendar fields.
 public struct DateInfo: Codable, Sendable {
 	public let date: String
 	public let valid: Bool
-	public let year: Int?
-	public let month: Int?
-	public let monthName: String?
-	public let day: Int?
-	/// ISO weekday, Monday 1 through Sunday 7.
-	public let weekday: Int?
-	public let weekdayName: String?
-	public let week: Int?
-	public let weekYear: Int?
-	public let dayOfYear: Int?
-	public let quarter: Int?
-	public let leap: Bool?
-	public let daysInMonth: Int?
-	/// Unix time at midnight UTC, in seconds.
 	public let unix: Int64?
 	public let to: String?
 	public let days: Int?
+	public let deep: DateInfoDeep?
 }
 
 public struct Holiday: Codable, Sendable {
@@ -888,8 +729,10 @@ public struct Elevation: Codable, Sendable {
 }
 
 public struct PointDeep: Codable, Sendable {
-	public let city: CityNearest?
-	public let timezone: Timezone?
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let resolution: Double?
+	public let city: PointCity?
 }
 
 public struct Point: Codable, Sendable {
@@ -901,10 +744,8 @@ public struct Point: Codable, Sendable {
 	public let stateName: String?
 	public let district: String?
 	public let districtName: String?
-	public let elevation: Double?
-	public let elevationFt: Double?
-	public let resolution: Double?
 	public let deep: PointDeep?
+	public let timezone: String?
 }
 
 public struct WeatherForecastPeriod: Codable, Sendable {
@@ -959,6 +800,7 @@ public struct WeatherDeep: Codable, Sendable {
 	public let minutes: [WeatherMinute]?
 	public let days: [WeatherDay]?
 	public let air: WeatherAir?
+	public let current: WeatherCurrentDetails?
 }
 
 public struct WeatherHistory: Codable, Sendable {
@@ -983,18 +825,10 @@ public struct WeatherCurrent: Codable, Sendable {
 	public let temperatureF: Double?
 	public let feelsLike: Double?
 	public let feelsLikeF: Double?
-	public let dewpoint: Double?
-	public let dewpointF: Double?
 	public let humidity: Double?
 	public let windSpeed: Double?
 	public let windSpeedMph: Double?
-	public let windGust: Double?
-	public let windGustMph: Double?
 	public let windDirection: Double?
-	public let pressure: Double?
-	public let pressureInhg: Double?
-	public let visibility: Double?
-	public let visibilityMi: Double?
 	public let condition: String?
 	public let conditionName: String?
 	public let conditionEmoji: String?
@@ -1027,13 +861,8 @@ public struct Emoji: Codable, Sendable {
 	public let emoji: String
 	public let name: String
 	public let shortcodes: [String]
-	public let codepoints: [String]
-	public let hex: String
 	public let category: String?
-	public let status: String?
-	public let version: String?
-	public let keywords: [String]
-	public let skins: [EmojiSkin]
+	public let deep: EmojiDeep?
 }
 
 public struct EmojiSearch: Codable, Sendable {
@@ -1120,9 +949,16 @@ public struct CompanyCountry: Codable, Sendable {
 }
 
 public struct CompanyDeep: Codable, Sendable {
-	public let country: CompanyCountry?
-	public let postal: Postal?
-	public let city: City?
+	public let activity: String?
+	public let stateName: String?
+	public let countryName: String?
+	public let vat: String?
+	public let gst: Bool?
+	public let acn: String?
+	public let siren: String?
+	public let siege: Bool?
+	public let kind: String?
+	public let invoice: String?
 }
 
 public struct Company: Codable, Sendable {
@@ -1133,20 +969,10 @@ public struct Company: Codable, Sendable {
 	public let type: String?
 	public let name: String?
 	public let active: Bool?
-	public let activity: String?
 	public let address: String?
 	public let city: String?
 	public let state: String?
-	public let stateName: String?
 	public let postal: String?
-	public let countryName: String?
-	public let vat: String?
-	public let gst: Bool?
-	public let acn: String?
-	public let siren: String?
-	public let siege: Bool?
-	public let kind: String?
-	public let invoice: String?
 	public let deep: CompanyDeep?
 }
 
@@ -1208,30 +1034,251 @@ public struct NAICSMatch: Codable, Sendable {
 public struct NAICS: Codable, Sendable {
 	public let naics: String
 	public let name: String
-	public let description: String?
 	public let level: Int
 	public let parent: String?
 	public let parentName: String?
-	public let children: [NAICSChild]
-	/// Classification exclusions. Nil for omitted/null older responses.
-	public let exclusions: [NAICSExclusion]?
-	/// Search evidence, absent on direct lookup and older responses.
-	public let match: NAICSMatch?
 	public let year: Int
 	public let country: String
+	public let deep: NAICSDeep?
 }
 
 public struct NAICSSearch: Codable, Sendable {
 	public let q: String
 	public let year: Int
 	public let country: String
-	public let results: [NAICS]
+	public let results: [NAICSSearchItem]
 }
 
-/// A SWIFT/BIC format check and partial institution lookup. Valid means syntax only.
-public struct SwiftCode: Codable, Sendable {
-	public let swift: String
-	public let valid: Bool
-	public let country: String?
+
+public struct CountryDeep: Codable, Sendable {
+	public let iso3: String?
+	public let numeric: Int?
+	public let fullName: String?
+	public let demonym: String?
+	public let capital: String?
+	public let capitalLat: Double?
+	public let capitalLon: Double?
+	public let region: String?
+	public let subregion: String?
+	public let population: Int?
+	public let area: Double?
+	public let tld: String?
+	public let borders: [String]?
+	public let blocs: [String]?
+	public let tax: String?
+	public let taxRate: Double?
+	public let taxIdFormat: String?
+	public let taxIdRegex: String?
+	public let weekStart: String?
+	public let units: String?
+	public let drivingSide: String?
+	public let plugs: [String]?
+	public let voltage: Int?
+	public let frequency: Int?
+	public let emergency: CountryEmergency?
+	public let postalFormat: String?
+	public let postalRegex: String?
+	public let ioc: String?
+	public let fifa: String?
+	public let plate: String?
+}
+
+
+public struct CountryEmergency: Codable, Sendable {
+	public let police: String?
+	public let ambulance: String?
+	public let fire: String?
+}
+
+
+public struct StateDeep: Codable, Sendable {
+	public let population: Int?
+	public let area: Double?
+	public let fips: String?
+	public let capital: String?
+	public let areaCodes: [String]?
+	public let tax: String?
+	public let taxRate: Double?
+}
+
+
+public struct StateDistrictDeep: Codable, Sendable {
+	public let population: Int?
+}
+
+
+public struct DistrictDeep: Codable, Sendable {
+	public let population: Int?
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
+	public let seat: String?
+}
+
+
+public struct CityDeep: Codable, Sendable {
+	public let capitalOf: String?
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let population: Int?
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
+}
+
+
+public struct PostalDeep: Codable, Sendable {
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let population: Int?
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
+	public let currency: String?
+	public let neighbors: [String]?
+	public let metros: [PostalMetro]?
+	public let tax: String?
+	public let taxRate: Double?
+	public let taxRateState: Double?
+	public let taxRateCounty: Double?
+	public let taxRateCity: Double?
+	public let taxRateSpecial: Double?
+}
+
+
+public struct PostalMetroDeep: Codable, Sendable {
+	public let metros: [PostalMetro]?
+}
+
+
+public struct IbanDeep: Codable, Sendable {
+	public let checksum: String?
+	public let branch: String?
+	public let account: String?
+}
+
+
+public struct CarrierDeep: Codable, Sendable {
+	public let city: String?
+	public let state: String?
+	public let stateName: String?
+}
+
+
+public struct HLRDeep: Codable, Sendable {
+	public let roaming: Bool?
+	public let roamingNetwork: String?
+	public let roamingCountry: String?
+	public let network: String?
+	public let originalNetwork: String?
+	public let mcc: String?
+	public let mnc: String?
+}
+
+
+public struct CurrencyDeep: Codable, Sendable {
+	public let numeric: Int?
+	public let namePlural: String?
+	public let countries: [String]?
+}
+
+
+public struct LanguageDeep: Codable, Sendable {
+	public let iso3: String?
+	public let countries: [String]?
+}
+
+
+public struct NameDeep: Codable, Sendable {
+	public let known: Bool?
+	public let countries: [String]?
+	public let gender: String?
+	public let salutation: String?
+}
+
+
+public struct TimezoneDeep: Codable, Sendable {
 	public let name: String?
+	public let offsetMinutes: Int?
+	public let offsetSeconds: Int?
+	public let nextDst: TimezoneNextDST?
+}
+
+
+public struct TimezoneConversionTargetDeep: Codable, Sendable {
+	public let name: String?
+	public let offsetMinutes: Int?
+	public let offsetSeconds: Int?
+}
+
+
+public struct DateInfoDeep: Codable, Sendable {
+	public let year: Int?
+	public let month: Int?
+	public let monthName: String?
+	public let day: Int?
+	public let weekday: Int?
+	public let weekdayName: String?
+	public let week: Int?
+	public let weekYear: Int?
+	public let dayOfYear: Int?
+	public let quarter: Int?
+	public let leap: Bool?
+	public let daysInMonth: Int?
+}
+
+
+public struct PointCity: Codable, Sendable {
+	public let name: String
+	public let localName: String?
+	public let type: String?
+	public let state: String?
+	public let stateName: String?
+	public let country: String
+	public let countryName: String?
+	public let latitude: Double?
+	public let longitude: Double?
+	public let id: String?
+	public let distance: Double
+	public let distanceMi: Double
+}
+
+
+public struct WeatherCurrentDetails: Codable, Sendable {
+	public let dewpoint: Double?
+	public let dewpointF: Double?
+	public let windGust: Double?
+	public let windGustMph: Double?
+	public let pressure: Double?
+	public let pressureInhg: Double?
+	public let visibility: Double?
+	public let visibilityMi: Double?
+}
+
+
+public struct EmojiDeep: Codable, Sendable {
+	public let codepoints: [String]?
+	public let hex: String?
+	public let status: String?
+	public let version: String?
+	public let keywords: [String]?
+	public let skins: [EmojiSkin]?
+}
+
+
+public struct NAICSDeep: Codable, Sendable {
+	public let description: String?
+	public let children: [NAICSChild]?
+	public let exclusions: [NAICSExclusion]?
+}
+
+
+public struct NAICSSearchItem: Codable, Sendable {
+	public let naics: String
+	public let name: String
+	public let level: Int
+	public let parent: String?
+	public let parentName: String?
+	public let deep: NAICSDeep?
+	public let match: NAICSMatch?
 }

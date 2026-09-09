@@ -73,9 +73,9 @@ import FoundationNetworking
         let hits = try await makeClient(search).addressSearch("123 Main", country: "US", postal: "28202")
         #expect(hits.addresses[0].postal == "28202")
         #expect(search.requests.count == 1)
-        let company = StubTransport(body: #"{"company":"01234567","valid":true,"deep":{"country":{"name":"United Kingdom","blocs":null,"tax":"VAT"}}}"#)
+        let company = StubTransport(body: #"{"company":"01234567","valid":true,"deep":{"country_name":"United Kingdom","vat":null}}"#)
         let c = try await makeClient(company).company("01234567", country: "GB", deep: true)
-        #expect(c.deep?.country?.blocs.isEmpty == true)
+        #expect(c.deep?.countryName == "United Kingdom")
         #expect(company.requests.count == 1)
     }
 
@@ -87,8 +87,8 @@ import FoundationNetworking
         #expect(w.deep?.hours?.first?.windGust == 30)
         #expect(w.deep?.days?.first?.high == 25)
         #expect(w.deep?.air?.pm25 == 7.5)
-        let country = StubTransport(body: #"{"country":"FR","iso3":"FRA","numeric":250,"name":"France","continent":"EU","blocs":["EU","SCHENGEN"]}"#)
-        #expect(try await makeClient(country).country("FR").blocs == ["EU", "SCHENGEN"])
+        let country = StubTransport(body: #"{"country":"FR","name":"France","continent":"EU","deep":{"iso3":"FRA","numeric":250,"blocs":["EU","SCHENGEN"]}}"#)
+        #expect(try await makeClient(country).country("FR").deep?.blocs == ["EU", "SCHENGEN"])
     }
 
     @Test func junkAddressAndCompanyCanEchoNull() async throws {

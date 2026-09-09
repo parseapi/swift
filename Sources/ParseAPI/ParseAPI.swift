@@ -141,8 +141,8 @@ public final class ParseAPI: Sendable {
 		try await get("/continent/\(enc(code))/countries")
 	}
 
-	public func country(_ code: String) async throws -> Country {
-		try await get("/country/\(enc(code))")
+	public func country(_ code: String, deep: Bool = false) async throws -> Country {
+		try await get("/country/\(enc(code))", query: deepQuery(deep))
 	}
 
 	public func bloc(_ code: String) async throws -> Bloc {
@@ -157,48 +157,48 @@ public final class ParseAPI: Sendable {
 		try await get("/country/\(enc(code))/states")
 	}
 
-	public func state(_ code: String, country: String? = nil) async throws -> State {
-		try await get("/state/\(enc(code))", query: [("country", country)])
+	public func state(_ code: String, country: String? = nil, deep: Bool = false) async throws -> State {
+		try await get("/state/\(enc(code))", query: [("country", country)] + deepQuery(deep))
 	}
 
-	public func stateDistricts(_ code: String, country: String? = nil) async throws -> StateDistricts {
-		try await get("/state/\(enc(code))/districts", query: [("country", country)])
+	public func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateDistricts {
+		try await get("/state/\(enc(code))/districts", query: [("country", country)] + deepQuery(deep))
 	}
 
-	public func district(_ code: String, country: String? = nil, state: String? = nil) async throws -> District {
-		try await get("/district/\(enc(code))", query: [("country", country), ("state", state)])
+	public func district(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> District {
+		try await get("/district/\(enc(code))", query: [("country", country), ("state", state)] + deepQuery(deep))
 	}
 
-	public func city(_ name: String, country: String? = nil, state: String? = nil) async throws -> City {
-		try await get("/city/\(enc(name))", query: [("country", country), ("state", state)])
+	public func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> City {
+		try await get("/city/\(enc(name))", query: [("country", country), ("state", state)] + deepQuery(deep))
 	}
 
 	/// Pin or refetch a city by its minted id (city_ + 12 chars).
-	public func cityId(_ id: String) async throws -> City {
-		try await get("/city/id/\(enc(id))")
+	public func cityId(_ id: String, deep: Bool = false) async throws -> City {
+		try await get("/city/id/\(enc(id))", query: deepQuery(deep))
 	}
 
-	public func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil) async throws -> CitySearch {
-		try await get("/city", query: [("q", query), ("country", country), ("state", state), ("limit", limit.map(String.init))])
+	public func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false) async throws -> CitySearch {
+		try await get("/city", query: [("q", query), ("country", country), ("state", state), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
 
-	public func cityNearest(_ lat: Double, _ lon: Double) async throws -> CityNearest {
-		try await get("/city", query: [("lat", num(lat)), ("lon", num(lon))])
+	public func cityNearest(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> CityNearest {
+		try await get("/city", query: [("lat", num(lat)), ("lon", num(lon))] + deepQuery(deep))
 	}
 
-	public func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil) async throws -> CityNearby {
+	public func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false) async throws -> CityNearby {
 		try await get("/city/\(enc(name))/nearby", query: [
 			("radius", radius.map(num)),
 			("unit", unit),
 			("country", country),
 			("state", state),
 			("limit", limit.map(String.init)),
-		])
+		] + deepQuery(deep))
 	}
 
 	/// One language by BCP 47 shortest code (en) or ISO 639-3 (eng).
-	public func language(_ code: String) async throws -> Language {
-		try await get("/language/\(enc(code))")
+	public func language(_ code: String, deep: Bool = false) async throws -> Language {
+		try await get("/language/\(enc(code))", query: deepQuery(deep))
 	}
 
 	/// Parse a person's name. Junk input returns valid false, never an error.
@@ -206,23 +206,27 @@ public final class ParseAPI: Sendable {
 		try await self.name(name, country: nil)
 	}
 
+	public func name(_ name: String, deep: Bool) async throws -> Name {
+		try await self.name(name, country: nil, deep: deep)
+	}
+
 	/// Country is an ISO2 context for gender, not a nationality claim.
-	public func name(_ name: String, country: String?) async throws -> Name {
-		try await get("/name/\(enc(name))", query: [("country", country)])
+	public func name(_ name: String, country: String?, deep: Bool = false) async throws -> Name {
+		try await get("/name/\(enc(name))", query: [("country", country)] + deepQuery(deep))
 	}
 
 	/// Look up a postal area. Pass country when known. Check nullable coordinates before another
 	/// location lookup.
-	public func postal(_ code: String, country: String? = nil) async throws -> Postal {
-		try await get("/postal/\(enc(code))", query: [("country", country)])
+	public func postal(_ code: String, country: String? = nil, deep: Bool = false) async throws -> Postal {
+		try await get("/postal/\(enc(code))", query: [("country", country)] + deepQuery(deep))
 	}
 
-	public func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil) async throws -> PostalNearby {
-		try await get("/postal/\(enc(code))/nearby", query: [("country", country), ("radius", radius.map(num)), ("unit", unit)])
+	public func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false) async throws -> PostalNearby {
+		try await get("/postal/\(enc(code))/nearby", query: [("country", country), ("radius", radius.map(num)), ("unit", unit)] + deepQuery(deep))
 	}
 
-	public func postalDistance(_ from: String, _ to: String, country: String? = nil) async throws -> PostalDistance {
-		try await get("/postal/\(enc(from))/distance/\(enc(to))", query: [("country", country)])
+	public func postalDistance(_ from: String, _ to: String, country: String? = nil, deep: Bool = false) async throws -> PostalDistance {
+		try await get("/postal/\(enc(from))/distance/\(enc(to))", query: [("country", country)] + deepQuery(deep))
 	}
 
 	/// Parse an email and check its format and domain. Deep explicitly requests a metered
@@ -240,14 +244,9 @@ public final class ParseAPI: Sendable {
 		try await get("/vat/\(enc(number))", query: [("country", country), ("from", from)] + deepQuery(deep))
 	}
 
-	/// Check SWIFT/BIC syntax and look up the institution where available.
-	public func swift(_ code: String) async throws -> SwiftCode {
-		try await get("/swift/\(enc(code))")
-	}
-
 	/// Checksum and structure. bank and branch are codes inside the number, not names.
-	public func iban(_ iban: String, country: String? = nil) async throws -> Iban {
-		try await get("/iban/\(enc(iban))", query: [("country", country)])
+	public func iban(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Iban {
+		try await get("/iban/\(enc(iban))", query: [("country", country)] + deepQuery(deep))
 	}
 
 	/// Look up a US healthcare provider by NPI.
@@ -257,15 +256,15 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Parse a phone number and its formats. Pass country for national numbers when needed. Deep
-	/// returns an empty object. Carrier, caller, and HLR are separate metered lookups.
+	/// adds numbering-plan location context. Carrier, caller, and HLR are separate metered lookups.
 	public func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone {
 		try await get("/phone/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
 
 	/// Request a metered carrier lookup. No automatic retries by default. Use a secret key on a
 	/// server. App keys return a 403.
-	public func carrier(_ number: String, country: String? = nil) async throws -> Carrier {
-		try await get("/carrier/\(enc(number))", query: [("country", country)])
+	public func carrier(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Carrier {
+		try await get("/carrier/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
 
 	/// Request a metered caller-name lookup for a NANP number. No automatic retries by default. Use
@@ -276,10 +275,11 @@ public final class ParseAPI: Sendable {
 
 	/// Request a metered live-status lookup. Nil status means unconfirmed. No automatic retries by
 	/// default. Use a secret key on a server. App keys return a 403.
-	public func hlr(_ number: String, country: String? = nil) async throws -> HLR {
-		try await get("/hlr/\(enc(number))", query: [("country", country)])
+	public func hlr(_ number: String, country: String? = nil, deep: Bool = false) async throws -> HLR {
+		try await get("/hlr/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
 
+	/// Check whether a domain is registered. Deep adds registration dates, registrar, status and DNSSEC on paid plans.
 	public func domain(_ domain: String, deep: Bool = false) async throws -> Domain {
 		try await get("/domain/\(enc(domain))", query: deepQuery(deep))
 	}
@@ -295,6 +295,11 @@ public final class ParseAPI: Sendable {
 	/// Look up a 6-11 digit card prefix. Preserve leading zeros in the string.
 	public func bin(_ bin: String, deep: Bool = false) async throws -> Bin {
 		try await get("/bin/\(enc(bin))", query: deepQuery(deep))
+	}
+
+	/// Check SWIFT/BIC syntax and look up the institution where available.
+	public func swift(_ code: String) async throws -> SwiftCode {
+		try await get("/swift/\(enc(code))")
 	}
 
 	/// Parse or convert a measurement. Amount is a decimal string. Without to, use the
@@ -324,7 +329,7 @@ public final class ParseAPI: Sendable {
 		try await get("/useragent", query: deepQuery(deep), userAgent: ua)
 	}
 
-	/// Decodes a 17-character VIN. Deep adds open recall campaigns on paid plans.
+	/// Decodes a 17-character VIN. Deep adds specifications and recalls on paid plans.
 	public func vin(_ vin: String, deep: Bool = false) async throws -> Vin {
 		try await get("/vin/\(enc(vin))", query: deepQuery(deep))
 	}
@@ -341,17 +346,17 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// US NAICS 2022 definition and hierarchy.
-	public func naics(_ code: String) async throws -> NAICS {
-		try await get("/naics/\(enc(code))")
+	public func naics(_ code: String, deep: Bool = false) async throws -> NAICS {
+		try await get("/naics/\(enc(code))", query: deepQuery(deep))
 	}
 
 	/// Keyword search. Limit defaults to 10 and accepts 1-50.
-	public func naicsSearch(_ query: String, limit: Int? = nil) async throws -> NAICSSearch {
-		try await get("/naics", query: [("q", query), ("limit", limit.map(String.init))])
+	public func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch {
+		try await get("/naics", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
 
-	public func currency(_ code: String) async throws -> Currency {
-		try await get("/currency/\(enc(code))")
+	public func currency(_ code: String, deep: Bool = false) async throws -> Currency {
+		try await get("/currency/\(enc(code))", query: deepQuery(deep))
 	}
 
 	/// Daily official reference cross rate. Pass date for a past day, amount to convert.
@@ -360,24 +365,24 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Current local time, UTC by default. With to, offsetless at is source wall time.
-	public func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil) async throws -> Time {
+	public func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time {
 		let path = timezone.map { "/time/\(enc($0))" } ?? "/time"
-		return try await get(path, query: [("at", at), ("to", to)])
+		return try await get(path, query: [("at", at), ("to", to)] + deepQuery(deep))
 	}
 
 	/// Current local time at the coordinates, optionally converted to another zone.
-	public func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil) async throws -> Time {
-		try await get("/time", query: [("lat", num(lat)), ("lon", num(lon)), ("at", at), ("to", to)])
+	public func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time {
+		try await get("/time", query: [("lat", num(lat)), ("lon", num(lon)), ("at", at), ("to", to)] + deepQuery(deep))
 	}
 
 	/// Look up a named timezone, or convert a wall time with to.
-	public func timezone(_ id: String, at: String? = nil, to: String? = nil) async throws -> Timezone {
-		try await get("/timezone/\(enc(id))", query: [("at", at), ("to", to)])
+	public func timezone(_ id: String, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Timezone {
+		try await get("/timezone/\(enc(id))", query: [("at", at), ("to", to)] + deepQuery(deep))
 	}
 
 	/// Coords in, zone out.
-	public func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil) async throws -> Timezone {
-		try await get("/timezone", query: [("lat", num(lat)), ("lon", num(lon)), ("at", at)])
+	public func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false) async throws -> Timezone {
+		try await get("/timezone", query: [("lat", num(lat)), ("lon", num(lon)), ("at", at)] + deepQuery(deep))
 	}
 
 	public func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear {
@@ -385,13 +390,13 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Calendar facts for a date. Use format to resolve month-first or day-first input.
-	public func date(_ date: String, format: String? = nil, to: String? = nil) async throws -> DateInfo {
-		try await get("/date/\(enc(date))", query: [("format", format), ("to", to)])
+	public func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false) async throws -> DateInfo {
+		try await get("/date/\(enc(date))", query: [("format", format), ("to", to)] + deepQuery(deep))
 	}
 
 	/// Today's calendar date in UTC. Pass to for the signed day difference.
-	public func dateToday(to: String? = nil) async throws -> DateInfo {
-		try await get("/date", query: [("to", to)])
+	public func dateToday(to: String? = nil, deep: Bool = false) async throws -> DateInfo {
+		try await get("/date", query: [("to", to)] + deepQuery(deep))
 	}
 
 	/// One date. A covered date that is not a holiday answers holiday nil.
@@ -413,12 +418,12 @@ public final class ParseAPI: Sendable {
 		try await get("/weather", query: [("lat", num(lat)), ("lon", num(lon)), ("date", date)] + deepQuery(deep))
 	}
 
-	public func emoji(_ emoji: String) async throws -> Emoji {
-		try await get("/emoji/\(enc(emoji))")
+	public func emoji(_ emoji: String, deep: Bool = false) async throws -> Emoji {
+		try await get("/emoji/\(enc(emoji))", query: deepQuery(deep))
 	}
 
-	public func emojiSearch(_ query: String, limit: Int? = nil) async throws -> EmojiSearch {
-		try await get("/emoji", query: [("q", query), ("limit", limit.map(String.init))])
+	public func emojiSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> EmojiSearch {
+		try await get("/emoji", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
 
 

@@ -69,7 +69,7 @@ func makeClient(
 	}
 
 	@Test func timezoneEncodesSlash() async throws {
-		let stub = StubTransport(body: #"{"timezone":"America/New_York","name":null,"abbreviation":null,"offset":null,"offset_minutes":null,"dst":null,"next_dst":null}"#)
+		let stub = StubTransport(body: #"{"timezone":"America/New_York","abbreviation":null,"offset":null,"dst":null,"deep":{"name":null,"offset_minutes":null,"next_dst":null}}"#)
 		_ = try await makeClient(stub).timezone("America/New_York")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/timezone/America%2FNew_York")
 	}
@@ -93,11 +93,11 @@ func makeClient(
 	}
 
 	@Test func vinDeep() async throws {
-		let stub = StubTransport(body: #"{"vin":"1HGCM82633A004352","valid":true,"year":2003,"make":"Honda","plant_city":"Marysville","deep":{"recalls":[]}}"#)
+		let stub = StubTransport(body: #"{"vin":"1HGCM82633A004352","valid":true,"year":2003,"make":"Honda","deep":{"recalls":[],"plant_city":"Marysville"}}"#)
 		let decoded = try await makeClient(stub).vin("1HGCM82633A004352", deep: true)
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/vin/1HGCM82633A004352?deep=true")
 		#expect(decoded.year == 2003)
-		#expect(decoded.plantCity == "Marysville")
+		#expect(decoded.deep?.plantCity == "Marysville")
 		#expect(decoded.deep?.recalls?.isEmpty == true)
 	}
 
@@ -115,7 +115,7 @@ func makeClient(
 	}
 
 	@Test func stateSendsCountry() async throws {
-		let stub = StubTransport(body: #"{"state":"NC","name":"North Carolina","local_name":null,"type":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"population":null,"area":null,"timezone":null,"timezones":[],"iso_3166_2":null,"fips":null,"capital":null,"area_codes":[],"tax":null,"tax_rate":null}"#)
+		let stub = StubTransport(body: #"{"state":"NC","local_name":null,"type":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"timezone":null,"timezones":[],"iso_3166_2":null,"name":"North Carolina"}"#)
 		_ = try await makeClient(stub).state("NC", country: "US")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/state/NC?country=US")
 	}
@@ -127,7 +127,7 @@ func makeClient(
 	}
 
 	@Test func cityIdPath() async throws {
-		let stub = StubTransport(body: #"{"name":"Charlotte","local_name":null,"type":null,"capital_of":null,"state":"NC","state_name":null,"district":null,"district_name":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"elevation":null,"elevation_ft":null,"population":null,"area":null,"land_area":null,"water_area":null,"timezone":null,"id":"city_abcdefabcdef"}"#)
+		let stub = StubTransport(body: #"{"local_name":null,"type":null,"state":"NC","state_name":null,"district":null,"district_name":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"timezone":null,"id":"city_abcdefabcdef","name":"Charlotte"}"#)
 		_ = try await makeClient(stub).cityId("city_abcdefabcdef")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/city/id/city_abcdefabcdef")
 	}
@@ -312,9 +312,9 @@ func makeClient(
 
 struct TimeTests {
 	@Test func clocksKeepEpochZeroAndNulls() async throws {
-		let historical = try await makeClient(StubTransport(body: #"{"offset_seconds":-17762,"offset_minutes":-296,"at":"1880-01-01T00:00:00-04:56:02"}"#)).time("America/New_York")
-		#expect(historical.offsetSeconds == -17762 && historical.offsetMinutes == -296)
-		let stub = StubTransport(body: #"{"timezone":"UTC","at":"1970-01-01T00:00:00+00:00","unix":0,"to":{"timezone":"UTC","offset":"+00:00","offset_minutes":0,"dst":false,"at":"1970-01-01T00:00:00+00:00","unix":0}}"#)
+		let historical = try await makeClient(StubTransport(body: #"{"at":"1880-01-01T00:00:00-04:56:02","deep":{"offset_seconds":-17762,"offset_minutes":-296},"timezone":"America/New_York"}"#)).time("America/New_York")
+		#expect(historical.deep?.offsetSeconds == -17762 && historical.deep?.offsetMinutes == -296)
+		let stub = StubTransport(body: #"{"timezone":"UTC","at":"1970-01-01T00:00:00+00:00","unix":0,"to":{"timezone":"UTC","offset":"+00:00","dst":false,"at":"1970-01-01T00:00:00+00:00","unix":0,"deep":{"offset_minutes":0}}}"#)
 		let parse = try makeClient(stub)
 		let clock: Time = try await parse.time()
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/time")

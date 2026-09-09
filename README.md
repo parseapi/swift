@@ -113,7 +113,7 @@ DNS uses pooled requests on every plan. Omit `type` to check A, AAAA, CNAME, MX,
 
 ## Time
 
-`time` returns local ISO `at` with its UTC offset and integer Unix seconds in `unix`. `offset_seconds` is the exact offset, while `offset_minutes` is whole minutes. Historical offsets and ISO times can include offset seconds. Omitted `at` means now. With `to`, an offsetless `at` is source wall time. Otherwise it is UTC. Include an offset for repeated local times around a clock change. Current time and conversion use pooled requests on every plan. Coordinate clock fields can be null when the timezone is unknown. Existing `timezone` methods remain supported.
+`time` returns local ISO `at` with its UTC offset and integer Unix seconds in `unix`. With `deep: true`, `deep.offsetSeconds` is the exact offset and `deep.offsetMinutes` is whole minutes. Historical offsets and ISO times can include offset seconds. Omitted `at` means now. With `to`, an offsetless `at` is source wall time. Otherwise it is UTC. Include an offset for repeated local times around a clock change. Current time and conversion use pooled requests on every plan. Coordinate clock fields can be null when the timezone is unknown. Existing `timezone` methods remain supported.
 
 ## Measurements
 
@@ -133,13 +133,27 @@ Choose enrichment for the question you need answered.
 | Operation | What `deep` requests |
 |---|---|
 | IP | Richer IP fields included with a paid plan. No separate check meter. |
+| Domain | Registration dates, registrar, status and DNSSEC, included with a paid plan. Use `dns` for DNS records and `mx` for mail routing. |
 | Email | A metered deliverability check, using included email checks or enabled on-demand usage. |
 | VAT | A metered registry check where supported, using included VAT checks or enabled on-demand usage. |
-| Phone | An empty object. Number parsing and formats are already in the core response. |
+| Phone | Numbering-plan state and timezone, pooled on every plan. |
+| Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
+| Company, VIN, NPI, NAICS, Name, Weather | Richer reference/profile facts on paid plans. |
+| Time, Date, Currency, Language, Emoji, IBAN | Optional same-question facts, pooled on every plan. |
+| Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
+| Carrier, HLR | Place or network details included in the same metered lookup. |
 
 Carrier, caller, and HLR are separate metered operations. Choose them explicitly when you need their answers. Ordinary lookups retry twice by default. Metered checks use one attempt by default. Setting retries explicitly can repeat paid usage.
 
-Without `deep`, the response omits that key. When requested, it is an empty object if access is locked or the operation has no deep fields. Otherwise it contains the available fields. A missing or null field means unknown.
+Without `deep`, the response omits that key. When requested, it is an empty object if access is locked or the operation has no deep fields. Otherwise it contains the available fields. A missing or null field means unknown. Empty collections remain distinct from unknown collections. A list request never becomes a separate billable lookup for each nested record.
+
+```swift
+let place = try await parse.postal("28202", country: "US")
+let profile = try await parse.postal("28202", country: "US", deep: true)
+let population = profile.deep?.population
+let cities = try await parse.citySearch("char", deep: true)
+let cityPopulation = cities.cities.first?.deep?.population
+```
 
 Metered checks require a secret key on a server. App keys can request paid-plan enrichment when their team has access.
 

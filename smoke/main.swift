@@ -55,7 +55,7 @@ await expectOk("ip", { try await parse.ip("8.8.8.8") }) { $0.ip == "8.8.8.8" ? n
 await expectOk("ipSelf", { try await parse.ipSelf() }) { $0.ip.isEmpty ? "no ip" : nil }
 await expectOk("continent", { try await parse.continent("NA") }) { $0.name == "North America" ? nil : "wrong name" }
 await expectOk("continentCountries", { try await parse.continentCountries("NA") }) { $0.countries.isEmpty ? "no countries" : nil }
-await expectOk("country", { try await parse.country("US") }) { $0.iso3 == "USA" ? nil : "wrong iso3" }
+await expectOk("country", { try await parse.country("US") }) { $0.country == "US" ? nil : "wrong country" }
 await expectOk("countryStates", { try await parse.countryStates("US") }) { $0.states.count >= 50 ? nil : "too few states" }
 await expectOk("state", { try await parse.state("NC", country: "US") }) { $0.name == "North Carolina" ? nil : "wrong name" }
 await expectOk("stateDistricts", { try await parse.stateDistricts("NC", country: "US") }) { $0.districts.isEmpty ? "no districts" : nil }
@@ -64,7 +64,7 @@ await expectOk("district", { try await parse.district("37081") }) { $0.name.cont
 var cityId: String? = nil
 await expectOk("city", { try await parse.city("charlotte", country: "US") }) {
 	if $0.name != "Charlotte" { return "wrong city" }
-	if !$0.id.hasPrefix("city_") { return "missing id" }
+	if $0.id?.hasPrefix("city_") != true { return "missing id" }
 	cityId = $0.id
 	return nil
 }
@@ -112,8 +112,8 @@ await expectOk("vin junk", { try await parse.vin("1HGCM82613A004352") }) { $0.va
 await expectOk("currency", { try await parse.currency("USD") }) { $0.symbol == "$" ? nil : "wrong symbol" }
 await expectOk("currencyRate", { try await parse.currencyRate("USD", "EUR") }) { $0.rate > 0 && $0.rate < 10 ? nil : "rate \($0.rate)" }
 await expectOk("language", { try await parse.language("en") }) { $0.language == "en" && $0.name == "English" ? nil : "wrong language" }
-await expectOk("name", { try await parse.name("BILLY O'SHALL") }) { $0.name == "Billy O'Shall" && $0.valid && $0.gender == "male" ? nil : "wrong name" }
-await expectOk("timezone", { try await parse.timezone("America/New_York") }) { $0.offsetMinutes == -240 || $0.offsetMinutes == -300 ? nil : "offset \($0.offsetMinutes.map(String.init) ?? "nil")" }
+await expectOk("name", { try await parse.name("BILLY O'SHALL") }) { $0.name == "Billy O'Shall" && $0.valid ? nil : "wrong name" }
+await expectOk("timezone", { try await parse.timezone("America/New_York") }) { $0.offset == "-04:00" || $0.offset == "-05:00" ? nil : "wrong offset" }
 await expectOk("timezoneAt", { try await parse.timezoneAt(40.7128, -74.006) }) { $0.timezone == "America/New_York" ? nil : "zone \($0.timezone ?? "nil")" }
 await expectOk("holiday", { try await parse.holiday("US") }) { $0.holidays.count > 5 ? nil : "too few holidays" }
 await expectOk("holidayDate", { try await parse.holidayDate("US", "2026-12-25") }) { $0.holiday?.name == "Christmas Day" ? nil : "not christmas" }
@@ -138,7 +138,7 @@ await expectError("bogus key 401", {
 let env = ProcessInfo.processInfo.environment
 if let appKey = env["PARSEAPI_APP_KEY"], let goodAppId = env["PARSEAPI_APP_ID"] {
 	let app = try! ParseAPI(appKey, appId: goodAppId)
-	await expectOk("app key good id", { try await app.country("US") }) { $0.iso3 == "USA" ? nil : "wrong iso3" }
+	await expectOk("app key good id", { try await app.country("US") }) { $0.country == "US" ? nil : "wrong country" }
 	await expectOk("app key wedge lookup", { try await app.postal("28202", country: "US") }) { $0.city == "Charlotte" ? nil : "wrong city" }
 
 	let noId = try! ParseAPI(appKey, appId: nil, retries: 0)
