@@ -1163,3 +1163,27 @@ public struct MeasureUnit: Codable, Sendable {
 public struct MeasureUnits: Codable, Sendable {
 	public let units: [MeasureUnit]
 }
+
+public struct NAICSChild: Codable, Sendable {
+	public let naics: String
+	public let name: String
+}
+
+public struct NAICS: Codable, Sendable {
+	public let naics: String
+	public let name: String
+	public let description: String?
+	public let level: Int
+	public let parent: String?
+	public let parentName: String?
+	public let children: [NAICSChild]
+	public let year: Int
+	public let country: String
+}
+
+public struct NAICSSearch: Codable, Sendable {
+	public let q: String
+	public let year: Int
+	public let country: String
+	public let results: [NAICS]
+}

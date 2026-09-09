@@ -677,6 +677,39 @@ MeasureUnits: conformsTo Swift.Encodable
 MeasureUnits: conformsTo Swift.Sendable
 MeasureUnits: conformsTo Swift.SendableMetatype
 MeasureUnits: struct MeasureUnits
+NAICS.children: let children: [NAICSChild]
+NAICS.country: let country: String
+NAICS.description: let description: String?
+NAICS.init(from:): init(from decoder: any Decoder) throws
+NAICS.level: let level: Int
+NAICS.naics: let naics: String
+NAICS.name: let name: String
+NAICS.parent: let parent: String?
+NAICS.parentName: let parentName: String?
+NAICS.year: let year: Int
+NAICS: conformsTo Swift.Decodable
+NAICS: conformsTo Swift.Encodable
+NAICS: conformsTo Swift.Sendable
+NAICS: conformsTo Swift.SendableMetatype
+NAICS: struct NAICS
+NAICSChild.init(from:): init(from decoder: any Decoder) throws
+NAICSChild.naics: let naics: String
+NAICSChild.name: let name: String
+NAICSChild: conformsTo Swift.Decodable
+NAICSChild: conformsTo Swift.Encodable
+NAICSChild: conformsTo Swift.Sendable
+NAICSChild: conformsTo Swift.SendableMetatype
+NAICSChild: struct NAICSChild
+NAICSSearch.country: let country: String
+NAICSSearch.init(from:): init(from decoder: any Decoder) throws
+NAICSSearch.q: let q: String
+NAICSSearch.results: let results: [NAICS]
+NAICSSearch.year: let year: Int
+NAICSSearch: conformsTo Swift.Decodable
+NAICSSearch: conformsTo Swift.Encodable
+NAICSSearch: conformsTo Swift.Sendable
+NAICSSearch: conformsTo Swift.SendableMetatype
+NAICSSearch: struct NAICSSearch
 Name.countries: let countries: [String]
 Name.first: let first: String?
 Name.gender: let gender: String?
@@ -779,6 +812,8 @@ ParseAPI.mac(_:): func mac(_ mac: String) async throws -> MAC
 ParseAPI.measure(_:to:locale:system:): func measure(_ measure: String, to: String? = nil, locale: String? = nil, system: String? = nil) async throws -> Measure
 ParseAPI.measureUnits(query:type:unit:): func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil) async throws -> MeasureUnits
 ParseAPI.mx(_:): func mx(_ domain: String) async throws -> MX
+ParseAPI.naics(_:): func naics(_ code: String) async throws -> NAICS
+ParseAPI.naicsSearch(_:limit:): func naicsSearch(_ query: String, limit: Int? = nil) async throws -> NAICSSearch
 ParseAPI.name(_:): func name(_ name: String) async throws -> Name
 ParseAPI.name(_:country:): func name(_ name: String, country: String?) async throws -> Name
 ParseAPI.npi(_:deep:): func npi(_ npi: String, deep: Bool = false) async throws -> Npi

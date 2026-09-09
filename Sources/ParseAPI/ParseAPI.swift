@@ -330,6 +330,16 @@ public final class ParseAPI: Sendable {
 		try await get("/tariff", query: [("q", query)])
 	}
 
+	/// US NAICS 2022 definition and hierarchy.
+	public func naics(_ code: String) async throws -> NAICS {
+		try await get("/naics/\(enc(code))")
+	}
+
+	/// Keyword search. Limit defaults to 10 and accepts 1-50.
+	public func naicsSearch(_ query: String, limit: Int? = nil) async throws -> NAICSSearch {
+		try await get("/naics", query: [("q", query), ("limit", limit.map(String.init))])
+	}
+
 	public func currency(_ code: String) async throws -> Currency {
 		try await get("/currency/\(enc(code))")
 	}
