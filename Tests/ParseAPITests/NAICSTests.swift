@@ -18,3 +18,24 @@ import Testing
   #expect(stub.requests[1].url!.absoluteString == "https://api.parseapi.com/naics?q=coffee%20%26%20tea&limit=5")
  }
 }
+
+
+@Suite struct NAICSEvidenceTests {
+ @Test func exclusionsAndMatchRemainCompatible() async throws {
+  let stub = StubTransport([(200, #"{"q":"sofware","year":2022,"country":"US","results":[{"naics":"541511","name":"Custom Computer Programming Services","description":null,"level":6,"parent":"54151","parent_name":"Computer Systems Design and Related Services","children":[],"year":2022,"country":"US"},{"naics":"541511","name":"Custom Computer Programming Services","description":null,"level":6,"parent":"54151","parent_name":"Computer Systems Design and Related Services","children":[],"year":2022,"country":"US","exclusions":null,"match":null},{"naics":"541511","name":"Custom Computer Programming Services","description":null,"level":6,"parent":"54151","parent_name":"Computer Systems Design and Related Services","children":[],"year":2022,"country":"US","exclusions":[],"match":{"field":"future-field","text":"Future matching evidence","corrections":[],"future":true}},{"naics":"541511","name":"Custom Computer Programming Services","description":null,"level":6,"parent":"54151","parent_name":"Computer Systems Design and Related Services","children":[],"year":2022,"country":"US","exclusions":[{"description":"Designing integrated computer systems","codes":[{"naics":"541512","name":"Computer Systems Design Services"}]},{"description":"Activities classified elsewhere","codes":[]}],"match":{"field":"term","text":"Computer software programming services","corrections":[{"from":"sofware","to":"software"}]},"future":true}]}"#, [:])])
+  let client = try makeClient(stub)
+  let search = try await client.naicsSearch("sofware")
+  let results: [NAICS] = search.results
+  #expect(results[0].exclusions == nil && results[0].match == nil)
+  #expect(results[1].exclusions == nil && results[1].match == nil)
+  #expect(results[2].exclusions?.isEmpty == true)
+  #expect(results[2].match?.field == "future-field")
+  #expect(results[2].match?.corrections.isEmpty == true)
+  #expect(results[3].exclusions?[0].codes[0].naics == "541512")
+  #expect(results[3].exclusions?[1].description == "Activities classified elsewhere")
+  #expect(results[3].exclusions?[1].codes.isEmpty == true)
+  #expect(results[3].match?.text == "Computer software programming services")
+  #expect(results[3].match?.corrections[0].from == "sofware")
+  #expect(results[3].match?.corrections[0].to == "software")
+ }
+}

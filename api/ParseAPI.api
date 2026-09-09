@@ -680,8 +680,10 @@ MeasureUnits: struct MeasureUnits
 NAICS.children: let children: [NAICSChild]
 NAICS.country: let country: String
 NAICS.description: let description: String?
+NAICS.exclusions: let exclusions: [NAICSExclusion]?
 NAICS.init(from:): init(from decoder: any Decoder) throws
 NAICS.level: let level: Int
+NAICS.match: let match: NAICSMatch?
 NAICS.naics: let naics: String
 NAICS.name: let name: String
 NAICS.parent: let parent: String?
@@ -700,6 +702,31 @@ NAICSChild: conformsTo Swift.Encodable
 NAICSChild: conformsTo Swift.Sendable
 NAICSChild: conformsTo Swift.SendableMetatype
 NAICSChild: struct NAICSChild
+NAICSCorrection.from: let from: String
+NAICSCorrection.init(from:): init(from decoder: any Decoder) throws
+NAICSCorrection.to: let to: String
+NAICSCorrection: conformsTo Swift.Decodable
+NAICSCorrection: conformsTo Swift.Encodable
+NAICSCorrection: conformsTo Swift.Sendable
+NAICSCorrection: conformsTo Swift.SendableMetatype
+NAICSCorrection: struct NAICSCorrection
+NAICSExclusion.codes: let codes: [NAICSChild]
+NAICSExclusion.description: let description: String
+NAICSExclusion.init(from:): init(from decoder: any Decoder) throws
+NAICSExclusion: conformsTo Swift.Decodable
+NAICSExclusion: conformsTo Swift.Encodable
+NAICSExclusion: conformsTo Swift.Sendable
+NAICSExclusion: conformsTo Swift.SendableMetatype
+NAICSExclusion: struct NAICSExclusion
+NAICSMatch.corrections: let corrections: [NAICSCorrection]
+NAICSMatch.field: let field: String
+NAICSMatch.init(from:): init(from decoder: any Decoder) throws
+NAICSMatch.text: let text: String
+NAICSMatch: conformsTo Swift.Decodable
+NAICSMatch: conformsTo Swift.Encodable
+NAICSMatch: conformsTo Swift.Sendable
+NAICSMatch: conformsTo Swift.SendableMetatype
+NAICSMatch: struct NAICSMatch
 NAICSSearch.country: let country: String
 NAICSSearch.init(from:): init(from decoder: any Decoder) throws
 NAICSSearch.q: let q: String

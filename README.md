@@ -99,6 +99,8 @@ try await parse.addressSearch("123 Main", country: "US", postal: "28202")
 try await parse.company("01234567", country: "GB")
 ```
 
+NAICS records include classification `exclusions`, each with a description and linked codes. Generic exclusions can have no linked codes. Omitted or null exclusions in older responses remain unknown. Search results also include `match`: the matched `field` (`name`, `term` or `naics`) and `text`, plus `corrections` with `from` and `to` tokens for typo fallback. Corrections are empty for exact, plural and prefix matches. Direct code lookups omit `match`. Older responses may omit it.
+
 Every response is a typed struct. Nullable fields are optionals. Unknown response fields are ignored.
 
 Reuse a client across calls. Each method performs its own lookup and returns data. `countryStates("US")` fetches the states directly. It does not fetch the country first.

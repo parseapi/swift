@@ -1175,6 +1175,27 @@ public struct NAICSChild: Codable, Sendable {
 	public let name: String
 }
 
+/// A classification exclusion. Generic exclusions can have no linked codes.
+public struct NAICSExclusion: Codable, Sendable {
+	public let description: String
+	public let codes: [NAICSChild]
+}
+
+/// A query token corrected only during typo fallback.
+public struct NAICSCorrection: Codable, Sendable {
+	public let from: String
+	public let to: String
+}
+
+/// The actual title, activity term or code that matched a search.
+public struct NAICSMatch: Codable, Sendable {
+	/// Currently name, term or naics. Future fields remain decodable.
+	public let field: String
+	public let text: String
+	/// Empty for exact, plural and prefix matches.
+	public let corrections: [NAICSCorrection]
+}
+
 public struct NAICS: Codable, Sendable {
 	public let naics: String
 	public let name: String
@@ -1183,6 +1204,10 @@ public struct NAICS: Codable, Sendable {
 	public let parent: String?
 	public let parentName: String?
 	public let children: [NAICSChild]
+	/// Classification exclusions. Nil for omitted/null older responses.
+	public let exclusions: [NAICSExclusion]?
+	/// Search evidence, absent on direct lookup and older responses.
+	public let match: NAICSMatch?
 	public let year: Int
 	public let country: String
 }
