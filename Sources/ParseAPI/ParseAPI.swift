@@ -349,6 +349,17 @@ public final class ParseAPI: Sendable {
 		try await get("/currency/\(enc(base))/\(enc(quote))", query: [("date", date), ("amount", amount.map(num))])
 	}
 
+	/// Current local time, UTC by default. With to, offsetless at is source wall time.
+	public func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil) async throws -> Time {
+		let path = timezone.map { "/time/\(enc($0))" } ?? "/time"
+		return try await get(path, query: [("at", at), ("to", to)])
+	}
+
+	/// Current local time at the coordinates, optionally converted to another zone.
+	public func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil) async throws -> Time {
+		try await get("/time", query: [("lat", num(lat)), ("lon", num(lon)), ("at", at), ("to", to)])
+	}
+
 	/// Look up a named timezone, or convert a wall time with to.
 	public func timezone(_ id: String, at: String? = nil, to: String? = nil) async throws -> Timezone {
 		try await get("/timezone/\(enc(id))", query: [("at", at), ("to", to)])

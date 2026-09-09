@@ -309,3 +309,23 @@ func makeClient(
 		#expect(result.deep == nil)
 	}
 }
+
+struct TimeTests {
+	@Test func clocksKeepEpochZeroAndNulls() async throws {
+		let historical = try await makeClient(StubTransport(body: #"{"offset_seconds":-17762,"offset_minutes":-296,"at":"1880-01-01T00:00:00-04:56:02"}"#)).time("America/New_York")
+		#expect(historical.offsetSeconds == -17762 && historical.offsetMinutes == -296)
+		let stub = StubTransport(body: #"{"timezone":"UTC","at":"1970-01-01T00:00:00+00:00","unix":0,"to":{"timezone":"UTC","offset":"+00:00","offset_minutes":0,"dst":false,"at":"1970-01-01T00:00:00+00:00","unix":0}}"#)
+		let parse = try makeClient(stub)
+		let clock: Time = try await parse.time()
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/time")
+		#expect(clock.unix == 0)
+		#expect(clock.to?.unix == 0)
+		_ = try await parse.time("America/New_York", at: "2026-09-05T15:00:00", to: "Asia/Tokyo")
+		#expect(stub.requests[1].url!.absoluteString == "https://api.parseapi.com/time/America%2FNew_York?at=2026-09-05T15%3A00%3A00&to=Asia%2FTokyo")
+		_ = try await parse.timeAt(0, 0, at: "1970-01-01T00:00:00Z", to: "UTC")
+		#expect(stub.requests[2].url!.absoluteString == "https://api.parseapi.com/time?lat=0&lon=0&at=1970-01-01T00%3A00%3A00Z&to=UTC")
+		let unknown = StubTransport(body: #"{"timezone":null,"at":null,"unix":null,"to":null}"#)
+		let empty = try await makeClient(unknown).timeAt(0, 0)
+		#expect(empty.at == nil && empty.unix == nil && empty.to == nil)
+	}
+}

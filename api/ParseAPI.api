@@ -826,6 +826,8 @@ ParseAPI.state(_:country:): func state(_ code: String, country: String? = nil) a
 ParseAPI.stateDistricts(_:country:): func stateDistricts(_ code: String, country: String? = nil) async throws -> StateDistricts
 ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff
 ParseAPI.tariffSearch(_:): func tariffSearch(_ query: String) async throws -> TariffSearch
+ParseAPI.time(_:at:to:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil) async throws -> Time
+ParseAPI.timeAt(_:_:at:to:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil) async throws -> Time
 ParseAPI.timezone(_:at:to:): func timezone(_ id: String, at: String? = nil, to: String? = nil) async throws -> Timezone
 ParseAPI.timezoneAt(_:_:at:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil) async throws -> Timezone
 ParseAPI.useragent(_:deep:): func useragent(_ ua: String, deep: Bool = false) async throws -> Useragent
@@ -1079,6 +1081,7 @@ TariffSearchHit: conformsTo Swift.Encodable
 TariffSearchHit: conformsTo Swift.Sendable
 TariffSearchHit: conformsTo Swift.SendableMetatype
 TariffSearchHit: struct TariffSearchHit
+Time: typealias Time = Timezone
 Timezone.abbreviation: let abbreviation: String?
 Timezone.at: let at: String?
 Timezone.dst: let dst: Bool?
@@ -1089,8 +1092,10 @@ Timezone.name: let name: String?
 Timezone.nextDst: let nextDst: TimezoneNextDST?
 Timezone.offset: let offset: String?
 Timezone.offsetMinutes: let offsetMinutes: Int?
+Timezone.offsetSeconds: let offsetSeconds: Int?
 Timezone.timezone: let timezone: String?
 Timezone.to: let to: TimezoneConversionTarget?
+Timezone.unix: let unix: Int64?
 Timezone: conformsTo Swift.Decodable
 Timezone: conformsTo Swift.Encodable
 Timezone: conformsTo Swift.Sendable
@@ -1103,7 +1108,9 @@ TimezoneConversionTarget.init(from:): init(from decoder: any Decoder) throws
 TimezoneConversionTarget.name: let name: String?
 TimezoneConversionTarget.offset: let offset: String
 TimezoneConversionTarget.offsetMinutes: let offsetMinutes: Int
+TimezoneConversionTarget.offsetSeconds: let offsetSeconds: Int?
 TimezoneConversionTarget.timezone: let timezone: String
+TimezoneConversionTarget.unix: let unix: Int64?
 TimezoneConversionTarget: conformsTo Swift.Decodable
 TimezoneConversionTarget: conformsTo Swift.Encodable
 TimezoneConversionTarget: conformsTo Swift.Sendable

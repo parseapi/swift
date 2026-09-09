@@ -787,6 +787,8 @@ public struct TimezoneNextDST: Codable, Sendable {
 	public let abbreviation: String
 }
 
+public typealias Time = Timezone
+
 public struct Timezone: Codable, Sendable {
 	/// Echoed on coordinate lookups only.
 	public let latitude: Double?
@@ -795,11 +797,13 @@ public struct Timezone: Codable, Sendable {
 	public let name: String?
 	public let abbreviation: String?
 	public let offset: String?
+	public let offsetSeconds: Int?
 	public let offsetMinutes: Int?
 	public let dst: Bool?
 	public let nextDst: TimezoneNextDST?
-	/// Resolved source wall time when a conversion was requested.
+	/// Resolved local ISO time with its UTC offset.
 	public let at: String?
+	public let unix: Int64?
 	public let to: TimezoneConversionTarget?
 }
 
@@ -808,9 +812,11 @@ public struct TimezoneConversionTarget: Codable, Sendable {
 	public let name: String?
 	public let abbreviation: String?
 	public let offset: String
+	public let offsetSeconds: Int?
 	public let offsetMinutes: Int
 	public let dst: Bool
 	public let at: String
+	public let unix: Int64?
 }
 
 /// Calendar facts. Ambiguous or invalid input has valid false and nil calendar fields.
