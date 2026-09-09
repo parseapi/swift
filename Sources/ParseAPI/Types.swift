@@ -635,6 +635,21 @@ public struct MAC: Codable, Sendable {
 	public let multicast: Bool?
 }
 
+public struct BinDeep: Codable, Sendable {}
+
+/// Card-prefix reference data. Nil means unknown.
+public struct Bin: Codable, Sendable {
+	public let bin: String
+	/// Actual longest matched prefix, which may be shorter than the input.
+	public let prefix: String?
+	public let country: String?
+	public let issuer: String?
+	public let brand: String?
+	public let type: String?
+	public let prepaid: Bool?
+	public let deep: BinDeep?
+}
+
 /// A published DNS record. Value retains DNS presentation syntax, including TXT quoting.
 public struct DNSRecord: Codable, Sendable {
 	public let name: String

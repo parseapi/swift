@@ -287,6 +287,11 @@ public final class ParseAPI: Sendable {
 		try await get("/mac/\(enc(mac))")
 	}
 
+	/// Look up a 6-11 digit card prefix. Preserve leading zeros in the string.
+	public func bin(_ bin: String, deep: Bool = false) async throws -> Bin {
+		try await get("/bin/\(enc(bin))", query: deepQuery(deep))
+	}
+
 	/// Parse or convert a measurement. Amount is a decimal string. Without to, use the
 	/// type's canonical unit. Locale and system (us or imperial) resolve explicit ambiguity.
 	public func measure(_ measure: String, to: String? = nil, locale: String? = nil, system: String? = nil) async throws -> Measure {

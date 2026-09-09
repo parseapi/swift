@@ -44,6 +44,7 @@ try await parse.ipSelf()
 try await parse.email("hello@gmail.com")
 try await parse.vat("DE136695976")
 try await parse.iban("DE89370400440532013000")
+try await parse.bin("424242")
 try await parse.npi("1881018208")
 try await parse.phone("+14155552671")
 try await parse.postal("SW1A 1AA")
@@ -186,3 +187,5 @@ Full field reference for every endpoint: [parseapi.com/docs](https://parseapi.co
 Run `swift test` and `python3 scripts/check-api.py` before a release. The API check compares compiler-exported declarations with `api/ParseAPI.api`. Use `python3 scripts/check-api.py --update` only after reviewing an intentional API addition.
 
 Pushes and pull requests run the tests on Swift 6.0 and 6.3.3. The API check uses Swift 6.3.3, the compiler used for the baseline. Device-platform validation remains a release check.
+
+BIN lookup accepts 6-11 digits as a string, including leading zeros. Spaces and hyphens are accepted. `prefix` is the actual longest match and can be shorter than the input. Unknown reference fields are null. `deep` adds an empty object on every plan.
