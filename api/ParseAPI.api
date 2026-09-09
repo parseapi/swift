@@ -872,6 +872,7 @@ ParseAPI.postalDistance(_:_:country:): func postalDistance(_ from: String, _ to:
 ParseAPI.postalNearby(_:country:radius:unit:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil) async throws -> PostalNearby
 ParseAPI.state(_:country:): func state(_ code: String, country: String? = nil) async throws -> State
 ParseAPI.stateDistricts(_:country:): func stateDistricts(_ code: String, country: String? = nil) async throws -> StateDistricts
+ParseAPI.swift(_:): func swift(_ code: String) async throws -> SwiftCode
 ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff
 ParseAPI.tariffSearch(_:): func tariffSearch(_ query: String) async throws -> TariffSearch
 ParseAPI.time(_:at:to:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil) async throws -> Time
@@ -1076,6 +1077,16 @@ StateDistricts: conformsTo Swift.Encodable
 StateDistricts: conformsTo Swift.Sendable
 StateDistricts: conformsTo Swift.SendableMetatype
 StateDistricts: struct StateDistricts
+SwiftCode.country: let country: String?
+SwiftCode.init(from:): init(from decoder: any Decoder) throws
+SwiftCode.name: let name: String?
+SwiftCode.swift: let swift: String
+SwiftCode.valid: let valid: Bool
+SwiftCode: conformsTo Swift.Decodable
+SwiftCode: conformsTo Swift.Encodable
+SwiftCode: conformsTo Swift.Sendable
+SwiftCode: conformsTo Swift.SendableMetatype
+SwiftCode: struct SwiftCode
 Tariff.deep: let deep: TariffDeep?
 Tariff.description: let description: String
 Tariff.general: let general: String?

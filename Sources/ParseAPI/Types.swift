@@ -1233,3 +1233,11 @@ public struct NAICSSearch: Codable, Sendable {
 	public let country: String
 	public let results: [NAICS]
 }
+
+/// A SWIFT/BIC format check and partial institution lookup. Valid means syntax only.
+public struct SwiftCode: Codable, Sendable {
+	public let swift: String
+	public let valid: Bool
+	public let country: String?
+	public let name: String?
+}

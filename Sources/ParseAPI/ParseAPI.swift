@@ -240,6 +240,11 @@ public final class ParseAPI: Sendable {
 		try await get("/vat/\(enc(number))", query: [("country", country), ("from", from)] + deepQuery(deep))
 	}
 
+	/// Check SWIFT/BIC syntax and look up the institution where available.
+	public func swift(_ code: String) async throws -> SwiftCode {
+		try await get("/swift/\(enc(code))")
+	}
+
 	/// Checksum and structure. bank and branch are codes inside the number, not names.
 	public func iban(_ iban: String, country: String? = nil) async throws -> Iban {
 		try await get("/iban/\(enc(iban))", query: [("country", country)])
