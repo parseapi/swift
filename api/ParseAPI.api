@@ -43,6 +43,7 @@ AddressSearch.country: let country: String?
 AddressSearch.init(from:): init(from decoder: any Decoder) throws
 AddressSearch.postal: let postal: String?
 AddressSearch.q: let q: String
+AddressSearch.reason: let reason: String?
 AddressSearch.state: let state: String?
 AddressSearch: conformsTo Swift.Decodable
 AddressSearch: conformsTo Swift.Encodable
@@ -170,6 +171,7 @@ CityDeep.elevationFt: let elevationFt: Double?
 CityDeep.init(from:): init(from decoder: any Decoder) throws
 CityDeep.landArea: let landArea: Double?
 CityDeep.population: let population: Int?
+CityDeep.populationPeriod: let populationPeriod: String?
 CityDeep.waterArea: let waterArea: Double?
 CityDeep: conformsTo Swift.Decodable
 CityDeep: conformsTo Swift.Encodable
@@ -269,6 +271,7 @@ Continent.emoji: let emoji: String
 Continent.init(from:): init(from decoder: any Decoder) throws
 Continent.name: let name: String
 Continent.population: let population: Int?
+Continent.populationPeriod: let populationPeriod: String?
 Continent.region: let region: String
 Continent.subregion: let subregion: String
 Continent: conformsTo Swift.Decodable
@@ -331,6 +334,7 @@ CountryDeep.numeric: let numeric: Int?
 CountryDeep.plate: let plate: String?
 CountryDeep.plugs: let plugs: [String]?
 CountryDeep.population: let population: Int?
+CountryDeep.populationPeriod: let populationPeriod: String?
 CountryDeep.postalFormat: let postalFormat: String?
 CountryDeep.postalRegex: let postalRegex: String?
 CountryDeep.region: let region: String?
@@ -478,6 +482,8 @@ DistrictDeep.area: let area: Double?
 DistrictDeep.init(from:): init(from decoder: any Decoder) throws
 DistrictDeep.landArea: let landArea: Double?
 DistrictDeep.population: let population: Int?
+DistrictDeep.populationPeriod: let populationPeriod: String?
+DistrictDeep.propertyTax: let propertyTax: PropertyTax?
 DistrictDeep.seat: let seat: String?
 DistrictDeep.waterArea: let waterArea: Double?
 DistrictDeep: conformsTo Swift.Decodable
@@ -1102,6 +1108,8 @@ PostalDeep.landArea: let landArea: Double?
 PostalDeep.metros: let metros: [PostalMetro]?
 PostalDeep.neighbors: let neighbors: [String]?
 PostalDeep.population: let population: Int?
+PostalDeep.populationPeriod: let populationPeriod: String?
+PostalDeep.propertyTax: let propertyTax: PropertyTax?
 PostalDeep.tax: let tax: String?
 PostalDeep.taxRate: let taxRate: Double?
 PostalDeep.taxRateCity: let taxRateCity: Double?
@@ -1179,6 +1187,15 @@ PostalNearbyItem: conformsTo Swift.Encodable
 PostalNearbyItem: conformsTo Swift.Sendable
 PostalNearbyItem: conformsTo Swift.SendableMetatype
 PostalNearbyItem: struct PostalNearbyItem
+PropertyTax.annualMedian: let annualMedian: Double
+PropertyTax.currency: let currency: String
+PropertyTax.init(from:): init(from decoder: any Decoder) throws
+PropertyTax.period: let period: String
+PropertyTax: conformsTo Swift.Decodable
+PropertyTax: conformsTo Swift.Encodable
+PropertyTax: conformsTo Swift.Sendable
+PropertyTax: conformsTo Swift.SendableMetatype
+PropertyTax: struct PropertyTax
 State.country: let country: String
 State.countryName: let countryName: String?
 State.deep: let deep: StateDeep?
@@ -1203,6 +1220,7 @@ StateDeep.capital: let capital: String?
 StateDeep.fips: let fips: String?
 StateDeep.init(from:): init(from decoder: any Decoder) throws
 StateDeep.population: let population: Int?
+StateDeep.populationPeriod: let populationPeriod: String?
 StateDeep.tax: let tax: String?
 StateDeep.taxRate: let taxRate: Double?
 StateDeep: conformsTo Swift.Decodable
@@ -1212,6 +1230,7 @@ StateDeep: conformsTo Swift.SendableMetatype
 StateDeep: struct StateDeep
 StateDistrictDeep.init(from:): init(from decoder: any Decoder) throws
 StateDistrictDeep.population: let population: Int?
+StateDistrictDeep.populationPeriod: let populationPeriod: String?
 StateDistrictDeep: conformsTo Swift.Decodable
 StateDistrictDeep: conformsTo Swift.Encodable
 StateDistrictDeep: conformsTo Swift.Sendable

@@ -273,8 +273,9 @@ public final class ParseAPI: Sendable {
 		try await get("/caller/\(enc(number))", query: [("country", country)])
 	}
 
-	/// Request a metered live-status lookup. Nil status means unconfirmed. No automatic retries by
-	/// default. Use a secret key on a server. App keys return a 403.
+	/// Look up phone status at the last check. Live means assigned and connected means reachable at
+	/// that check. Cached results may be returned. Null means unconfirmed. Deep adds network
+	/// diagnostics within the same metered lookup. No automatic retries by default. Use a secret key on your server. App keys return 403.
 	public func hlr(_ number: String, country: String? = nil, deep: Bool = false) async throws -> HLR {
 		try await get("/hlr/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
@@ -334,8 +335,10 @@ public final class ParseAPI: Sendable {
 		try await get("/vin/\(enc(vin))", query: deepQuery(deep))
 	}
 
-	/// Looks up US import duty for an HTS code. Deep with an origin
-	/// resolves the Chapter 99 tariff measures that apply from that country.
+	/// Look up the general US duty schedule line. Paid deep adds units and the special and other
+	/// schedule columns. Add origin with deep to resolve country-specific measures. Without origin,
+	/// schedule detail remains available and origin-dependent fields are null. A null effective rate
+	/// is not a zero rate.
 	public func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff {
 		try await get("/tariff/\(enc(code))", query: [("origin", origin)] + deepQuery(deep))
 	}
@@ -408,12 +411,16 @@ public final class ParseAPI: Sendable {
 		try await get("/elevation", query: [("lat", num(lat)), ("lon", num(lon))])
 	}
 
+	/// Resolve the country, state, district and timezone at coordinates. Deep adds terrain and compact
+	/// nearest-city context on every plan. The timezone ID stays in core. The nearest city is null
+	/// when none is within 200 km.
 	public func point(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Point {
 		try await get("/point", query: [("lat", num(lat)), ("lon", num(lon))] + deepQuery(deep))
 	}
 
-	/// Get weather for a point. Both unit systems are returned. Pass known coordinates from a
-	/// postal, city, or location result.
+	/// Get current conditions in metric and imperial units. Paid deep adds specialist current
+	/// measurements, forecasts and related detail. With deep, date selects a past UTC day (YYYY-MM-DD)
+	/// in deep.history alongside current conditions. Date alone does not request history.
 	public func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather {
 		try await get("/weather", query: [("lat", num(lat)), ("lon", num(lon)), ("date", date)] + deepQuery(deep))
 	}
@@ -431,6 +438,10 @@ public final class ParseAPI: Sendable {
 		try await get("/address/\(enc(address))", query: [("country", country)] + deepQuery(deep))
 	}
 
+	/// Find address suggestions using the context supplied. Prefer postal, or city and state, from the
+	/// form; ip is an optional end-user locality hint for server-side calls. An empty result has
+	/// reason more_input, missing_context or no_matches. Suggestions have reason null. Operational
+	/// failures are errors.
 	public func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch {
 		try await get("/address", query: [("q", query), ("country", country), ("postal", postal), ("city", city), ("state", state), ("ip", ip)])
 	}

@@ -42,6 +42,8 @@ public struct Continent: Codable, Sendable {
 	public let region: String
 	public let subregion: String
 	public let population: Int?
+	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
+	public let populationPeriod: String?
 	public let area: Double?
 	public let emoji: String
 }
@@ -470,7 +472,9 @@ public struct HLR: Codable, Sendable {
 	public let phone: String?
 	public let valid: Bool
 	public let country: String?
+	/// Assigned to a subscriber at the last check. Nil means unconfirmed.
 	public let live: Bool?
+	/// Handset reachable at the last check. Nil means unconfirmed.
 	public let connected: Bool?
 	public let deep: HLRDeep?
 }
@@ -940,6 +944,8 @@ public struct AddressSearch: Codable, Sendable {
 	public let state: String?
 	public let country: String?
 	public let addresses: [AddressSuggestion]
+	/// Why suggestions are empty: more_input, missing_context or no_matches. Null with suggestions. Open to future values. Operational failures are errors.
+	public let reason: String?
 }
 
 public struct CompanyCountry: Codable, Sendable {
@@ -1061,6 +1067,8 @@ public struct CountryDeep: Codable, Sendable {
 	public let region: String?
 	public let subregion: String?
 	public let population: Int?
+	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
+	public let populationPeriod: String?
 	public let area: Double?
 	public let tld: String?
 	public let borders: [String]?
@@ -1093,6 +1101,8 @@ public struct CountryEmergency: Codable, Sendable {
 
 public struct StateDeep: Codable, Sendable {
 	public let population: Int?
+	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
+	public let populationPeriod: String?
 	public let area: Double?
 	public let fips: String?
 	public let capital: String?
@@ -1104,15 +1114,22 @@ public struct StateDeep: Codable, Sendable {
 
 public struct StateDistrictDeep: Codable, Sendable {
 	public let population: Int?
+	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
+	public let populationPeriod: String?
+
 }
 
 
 public struct DistrictDeep: Codable, Sendable {
 	public let population: Int?
+	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
+	public let populationPeriod: String?
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
 	public let seat: String?
+	/// Median annual property tax payable on owner-occupied homes in this statistical area. Null when unsupported, missing or censored.
+	public let propertyTax: PropertyTax?
 }
 
 
@@ -1121,6 +1138,8 @@ public struct CityDeep: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
+	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
+	public let populationPeriod: String?
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
@@ -1131,6 +1150,8 @@ public struct PostalDeep: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
+	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
+	public let populationPeriod: String?
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
@@ -1143,6 +1164,8 @@ public struct PostalDeep: Codable, Sendable {
 	public let taxRateCounty: Double?
 	public let taxRateCity: Double?
 	public let taxRateSpecial: Double?
+	/// Median annual property tax payable on owner-occupied homes in this statistical area. Null when unsupported, missing or censored.
+	public let propertyTax: PropertyTax?
 }
 
 
@@ -1281,4 +1304,14 @@ public struct NAICSSearchItem: Codable, Sendable {
 	public let parentName: String?
 	public let deep: NAICSDeep?
 	public let match: NAICSMatch?
+}
+
+/// Property-tax estimate for an area, not a specific property.
+public struct PropertyTax: Codable, Sendable {
+	/// Median annual tax payable, in currency units adjusted to the final year of period. Not a tax rate or an individual property bill.
+	public let annualMedian: Double
+	/// ISO 4217 currency code, currently USD.
+	public let currency: String
+	/// Reporting period, YYYY-YYYY. Monetary amounts use the final year of this period.
+	public let period: String
 }
