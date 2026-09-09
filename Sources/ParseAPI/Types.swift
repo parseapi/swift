@@ -63,7 +63,7 @@ public struct ContinentCountries: Codable, Sendable {
 public struct Country: Codable, Sendable {
 	public let country: String
 	public let name: String
-	public let localName: String?
+	public let nameLocal: String?
 	public let continent: String?
 	public let currency: String?
 	public let currencyName: String?
@@ -107,7 +107,7 @@ public struct CountryStates: Codable, Sendable {
 public struct State: Codable, Sendable {
 	public let state: String
 	public let name: String
-	public let localName: String?
+	public let nameLocal: String?
 	public let type: String?
 	public let country: String
 	public let countryName: String?
@@ -151,7 +151,7 @@ public struct District: Codable, Sendable {
 
 public struct City: Codable, Sendable {
 	public let name: String
-	public let localName: String?
+	public let nameLocal: String?
 	public let type: String?
 	public let state: String?
 	public let stateName: String?
@@ -169,7 +169,7 @@ public struct City: Codable, Sendable {
 /// Nearest-city lookups add the distance from the query point.
 public struct CityNearest: Codable, Sendable {
 	public let name: String
-	public let localName: String?
+	public let nameLocal: String?
 	public let type: String?
 	public let state: String?
 	public let stateName: String?
@@ -624,7 +624,7 @@ public struct Currency: Codable, Sendable {
 public struct Language: Codable, Sendable {
 	public let language: String
 	public let name: String
-	public let localName: String?
+	public let nameLocal: String?
 	public let script: String?
 	public let direction: String
 	public let deep: LanguageDeep?
@@ -698,7 +698,7 @@ public struct DateInfo: Codable, Sendable {
 public struct Holiday: Codable, Sendable {
 	public let date: String
 	public let name: String
-	public let localName: String?
+	public let nameLocal: String?
 	/// public for an official day off, observance for cultural days.
 	public let type: String
 	public let regions: [String]?
@@ -1246,7 +1246,7 @@ public struct DateInfoDeep: Codable, Sendable {
 
 public struct PointCity: Codable, Sendable {
 	public let name: String
-	public let localName: String?
+	public let nameLocal: String?
 	public let type: String?
 	public let state: String?
 	public let stateName: String?

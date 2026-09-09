@@ -115,7 +115,7 @@ func makeClient(
 	}
 
 	@Test func stateSendsCountry() async throws {
-		let stub = StubTransport(body: #"{"state":"NC","local_name":null,"type":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"timezone":null,"timezones":[],"iso_3166_2":null,"name":"North Carolina"}"#)
+		let stub = StubTransport(body: #"{"state":"NC","name_local":null,"type":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"timezone":null,"timezones":[],"iso_3166_2":null,"name":"North Carolina"}"#)
 		_ = try await makeClient(stub).state("NC", country: "US")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/state/NC?country=US")
 	}
@@ -127,7 +127,7 @@ func makeClient(
 	}
 
 	@Test func cityIdPath() async throws {
-		let stub = StubTransport(body: #"{"local_name":null,"type":null,"state":"NC","state_name":null,"district":null,"district_name":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"timezone":null,"id":"city_abcdefabcdef","name":"Charlotte"}"#)
+		let stub = StubTransport(body: #"{"name_local":null,"type":null,"state":"NC","state_name":null,"district":null,"district_name":null,"country":"US","country_name":null,"latitude":null,"longitude":null,"timezone":null,"id":"city_abcdefabcdef","name":"Charlotte"}"#)
 		_ = try await makeClient(stub).cityId("city_abcdefabcdef")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/city/id/city_abcdefabcdef")
 	}
@@ -288,7 +288,7 @@ func makeClient(
 	}
 
 	@Test func nullRegionsArray() async throws {
-		let stub = StubTransport(body: #"{"country":"US","date":"2026-12-25","holiday":{"date":"2026-12-25","name":"Christmas Day","local_name":null,"type":"public","regions":null,"substitute":false}}"#)
+		let stub = StubTransport(body: #"{"country":"US","date":"2026-12-25","holiday":{"date":"2026-12-25","name":"Christmas Day","name_local":null,"type":"public","regions":null,"substitute":false}}"#)
 		let result = try await makeClient(stub).holidayDate("US", "2026-12-25")
 		#expect(result.holiday?.regions == nil)
 		#expect(result.holiday?.name == "Christmas Day")

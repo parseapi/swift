@@ -152,9 +152,9 @@ City.districtName: let districtName: String?
 City.id: let id: String?
 City.init(from:): init(from decoder: any Decoder) throws
 City.latitude: let latitude: Double?
-City.localName: let localName: String?
 City.longitude: let longitude: Double?
 City.name: let name: String
+City.nameLocal: let nameLocal: String?
 City.state: let state: String?
 City.stateName: let stateName: String?
 City.timezone: let timezone: String?
@@ -200,9 +200,9 @@ CityNearest.districtName: let districtName: String?
 CityNearest.id: let id: String?
 CityNearest.init(from:): init(from decoder: any Decoder) throws
 CityNearest.latitude: let latitude: Double?
-CityNearest.localName: let localName: String?
 CityNearest.longitude: let longitude: Double?
 CityNearest.name: let name: String
+CityNearest.nameLocal: let nameLocal: String?
 CityNearest.state: let state: String?
 CityNearest.stateName: let stateName: String?
 CityNearest.timezone: let timezone: String?
@@ -307,8 +307,8 @@ Country.deep: let deep: CountryDeep?
 Country.emoji: let emoji: String?
 Country.init(from:): init(from decoder: any Decoder) throws
 Country.languages: let languages: [String]
-Country.localName: let localName: String?
 Country.name: let name: String
+Country.nameLocal: let nameLocal: String?
 Country.timezones: let timezones: [String]?
 Country: conformsTo Swift.Decodable
 Country: conformsTo Swift.Encodable
@@ -621,8 +621,8 @@ HLRDeep: conformsTo Swift.SendableMetatype
 HLRDeep: struct HLRDeep
 Holiday.date: let date: String
 Holiday.init(from:): init(from decoder: any Decoder) throws
-Holiday.localName: let localName: String?
 Holiday.name: let name: String
+Holiday.nameLocal: let nameLocal: String?
 Holiday.regions: let regions: [String]?
 Holiday.substitute: let substitute: Bool
 Holiday.type: let type: String
@@ -703,8 +703,8 @@ Language.deep: let deep: LanguageDeep?
 Language.direction: let direction: String
 Language.init(from:): init(from decoder: any Decoder) throws
 Language.language: let language: String
-Language.localName: let localName: String?
 Language.name: let name: String
+Language.nameLocal: let nameLocal: String?
 Language.script: let script: String?
 Language: conformsTo Swift.Decodable
 Language: conformsTo Swift.Encodable
@@ -1056,9 +1056,9 @@ PointCity.distanceMi: let distanceMi: Double
 PointCity.id: let id: String?
 PointCity.init(from:): init(from decoder: any Decoder) throws
 PointCity.latitude: let latitude: Double?
-PointCity.localName: let localName: String?
 PointCity.longitude: let longitude: Double?
 PointCity.name: let name: String
+PointCity.nameLocal: let nameLocal: String?
 PointCity.state: let state: String?
 PointCity.stateName: let stateName: String?
 PointCity.type: let type: String?
@@ -1201,9 +1201,9 @@ State.deep: let deep: StateDeep?
 State.init(from:): init(from decoder: any Decoder) throws
 State.iso31662: let iso31662: String?
 State.latitude: let latitude: Double?
-State.localName: let localName: String?
 State.longitude: let longitude: Double?
 State.name: let name: String
+State.nameLocal: let nameLocal: String?
 State.state: let state: String
 State.timezone: let timezone: String?
 State.timezones: let timezones: [String]
