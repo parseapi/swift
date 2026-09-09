@@ -293,7 +293,7 @@ public struct VatDeep: Codable, Sendable {
 	public let name: String?
 	public let address: VatAddress?
 	public let consultation: String?
-	/// Registry timestamp of this check, ISO.
+	/// Registry-provided check time, or nil when unavailable.
 	public let consultedAt: String?
 }
 
@@ -944,6 +944,7 @@ public struct AddressSearch: Codable, Sendable {
 public struct CompanyCountry: Codable, Sendable {
 	public let name: String?
 	public let blocs: [String]
+	/// Levy name, such as VAT, GST or sales tax. Null when unknown or not applicable.
 	public let tax: String?
 }
 
