@@ -80,7 +80,7 @@ import FoundationNetworking
     }
 
     @Test func richerWeatherAndCountryFieldsDecode() async throws {
-        let weather = StubTransport(body: #"{"latitude":40,"longitude":-74,"current":{},"source":{"id":"example","name":"Example"},"deep":{"minutes":[{"at":"2026-09-05T12:00Z","precipitation":0.2}],"hours":[{"at":"2026-09-05T12:00Z","feels_like":21,"wind_gust":30}],"days":[{"date":"2026-09-06","high":25}],"air":{"pm2_5":7.5}}}"#)
+        let weather = StubTransport(body: #"{"latitude":40,"longitude":-74,"current":{},"deep":{"minutes":[{"at":"2026-09-05T12:00Z","precipitation":0.2}],"hours":[{"at":"2026-09-05T12:00Z","feels_like":21,"wind_gust":30}],"days":[{"date":"2026-09-06","high":25}],"air":{"pm2_5":7.5}}}"#)
         let w = try await makeClient(weather).weather(40, -74, deep: true)
         #expect(w.deep?.minutes?.first?.precipitation == 0.2)
         #expect(w.deep?.hours?.first?.feelsLike == 21)

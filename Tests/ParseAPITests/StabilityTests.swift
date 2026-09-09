@@ -59,7 +59,7 @@ private actor CallCount {
 	}
 
 	@Test func weatherHistoryIsOptional() async throws {
-		let stub = StubTransport(body: #"{"latitude":40,"longitude":-74,"current":{},"source":{"id":"example","name":"Example"},"deep":{"history":{"date":"2026-09-01","high_f":80,"wind_max_mph":20}}}"#)
+		let stub = StubTransport(body: #"{"latitude":40,"longitude":-74,"current":{},"deep":{"history":{"date":"2026-09-01","high_f":80,"wind_max_mph":20}}}"#)
 		let value = try await makeClient(stub).weather(40, -74, deep: true, date: "2026-09-01")
 		#expect(stub.requests[0].url?.absoluteString == "https://api.parseapi.com/weather?lat=40&lon=-74&date=2026-09-01&deep=true")
 		#expect(value.deep?.history?.highF == 80)

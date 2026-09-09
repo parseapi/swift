@@ -1008,17 +1008,11 @@ public struct WeatherStation: Codable, Sendable {
 	public let distanceMi: Double?
 }
 
-public struct WeatherSource: Codable, Sendable {
-	public let id: String
-	public let name: String?
-}
-
 public struct Weather: Codable, Sendable {
 	public let latitude: Double
 	public let longitude: Double
 	public let current: WeatherCurrent
 	public let station: WeatherStation?
-	public let source: WeatherSource
 	public let deep: WeatherDeep?
 }
 

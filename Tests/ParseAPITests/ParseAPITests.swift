@@ -301,11 +301,11 @@ func makeClient(
 	}
 
 	@Test func weatherRooms() async throws {
-		let stub = StubTransport(body: #"{"latitude":40.71,"longitude":-74.01,"current":{"temperature":21.7,"temperature_f":71.1,"feels_like":21.7,"feels_like_f":71.1,"dewpoint":null,"dewpoint_f":null,"humidity":63,"wind_speed":9.3,"wind_speed_mph":5.8,"wind_gust":null,"wind_gust_mph":null,"wind_direction":180,"pressure":1017.2,"pressure_inhg":30.04,"visibility":16.1,"visibility_mi":10,"condition":"clear","condition_name":"Clear","condition_emoji":"C","observed_at":"2026-08-28T12:51:00Z"},"station":{"id":"KNYC","name":"New York City, Central Park","distance":4.3,"distance_mi":2.7},"source":{"id":"nws","name":"US National Weather Service"}}"#)
+		let stub = StubTransport(body: #"{"latitude":40.71,"longitude":-74.01,"current":{"temperature":21.7,"temperature_f":71.1,"feels_like":21.7,"feels_like_f":71.1,"dewpoint":null,"dewpoint_f":null,"humidity":63,"wind_speed":9.3,"wind_speed_mph":5.8,"wind_gust":null,"wind_gust_mph":null,"wind_direction":180,"pressure":1017.2,"pressure_inhg":30.04,"visibility":16.1,"visibility_mi":10,"condition":"clear","condition_name":"Clear","condition_emoji":"C","observed_at":"2026-08-28T12:51:00Z"},"station":{"id":"KNYC","name":"New York City, Central Park","distance":4.3,"distance_mi":2.7}}"#)
 		let result = try await makeClient(stub).weather(40.71, -74.01)
 		#expect(result.current.temperatureF == 71.1)
 		#expect(result.station?.id == "KNYC")
-		#expect(result.source.id == "nws")
+		#expect(result.current.observedAt == "2026-08-28T12:51:00Z")
 		#expect(result.deep == nil)
 	}
 }

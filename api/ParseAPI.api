@@ -1349,7 +1349,6 @@ Weather.deep: let deep: WeatherDeep?
 Weather.init(from:): init(from decoder: any Decoder) throws
 Weather.latitude: let latitude: Double
 Weather.longitude: let longitude: Double
-Weather.source: let source: WeatherSource
 Weather.station: let station: WeatherStation?
 Weather: conformsTo Swift.Decodable
 Weather: conformsTo Swift.Encodable
@@ -1508,14 +1507,6 @@ WeatherMinute: conformsTo Swift.Encodable
 WeatherMinute: conformsTo Swift.Sendable
 WeatherMinute: conformsTo Swift.SendableMetatype
 WeatherMinute: struct WeatherMinute
-WeatherSource.id: let id: String
-WeatherSource.init(from:): init(from decoder: any Decoder) throws
-WeatherSource.name: let name: String?
-WeatherSource: conformsTo Swift.Decodable
-WeatherSource: conformsTo Swift.Encodable
-WeatherSource: conformsTo Swift.Sendable
-WeatherSource: conformsTo Swift.SendableMetatype
-WeatherSource: struct WeatherSource
 WeatherStation.distance: let distance: Double?
 WeatherStation.distanceMi: let distanceMi: Double?
 WeatherStation.id: let id: String
