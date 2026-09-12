@@ -274,7 +274,9 @@ public struct Email: Codable, Sendable {
 	/// Suggested full address when the host is a known misspelling. Never a guess.
 	public let didyoumean: String?
 	public let valid: Bool
+	public let free: Bool
 	public let domain: String?
+	public let domainType: String?
 	public let domainValid: Bool?
 	public let role: Bool
 	public let disposable: Bool

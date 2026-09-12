@@ -75,7 +75,7 @@ func makeClient(
 	}
 
 	@Test func emailEncodesAt() async throws {
-		let stub = StubTransport(body: #"{"email":"a@b.com","didyoumean":null,"valid":true,"domain":"b.com","domain_valid":true,"role":false,"disposable":false}"#)
+		let stub = StubTransport(body: #"{"email":"a@b.com","didyoumean":null,"valid":true,"free":false,"domain":"b.com","domain_type":null,"domain_valid":true,"role":false,"disposable":false}"#)
 		_ = try await makeClient(stub).email("a@b.com")
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/email/a%40b.com")
 	}
