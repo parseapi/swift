@@ -278,12 +278,12 @@ import Testing
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
 		let core = try decoder.decode(Name.self, from: Data(#"{"name":"Fixture","valid":true}"#.utf8))
 		let locked = try decoder.decode(Name.self, from: Data(#"{"name":"Fixture","valid":true,"deep":{}}"#.utf8))
-		let rich = try decoder.decode(Name.self, from: Data(#"{"name":"Fixture","valid":true,"deep":{"known":false,"gender":null,"countries":[]}}"#.utf8))
+		let rich = try decoder.decode(Name.self, from: Data(#"{"name":"Fixture","valid":true,"deep":{"known":false,"gender":null}}"#.utf8))
 		#expect(core.deep == nil)
 		#expect(locked.deep != nil && locked.deep?.known == nil)
 		#expect(rich.deep?.known == false)
 		for depth in [false, true] {
-			let stub = StubTransport(body: #"{"name":"Fixture","valid":true,"deep":{"known":false,"gender":null,"countries":[]}}"#)
+			let stub = StubTransport(body: #"{"name":"Fixture","valid":true,"deep":{"known":false,"gender":null}}"#)
 			_ = try await makeClient(stub).name("Fixture", deep: depth)
 			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
 			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
