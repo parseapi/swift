@@ -531,6 +531,7 @@ public struct Bin: Codable, Sendable {
 	public let country: String?
 	public let issuer: String?
 	public let brand: String?
+	public let brandName: String?
 	public let type: String?
 	public let prepaid: Bool?
 	public let deep: BinDeep?
