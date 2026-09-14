@@ -536,8 +536,10 @@ Email.deep: let deep: EmailDeep?
 Email.didyoumean: let didyoumean: String?
 Email.disposable: let disposable: Bool
 Email.domain: let domain: String?
+Email.domainType: let domainType: String?
 Email.domainValid: let domainValid: Bool?
 Email.email: let email: String
+Email.free: let free: Bool
 Email.init(from:): init(from decoder: any Decoder) throws
 Email.role: let role: Bool
 Email.valid: let valid: Bool
@@ -878,7 +880,6 @@ Name: conformsTo Swift.Encodable
 Name: conformsTo Swift.Sendable
 Name: conformsTo Swift.SendableMetatype
 Name: struct Name
-NameDeep.countries: let countries: [String]?
 NameDeep.gender: let gender: String?
 NameDeep.init(from:): init(from decoder: any Decoder) throws
 NameDeep.known: let known: Bool?

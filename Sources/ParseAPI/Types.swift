@@ -281,6 +281,21 @@ public struct Email: Codable, Sendable {
 	public let role: Bool
 	public let disposable: Bool
 	public let deep: EmailDeep?
+
+	public init(from decoder: Decoder) throws {
+		let c = try decoder.container(keyedBy: CodingKeys.self)
+		email = try c.decode(String.self, forKey: .email)
+		didyoumean = try c.decodeIfPresent(String.self, forKey: .didyoumean)
+		valid = try c.decode(Bool.self, forKey: .valid)
+		// 1.0.0 omits free and domain_type.
+		free = try c.decodeIfPresent(Bool.self, forKey: .free) ?? false
+		domain = try c.decodeIfPresent(String.self, forKey: .domain)
+		domainType = try c.decodeIfPresent(String.self, forKey: .domainType)
+		domainValid = try c.decodeIfPresent(Bool.self, forKey: .domainValid)
+		role = try c.decode(Bool.self, forKey: .role)
+		disposable = try c.decode(Bool.self, forKey: .disposable)
+		deep = try c.decodeIfPresent(EmailDeep.self, forKey: .deep)
+	}
 }
 
 public struct VatAddress: Codable, Sendable {
