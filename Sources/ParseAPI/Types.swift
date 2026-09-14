@@ -1082,6 +1082,16 @@ public struct CountryDeep: Codable, Sendable {
 	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
 	public let populationPeriod: String?
 	public let area: Double?
+	/// Land area in km2.
+	public let landArea: Double?
+	/// Water area in km2.
+	public let waterArea: Double?
+	/// Coastline length in km. Zero is a known landlocked coastline.
+	public let coastline: Double?
+	/// Mean elevation in metres above sea level.
+	public let elevation: Double?
+	public let lowestPoint: CountryElevationPoint?
+	public let highestPoint: CountryElevationPoint?
 	public let tld: String?
 	public let borders: [String]?
 	public let blocs: [String]?
@@ -1101,6 +1111,12 @@ public struct CountryDeep: Codable, Sendable {
 	public let ioc: String?
 	public let fifa: String?
 	public let plate: String?
+}
+
+public struct CountryElevationPoint: Codable, Sendable {
+	public let name: String?
+	/// Elevation in metres above sea level. Values below sea level are negative.
+	public let elevation: Double
 }
 
 

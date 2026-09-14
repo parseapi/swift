@@ -322,15 +322,20 @@ CountryDeep.borders: let borders: [String]?
 CountryDeep.capital: let capital: String?
 CountryDeep.capitalLat: let capitalLat: Double?
 CountryDeep.capitalLon: let capitalLon: Double?
+CountryDeep.coastline: let coastline: Double?
 CountryDeep.demonym: let demonym: String?
 CountryDeep.drivingSide: let drivingSide: String?
+CountryDeep.elevation: let elevation: Double?
 CountryDeep.emergency: let emergency: CountryEmergency?
 CountryDeep.fifa: let fifa: String?
 CountryDeep.frequency: let frequency: Int?
 CountryDeep.fullName: let fullName: String?
+CountryDeep.highestPoint: let highestPoint: CountryElevationPoint?
 CountryDeep.init(from:): init(from decoder: any Decoder) throws
 CountryDeep.ioc: let ioc: String?
 CountryDeep.iso3: let iso3: String?
+CountryDeep.landArea: let landArea: Double?
+CountryDeep.lowestPoint: let lowestPoint: CountryElevationPoint?
 CountryDeep.numeric: let numeric: Int?
 CountryDeep.plate: let plate: String?
 CountryDeep.plugs: let plugs: [String]?
@@ -347,12 +352,21 @@ CountryDeep.taxRate: let taxRate: Double?
 CountryDeep.tld: let tld: String?
 CountryDeep.units: let units: String?
 CountryDeep.voltage: let voltage: Int?
+CountryDeep.waterArea: let waterArea: Double?
 CountryDeep.weekStart: let weekStart: String?
 CountryDeep: conformsTo Swift.Decodable
 CountryDeep: conformsTo Swift.Encodable
 CountryDeep: conformsTo Swift.Sendable
 CountryDeep: conformsTo Swift.SendableMetatype
 CountryDeep: struct CountryDeep
+CountryElevationPoint.elevation: let elevation: Double
+CountryElevationPoint.init(from:): init(from decoder: any Decoder) throws
+CountryElevationPoint.name: let name: String?
+CountryElevationPoint: conformsTo Swift.Decodable
+CountryElevationPoint: conformsTo Swift.Encodable
+CountryElevationPoint: conformsTo Swift.Sendable
+CountryElevationPoint: conformsTo Swift.SendableMetatype
+CountryElevationPoint: struct CountryElevationPoint
 CountryEmergency.ambulance: let ambulance: String?
 CountryEmergency.fire: let fire: String?
 CountryEmergency.init(from:): init(from decoder: any Decoder) throws
