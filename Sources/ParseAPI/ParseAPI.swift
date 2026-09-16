@@ -216,6 +216,11 @@ public final class ParseAPI: Sendable {
 		try await get("/name/\(enc(name))", query: [("country", country)] + deepQuery(deep))
 	}
 
+	/// Name locale selects CLDR formatting rules, default en. Parsing and gender context stay unchanged.
+	public func name(_ name: String, country: String? = nil, deep: Bool = false, nameLocale: String?) async throws -> Name {
+		try await get("/name/\(enc(name))", query: [("country", country)] + deepQuery(deep) + [("name_locale", nameLocale)])
+	}
+
 	/// Look up a postal area. Pass country when known. Check nullable coordinates before another
 	/// location lookup.
 	public func postal(_ code: String, country: String? = nil, deep: Bool = false) async throws -> Postal {

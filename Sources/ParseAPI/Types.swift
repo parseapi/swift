@@ -1241,9 +1241,11 @@ public struct LanguageDeep: Codable, Sendable {
 
 
 public struct NameDeep: Codable, Sendable {
-	public let known: Bool?
 	public let gender: String?
 	public let salutation: String?
+	public let short: String?
+	public let directory: String?
+	public let initials: String?
 }
 
 

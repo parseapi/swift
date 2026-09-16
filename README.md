@@ -42,6 +42,8 @@ Pass `country` when a postal code or national phone number needs disambiguation.
 
 Results are plain data. Pass a returned code or coordinate to another operation when the task needs it. Check nullable values before composing the next call.
 
+Name paid deep includes flat `short`, `directory`, and `initials` fields beside `gender` and `salutation`. `nameLocale` selects CLDR formatting rules and defaults to `en`. It changes formatting only. Country remains gender context, and unavailable formatting is null. Older responses may omit these fields.
+
 ## Calls
 
 One method per endpoint, named after the route. Async throughout.
@@ -79,6 +81,7 @@ try await parse.currencyRate("USD", "EUR")
 try await parse.language("en")
 try await parse.name("BILLY OSHALL")
 try await parse.name("Andrea", country: "IT")
+try await parse.name("Robert James Smith", deep: true, nameLocale: "en")
 try await parse.time() // UTC now
 try await parse.time("America/New_York")
 try await parse.timeAt(40.7128, -74.006)

@@ -894,10 +894,12 @@ Name: conformsTo Swift.Encodable
 Name: conformsTo Swift.Sendable
 Name: conformsTo Swift.SendableMetatype
 Name: struct Name
+NameDeep.directory: let directory: String?
 NameDeep.gender: let gender: String?
 NameDeep.init(from:): init(from decoder: any Decoder) throws
-NameDeep.known: let known: Bool?
+NameDeep.initials: let initials: String?
 NameDeep.salutation: let salutation: String?
+NameDeep.short: let short: String?
 NameDeep: conformsTo Swift.Decodable
 NameDeep: conformsTo Swift.Encodable
 NameDeep: conformsTo Swift.Sendable
@@ -993,6 +995,7 @@ ParseAPI.naics(_:deep:): func naics(_ code: String, deep: Bool = false) async th
 ParseAPI.naicsSearch(_:limit:deep:): func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch
 ParseAPI.name(_:): func name(_ name: String) async throws -> Name
 ParseAPI.name(_:country:deep:): func name(_ name: String, country: String?, deep: Bool = false) async throws -> Name
+ParseAPI.name(_:country:deep:nameLocale:): func name(_ name: String, country: String? = nil, deep: Bool = false, nameLocale: String?) async throws -> Name
 ParseAPI.name(_:deep:): func name(_ name: String, deep: Bool) async throws -> Name
 ParseAPI.npi(_:deep:): func npi(_ npi: String, deep: Bool = false) async throws -> Npi
 ParseAPI.phone(_:country:deep:): func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone
