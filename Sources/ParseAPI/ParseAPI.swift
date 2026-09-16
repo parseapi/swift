@@ -37,7 +37,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "0.5.0"
+	static let version = "1.0.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
