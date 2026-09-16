@@ -953,43 +953,65 @@ NpiEnrollment: struct NpiEnrollment
 ParseAPI.address(_:country:deep:): func address(_ address: String, country: String? = nil, deep: Bool = false) async throws -> Address
 ParseAPI.addressSearch(_:country:postal:city:state:ip:): func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch
 ParseAPI.asn(_:): func asn(_ asn: String) async throws -> ASN
+ParseAPI.asn(_:lang:): func asn(_ asn: String, lang: String?) async throws -> ASN
 ParseAPI.bin(_:deep:): func bin(_ bin: String, deep: Bool = false) async throws -> Bin
 ParseAPI.bloc(_:): func bloc(_ code: String) async throws -> Bloc
 ParseAPI.blocCountries(_:): func blocCountries(_ code: String) async throws -> BlocCountries
+ParseAPI.blocCountries(_:lang:): func blocCountries(_ code: String, lang: String?) async throws -> BlocCountries
 ParseAPI.caller(_:country:): func caller(_ number: String, country: String? = nil) async throws -> Caller
 ParseAPI.carrier(_:country:deep:): func carrier(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Carrier
 ParseAPI.city(_:country:state:deep:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> City
+ParseAPI.city(_:country:state:deep:lang:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> City
 ParseAPI.cityId(_:deep:): func cityId(_ id: String, deep: Bool = false) async throws -> City
+ParseAPI.cityId(_:deep:lang:): func cityId(_ id: String, deep: Bool = false, lang: String?) async throws -> City
 ParseAPI.cityNearby(_:radius:unit:country:state:limit:deep:): func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false) async throws -> CityNearby
+ParseAPI.cityNearby(_:radius:unit:country:state:limit:deep:lang:): func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false, lang: String?) async throws -> CityNearby
 ParseAPI.cityNearest(_:_:deep:): func cityNearest(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> CityNearest
+ParseAPI.cityNearest(_:_:deep:lang:): func cityNearest(_ lat: Double, _ lon: Double, deep: Bool = false, lang: String?) async throws -> CityNearest
 ParseAPI.citySearch(_:country:state:limit:deep:): func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false) async throws -> CitySearch
+ParseAPI.citySearch(_:country:state:limit:deep:lang:): func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false, lang: String?) async throws -> CitySearch
 ParseAPI.company(_:country:deep:): func company(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Company
+ParseAPI.company(_:country:deep:lang:): func company(_ number: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> Company
 ParseAPI.continent(_:): func continent(_ code: String) async throws -> Continent
+ParseAPI.continent(_:lang:): func continent(_ code: String, lang: String?) async throws -> Continent
 ParseAPI.continentCountries(_:): func continentCountries(_ code: String) async throws -> ContinentCountries
+ParseAPI.continentCountries(_:lang:): func continentCountries(_ code: String, lang: String?) async throws -> ContinentCountries
 ParseAPI.country(_:deep:): func country(_ code: String, deep: Bool = false) async throws -> Country
+ParseAPI.country(_:deep:lang:): func country(_ code: String, deep: Bool = false, lang: String?) async throws -> Country
 ParseAPI.countryStates(_:): func countryStates(_ code: String) async throws -> CountryStates
+ParseAPI.countryStates(_:lang:): func countryStates(_ code: String, lang: String?) async throws -> CountryStates
 ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
+ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
 ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
 ParseAPI.date(_:format:to:deep:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false) async throws -> DateInfo
+ParseAPI.date(_:format:to:deep:lang:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> DateInfo
 ParseAPI.dateToday(to:deep:): func dateToday(to: String? = nil, deep: Bool = false) async throws -> DateInfo
+ParseAPI.dateToday(to:deep:lang:): func dateToday(to: String? = nil, deep: Bool = false, lang: String?) async throws -> DateInfo
 ParseAPI.district(_:country:state:deep:): func district(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> District
+ParseAPI.district(_:country:state:deep:lang:): func district(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> District
 ParseAPI.dns(_:type:): func dns(_ domain: String, type: String? = nil) async throws -> DNS
 ParseAPI.domain(_:deep:): func domain(_ domain: String, deep: Bool = false) async throws -> Domain
 ParseAPI.elevation(_:_:): func elevation(_ lat: Double, _ lon: Double) async throws -> Elevation
 ParseAPI.email(_:deep:): func email(_ email: String, deep: Bool = false) async throws -> Email
 ParseAPI.emoji(_:deep:): func emoji(_ emoji: String, deep: Bool = false) async throws -> Emoji
+ParseAPI.emoji(_:deep:lang:): func emoji(_ emoji: String, deep: Bool = false, lang: String?) async throws -> Emoji
 ParseAPI.emojiSearch(_:limit:deep:): func emojiSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> EmojiSearch
+ParseAPI.emojiSearch(_:limit:deep:lang:): func emojiSearch(_ query: String, limit: Int? = nil, deep: Bool = false, lang: String?) async throws -> EmojiSearch
 ParseAPI.hlr(_:country:deep:): func hlr(_ number: String, country: String? = nil, deep: Bool = false) async throws -> HLR
 ParseAPI.holiday(_:year:): func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear
 ParseAPI.holidayDate(_:_:): func holidayDate(_ country: String, _ date: String) async throws -> HolidayDate
 ParseAPI.iban(_:country:deep:): func iban(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Iban
 ParseAPI.init(_:appId:baseURL:timeout:retries:transport:): init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, timeout: TimeInterval = 10, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.ip(_:deep:): func ip(_ ip: String, deep: Bool = false) async throws -> IP
+ParseAPI.ip(_:deep:lang:): func ip(_ ip: String, deep: Bool = false, lang: String?) async throws -> IP
 ParseAPI.ipSelf(deep:): func ipSelf(deep: Bool = false) async throws -> IP
+ParseAPI.ipSelf(deep:lang:): func ipSelf(deep: Bool = false, lang: String?) async throws -> IP
 ParseAPI.language(_:deep:): func language(_ code: String, deep: Bool = false) async throws -> Language
+ParseAPI.language(_:deep:lang:): func language(_ code: String, deep: Bool = false, lang: String?) async throws -> Language
 ParseAPI.mac(_:): func mac(_ mac: String) async throws -> MAC
 ParseAPI.measure(_:to:locale:system:): func measure(_ measure: String, to: String? = nil, locale: String? = nil, system: String? = nil) async throws -> Measure
 ParseAPI.measureUnits(query:type:unit:): func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil) async throws -> MeasureUnits
+ParseAPI.measureUnits(query:type:unit:lang:): func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil, lang: String?) async throws -> MeasureUnits
 ParseAPI.mx(_:): func mx(_ domain: String) async throws -> MX
 ParseAPI.naics(_:deep:): func naics(_ code: String, deep: Bool = false) async throws -> NAICS
 ParseAPI.naicsSearch(_:limit:deep:): func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch
@@ -998,19 +1020,30 @@ ParseAPI.name(_:country:deep:): func name(_ name: String, country: String?, deep
 ParseAPI.name(_:country:deep:nameLocale:): func name(_ name: String, country: String? = nil, deep: Bool = false, nameLocale: String?) async throws -> Name
 ParseAPI.name(_:deep:): func name(_ name: String, deep: Bool) async throws -> Name
 ParseAPI.npi(_:deep:): func npi(_ npi: String, deep: Bool = false) async throws -> Npi
+ParseAPI.npi(_:deep:lang:): func npi(_ npi: String, deep: Bool = false, lang: String?) async throws -> Npi
 ParseAPI.phone(_:country:deep:): func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone
 ParseAPI.point(_:_:deep:): func point(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Point
+ParseAPI.point(_:_:deep:lang:): func point(_ lat: Double, _ lon: Double, deep: Bool = false, lang: String?) async throws -> Point
 ParseAPI.postal(_:country:deep:): func postal(_ code: String, country: String? = nil, deep: Bool = false) async throws -> Postal
+ParseAPI.postal(_:country:deep:lang:): func postal(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> Postal
 ParseAPI.postalDistance(_:_:country:deep:): func postalDistance(_ from: String, _ to: String, country: String? = nil, deep: Bool = false) async throws -> PostalDistance
+ParseAPI.postalDistance(_:_:country:deep:lang:): func postalDistance(_ from: String, _ to: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalDistance
 ParseAPI.postalNearby(_:country:radius:unit:deep:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false) async throws -> PostalNearby
+ParseAPI.postalNearby(_:country:radius:unit:deep:lang:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalNearby
 ParseAPI.state(_:country:deep:): func state(_ code: String, country: String? = nil, deep: Bool = false) async throws -> State
+ParseAPI.state(_:country:deep:lang:): func state(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> State
 ParseAPI.stateDistricts(_:country:deep:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateDistricts
+ParseAPI.stateDistricts(_:country:deep:lang:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateDistricts
 ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff
 ParseAPI.tariffSearch(_:): func tariffSearch(_ query: String) async throws -> TariffSearch
 ParseAPI.time(_:at:to:deep:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time
+ParseAPI.time(_:at:to:deep:lang:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time
 ParseAPI.timeAt(_:_:at:to:deep:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time
+ParseAPI.timeAt(_:_:at:to:deep:lang:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time
 ParseAPI.timezone(_:at:to:deep:): func timezone(_ id: String, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Timezone
+ParseAPI.timezone(_:at:to:deep:lang:): func timezone(_ id: String, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Timezone
 ParseAPI.timezoneAt(_:_:at:deep:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false) async throws -> Timezone
+ParseAPI.timezoneAt(_:_:at:deep:lang:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false, lang: String?) async throws -> Timezone
 ParseAPI.useragent(_:deep:): func useragent(_ ua: String, deep: Bool = false) async throws -> Useragent
 ParseAPI.vat(_:country:from:deep:): func vat(_ number: String, country: String? = nil, from: String? = nil, deep: Bool = false) async throws -> Vat
 ParseAPI.vin(_:deep:): func vin(_ vin: String, deep: Bool = false) async throws -> Vin
