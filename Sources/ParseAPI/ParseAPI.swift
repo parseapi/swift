@@ -38,6 +38,8 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
 	static let version = "0.5.0"
+	// The response types' wire contract. Changes require a reviewed major SDK release.
+	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
 	private static let retryAfterCapSeconds: Double = 5
 
@@ -630,6 +632,7 @@ public final class ParseAPI: Sendable {
 			var request = URLRequest(url: requestURL)
 			request.timeoutInterval = timeout
 			request.setValue(key, forHTTPHeaderField: "X-API-Key")
+			request.setValue(Self.apiVersion, forHTTPHeaderField: "Parse-Version")
 			request.setValue(userAgent ?? "parseapi-swift/\(Self.version)", forHTTPHeaderField: "User-Agent")
 			if let appId {
 				request.setValue(appId, forHTTPHeaderField: "X-App-Id")
