@@ -265,8 +265,17 @@ public struct PostalDistance: Codable, Sendable {
 }
 
 public struct EmailDeep: Codable, Sendable {
+	/// Suggested first name. Not a verified identity.
+	public let firstName: String?
+	public let noReply: Bool?
+	public let tag: String?
+	public let mailProvider: String?
 	public let deliverable: Bool?
 	public let catchall: Bool?
+	/// Mailbox status: deliverable, undeliverable or risky. Null when unavailable.
+	public let status: String?
+	/// Why the address received this result, such as mailbox_full or mailbox_not_found. Null when unavailable.
+	public let reason: String?
 }
 
 public struct Email: Codable, Sendable {

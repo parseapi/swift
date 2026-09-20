@@ -564,7 +564,13 @@ Email: conformsTo Swift.SendableMetatype
 Email: struct Email
 EmailDeep.catchall: let catchall: Bool?
 EmailDeep.deliverable: let deliverable: Bool?
+EmailDeep.firstName: let firstName: String?
 EmailDeep.init(from:): init(from decoder: any Decoder) throws
+EmailDeep.mailProvider: let mailProvider: String?
+EmailDeep.noReply: let noReply: Bool?
+EmailDeep.reason: let reason: String?
+EmailDeep.status: let status: String?
+EmailDeep.tag: let tag: String?
 EmailDeep: conformsTo Swift.Decodable
 EmailDeep: conformsTo Swift.Encodable
 EmailDeep: conformsTo Swift.Sendable
