@@ -510,6 +510,32 @@ public struct MXRecord: Codable, Sendable {
 	public let host: String
 }
 
+public struct StackTechnology: Codable, Sendable {
+	public let technology: String
+	public let name: String
+	public let version: String?
+}
+
+public struct StackDeep: Codable, Sendable {}
+
+public struct Stack: Codable, Sendable {
+	public let domain: String
+	public let url: String
+	public let checkedAt: String?
+	public let scope: String
+	public let pages: Int
+	public let partial: Bool?
+	public let cms: [StackTechnology]?
+	public let servers: [StackTechnology]?
+	public let frameworks: [StackTechnology]?
+	public let ecommerce: [StackTechnology]?
+	public let analytics: [StackTechnology]?
+	public let chat: [StackTechnology]?
+	public let payments: [StackTechnology]?
+	public let hosting: [StackTechnology]?
+	public let deep: StackDeep?
+}
+
 public struct DomainRegistration: Codable, Sendable {
 	public let registered: Bool?
 	public let created: String?

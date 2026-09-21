@@ -47,9 +47,21 @@ public final class ParseAPI: Sendable {
 	private let appId: String?
 	private let baseURL: String
 	private let timeout: TimeInterval
+	private let timeoutConfigured: Bool
 	private let retries: Int?
 	private let transport: ParseAPITransport
 	private let ownedSession: URLSession?
+
+	/// Creates a client with operation defaults: 35 seconds for Stack, 10 for other lookups.
+	public convenience init(
+		_ key: String? = nil,
+		appId: String? = Bundle.main.bundleIdentifier,
+		baseURL: String? = nil,
+		retries: Int? = nil,
+		transport: ParseAPITransport? = nil
+	) throws {
+		try self.init(key, appId: appId, baseURL: baseURL, timeout: 10, timeoutConfigured: false, retries: retries, transport: transport)
+	}
 
 	/// - Parameters:
 	///   - key: API key. Falls back to the PARSEAPI_KEY environment variable.
@@ -57,18 +69,25 @@ public final class ParseAPI: Sendable {
 	///     list for app keys. Defaults to the bundle identifier. Secret keys ignore it.
 	///   - baseURL: Override https://api.parseapi.com (tests, canaries).
 	///     Also read from PARSEAPI_BASE_URL.
-	///   - timeout: Per-attempt timeout in seconds. Default 10.
+	///   - timeout: Explicit per-attempt timeout in seconds, applied to every operation.
 	///   - retries: Retries after the first attempt on network errors / 429 / 5xx.
 	///     Defaults to 2 for ordinary lookups and 0 for metered lookups.
 	///     An explicit count overrides both defaults, 0 disables.
 	///   - transport: Custom transport (tests, instrumentation).
-	public init(
+	public convenience init(
 		_ key: String? = nil,
 		appId: String? = Bundle.main.bundleIdentifier,
 		baseURL: String? = nil,
-		timeout: TimeInterval = 10,
+		timeout: TimeInterval,
 		retries: Int? = nil,
 		transport: ParseAPITransport? = nil
+	) throws {
+		try self.init(key, appId: appId, baseURL: baseURL, timeout: timeout, timeoutConfigured: true, retries: retries, transport: transport)
+	}
+
+	private init(
+		_ key: String?, appId: String?, baseURL: String?, timeout: TimeInterval,
+		timeoutConfigured: Bool, retries: Int?, transport: ParseAPITransport?
 	) throws {
 		// You found Dev. https://parseapi.com/dev
 		guard let resolved = key ?? Self.env("PARSEAPI_KEY"), !resolved.isEmpty else {
@@ -93,6 +112,7 @@ public final class ParseAPI: Sendable {
 		}
 		self.baseURL = base
 		self.timeout = timeout
+		self.timeoutConfigured = timeoutConfigured
 		self.retries = retries
 		if let transport {
 			self.transport = transport
@@ -374,6 +394,12 @@ public final class ParseAPI: Sendable {
 		try await get("/hlr/\(enc(number))", query: [("country", country)] + deepQuery(deep))
 	}
 
+	/// Observe technologies on a public hostname.
+	/// Nil collections mean the check did not complete. Empty arrays mean no matches.
+	public func stack(_ domain: String, deep: Bool = false, pretty: Bool = false) async throws -> Stack {
+		try await get("/stack/\(enc(domain))", query: deepQuery(deep) + [("pretty", pretty ? "true" : nil)])
+	}
+
 	/// Check whether a domain is registered. Deep adds registration dates, registrar, status and DNSSEC on paid plans.
 	public func domain(_ domain: String, deep: Bool = false) async throws -> Domain {
 		try await get("/domain/\(enc(domain))", query: deepQuery(deep))
@@ -630,7 +656,7 @@ public final class ParseAPI: Sendable {
 		while true {
 			try Task.checkCancellation()
 			var request = URLRequest(url: requestURL)
-			request.timeoutInterval = timeout
+			request.timeoutInterval = !timeoutConfigured && path.hasPrefix("/stack/") ? 35 : timeout
 			request.setValue(key, forHTTPHeaderField: "X-API-Key")
 			request.setValue(Self.apiVersion, forHTTPHeaderField: "Parse-Version")
 			request.setValue(userAgent ?? "parseapi-swift/\(Self.version)", forHTTPHeaderField: "User-Agent")

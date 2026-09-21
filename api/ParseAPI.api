@@ -1007,7 +1007,8 @@ ParseAPI.hlr(_:country:deep:): func hlr(_ number: String, country: String? = nil
 ParseAPI.holiday(_:year:): func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear
 ParseAPI.holidayDate(_:_:): func holidayDate(_ country: String, _ date: String) async throws -> HolidayDate
 ParseAPI.iban(_:country:deep:): func iban(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Iban
-ParseAPI.init(_:appId:baseURL:timeout:retries:transport:): init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, timeout: TimeInterval = 10, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
+ParseAPI.init(_:appId:baseURL:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
+ParseAPI.init(_:appId:baseURL:timeout:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, timeout: TimeInterval, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.ip(_:deep:): func ip(_ ip: String, deep: Bool = false) async throws -> IP
 ParseAPI.ip(_:deep:lang:): func ip(_ ip: String, deep: Bool = false, lang: String?) async throws -> IP
 ParseAPI.ipSelf(deep:): func ipSelf(deep: Bool = false) async throws -> IP
@@ -1036,6 +1037,7 @@ ParseAPI.postalDistance(_:_:country:deep:): func postalDistance(_ from: String, 
 ParseAPI.postalDistance(_:_:country:deep:lang:): func postalDistance(_ from: String, _ to: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalDistance
 ParseAPI.postalNearby(_:country:radius:unit:deep:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false) async throws -> PostalNearby
 ParseAPI.postalNearby(_:country:radius:unit:deep:lang:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalNearby
+ParseAPI.stack(_:deep:pretty:): func stack(_ domain: String, deep: Bool = false, pretty: Bool = false) async throws -> Stack
 ParseAPI.state(_:country:deep:): func state(_ code: String, country: String? = nil, deep: Bool = false) async throws -> State
 ParseAPI.state(_:country:deep:lang:): func state(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> State
 ParseAPI.stateDistricts(_:country:deep:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateDistricts
@@ -1253,6 +1255,42 @@ PropertyTax: conformsTo Swift.Encodable
 PropertyTax: conformsTo Swift.Sendable
 PropertyTax: conformsTo Swift.SendableMetatype
 PropertyTax: struct PropertyTax
+Stack.analytics: let analytics: [StackTechnology]?
+Stack.chat: let chat: [StackTechnology]?
+Stack.checkedAt: let checkedAt: String?
+Stack.cms: let cms: [StackTechnology]?
+Stack.deep: let deep: StackDeep?
+Stack.domain: let domain: String
+Stack.ecommerce: let ecommerce: [StackTechnology]?
+Stack.frameworks: let frameworks: [StackTechnology]?
+Stack.hosting: let hosting: [StackTechnology]?
+Stack.init(from:): init(from decoder: any Decoder) throws
+Stack.pages: let pages: Int
+Stack.partial: let partial: Bool?
+Stack.payments: let payments: [StackTechnology]?
+Stack.scope: let scope: String
+Stack.servers: let servers: [StackTechnology]?
+Stack.url: let url: String
+Stack: conformsTo Swift.Decodable
+Stack: conformsTo Swift.Encodable
+Stack: conformsTo Swift.Sendable
+Stack: conformsTo Swift.SendableMetatype
+Stack: struct Stack
+StackDeep.init(from:): init(from decoder: any Decoder) throws
+StackDeep: conformsTo Swift.Decodable
+StackDeep: conformsTo Swift.Encodable
+StackDeep: conformsTo Swift.Sendable
+StackDeep: conformsTo Swift.SendableMetatype
+StackDeep: struct StackDeep
+StackTechnology.init(from:): init(from decoder: any Decoder) throws
+StackTechnology.name: let name: String
+StackTechnology.technology: let technology: String
+StackTechnology.version: let version: String?
+StackTechnology: conformsTo Swift.Decodable
+StackTechnology: conformsTo Swift.Encodable
+StackTechnology: conformsTo Swift.Sendable
+StackTechnology: conformsTo Swift.SendableMetatype
+StackTechnology: struct StackTechnology
 State.country: let country: String
 State.countryName: let countryName: String?
 State.deep: let deep: StateDeep?
