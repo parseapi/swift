@@ -63,7 +63,9 @@ import Testing
 			#expect(core.frameworks == nil && core.deep != nil)
 			_ = try await client.domain("example.com")
 			_ = try await client.stack("example.com", deep: true)
-			#expect(stub.requests.map(\.timeoutInterval) == [configured ?? 35, configured ?? 10, configured ?? 35])
+			let actualTimeouts: [TimeInterval] = stub.requests.map(\.timeoutInterval)
+			let expectedTimeouts: [TimeInterval] = [configured ?? 35, configured ?? 10, configured ?? 35]
+			#expect(actualTimeouts == expectedTimeouts)
 		}
 	}
 }
