@@ -1147,6 +1147,7 @@ Postal.districtName: let districtName: String?
 Postal.districtNameLocal: let districtNameLocal: String?
 Postal.init(from:): init(from decoder: any Decoder) throws
 Postal.latitude: let latitude: Double?
+Postal.localities: let localities: [PostalLocality]?
 Postal.longitude: let longitude: Double?
 Postal.postal: let postal: String
 Postal.state: let state: String?
@@ -1201,6 +1202,15 @@ PostalDistanceEnd: conformsTo Swift.Encodable
 PostalDistanceEnd: conformsTo Swift.Sendable
 PostalDistanceEnd: conformsTo Swift.SendableMetatype
 PostalDistanceEnd: struct PostalDistanceEnd
+PostalLocality.city: let city: String
+PostalLocality.init(from:): init(from decoder: any Decoder) throws
+PostalLocality.state: let state: String
+PostalLocality.stateName: let stateName: String
+PostalLocality: conformsTo Swift.Decodable
+PostalLocality: conformsTo Swift.Encodable
+PostalLocality: conformsTo Swift.Sendable
+PostalLocality: conformsTo Swift.SendableMetatype
+PostalLocality: struct PostalLocality
 PostalMetro.businessShare: let businessShare: Double?
 PostalMetro.code: let code: String
 PostalMetro.init(from:): init(from decoder: any Decoder) throws
