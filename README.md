@@ -188,6 +188,19 @@ Address search uses context from the form: prefer postal, or city and state. An 
 
 HLR reports status at the last check. `live` means assigned and `connected` means reachable at that check. Cached results may be returned. Null means unconfirmed. Deep diagnostics stay within the same metered lookup.
 
+## NPI provider lookup
+
+```swift
+let provider = try await parse.npi("1881018208")
+let profile = try await parse.npi("1881018208", deep: true)
+```
+
+Pass the original NPI as a string. `valid` checks its format and checksum; `registered` means a match in the stored NPPES snapshot. `active` reflects recorded NPI deactivation, not licensure. `excluded` is an NPI-only OIG LEIE match; `false` is not a complete exclusion clearance. These directory facts do not verify credentials, current practice contact or payment eligibility.
+
+Invalid input returns `valid: false` with unknown provider fields. A checksum-valid number missing from the snapshot returns `registered: false`; unavailable storage remains an API error. Preserve `null` as unknown.
+
+The default pooled lookup includes provider identity, specialty and practice contact where held. Paid `deep` adds `deactivated_at`, `medicare`, `opt_out` and `enrollments` from stored source files, with no separate check meter or live verification. `enrollments: null` means unavailable; `[]` means no enrollment rows are returned. The API omits unrequested `deep` and returns `{}` when requested on Free.
+
 ## Deep
 
 Choose enrichment for the question you need answered.
@@ -200,7 +213,8 @@ Choose enrichment for the question you need answered.
 | VAT | A metered registry check where supported, using included VAT checks or enabled on-demand usage. |
 | Phone | Numbering-plan state and timezone, pooled on every plan. |
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
-| Company, VIN, NPI, NAICS, Name, Weather | Richer reference/profile facts on paid plans. |
+| NPI | Deactivation date, Medicare enrollment, opt-out and enrollment rows from stored sources on paid plans. Exclusion evidence stays core. |
+| Company, VIN, NAICS, Name, Weather | Richer reference/profile facts on paid plans. |
 | Time, Date, Currency, Language, Emoji, IBAN | Optional same-question facts, pooled on every plan. |
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |

@@ -352,10 +352,15 @@ public struct Iban: Codable, Sendable {
 }
 
 public struct Npi: Codable, Sendable {
+	/// Input with accepted separators removed; nil when empty. Invalid values remain visible.
 	public let npi: String?
+	/// Format and NPI checksum only; does not verify a provider or credentials.
 	public let valid: Bool
+	/// Found in the stored NPPES snapshot. Nil when input is invalid.
 	public let registered: Bool?
+	/// Recorded NPI activation status. Nil when unknown; not licensure or practice status.
 	public let active: Bool?
+	/// NPI-only match in the stored OIG LEIE file. False is not complete exclusion clearance.
 	public let excluded: Bool?
 	public let type: String?
 	public let name: String?
@@ -382,9 +387,13 @@ public struct NpiEnrollment: Codable, Sendable {
 }
 
 public struct NpiDeep: Codable, Sendable {
+	/// Present in the stored Medicare FFS enrollment extract; not payment eligibility.
 	public let medicare: Bool?
+	/// NPI-only match in the stored CMS opt-out affidavit list. Nil when unavailable.
 	public let optOut: Bool?
+	/// Stored enrollment rows. Nil when unavailable; empty when no rows are returned.
 	public let enrollments: [NpiEnrollment]?
+	/// Recorded NPI deactivation date, YYYY-MM-DD. Nil when active or unavailable.
 	public let deactivatedAt: String?
 }
 
