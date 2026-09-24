@@ -3,6 +3,34 @@ import Foundation
 import FoundationNetworking
 #endif
 
+/// An explicit location input. Unknown or ambiguous locations keep clock fields null.
+public enum TimeSource: Sendable {
+	case ip(String)
+	case city(String, country: String? = nil, state: String? = nil)
+	case country(String)
+	case iata(String)
+	case icao(String)
+	case unlocode(String)
+	case address(String, country: String, state: String? = nil)
+}
+
+/// Filters the serving timezone catalog at one instant.
+public struct TimeZonesOptions: Sendable {
+	public var country: String?
+	public var area: String?
+	public var offset: String?
+	public var abbreviation: String?
+	public var dst: Bool?
+	public var observesDst: Bool?
+	public var at: String?
+	public var details: Bool
+	public var sort: String?
+	public init(country: String? = nil, area: String? = nil, offset: String? = nil, abbreviation: String? = nil, dst: Bool? = nil, observesDst: Bool? = nil, at: String? = nil, details: Bool = false, sort: String? = nil) {
+		self.country = country; self.area = area; self.offset = offset; self.abbreviation = abbreviation
+		self.dst = dst; self.observesDst = observesDst; self.at = at; self.details = details; self.sort = sort
+	}
+}
+
 /// Every non-2xx response from the API. Branch on `code`, never on `message`.
 public struct ParseAPIError: Error, LocalizedError, Sendable {
 	/// HTTP status. 0 for a construction error.
@@ -37,7 +65,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.4.0"
+	static let version = "1.6.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -497,12 +525,12 @@ public final class ParseAPI: Sendable {
 
 	/// Current local time, UTC by default. With to, offsetless at is source wall time.
 	public func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time {
-		let path = timezone.map { "/time/\(enc($0))" } ?? "/time"
+		let path = try timePath(timezone)
 		return try await get(path, query: [("at", at), ("to", to)] + deepQuery(deep))
 	}
 	/// Select translated display names for this request.
 	public func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time {
-		let path = timezone.map { "/time/\(enc($0))" } ?? "/time"
+		let path = try timePath(timezone)
 		return try await get(path, query: [("lang", lang)] + [("at", at), ("to", to)] + deepQuery(deep))
 	}
 
@@ -513,6 +541,80 @@ public final class ParseAPI: Sendable {
 	/// Select translated display names for this request.
 	public func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time {
 		try await get("/time", query: [("lang", lang)] + [("lat", num(lat)), ("lon", num(lon)), ("at", at), ("to", to)] + deepQuery(deep))
+	}
+
+	/// Convert offsetless source wall time with compatible, earlier, later, or reject at clock changes. Explicit offsets select the instant directly.
+	public func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String) async throws -> Time {
+		let path = try timePath(timezone)
+		return try await get(path, query: [("lang", lang), ("at", at), ("to", to), ("disambiguation", disambiguation)] + deepQuery(deep))
+	}
+
+	/// Convert offsetless coordinate-local wall time with compatible, earlier, later, or reject at clock changes.
+	public func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String) async throws -> Time {
+		try await get("/time", query: [("lang", lang), ("lat", num(lat)), ("lon", num(lon)), ("at", at), ("to", to), ("disambiguation", disambiguation)] + deepQuery(deep))
+	}
+
+	/// Convert the same instant to 1-10 destination zones, preserving order and duplicates.
+	public func time(_ timezone: String? = nil, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time {
+		let path = try timePath(timezone)
+		return try await get(path, query: [("at", at), ("lang", lang), ("disambiguation", disambiguation), ("targets", try timeTargets(targets))] + deepQuery(deep))
+	}
+
+	/// Convert coordinate-local time to 1-10 zones, preserving order and duplicates.
+	public func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time {
+		try await get("/time", query: [("lat", num(lat)), ("lon", num(lon)), ("at", at), ("lang", lang), ("disambiguation", disambiguation), ("targets", try timeTargets(targets))] + deepQuery(deep))
+	}
+
+	/// Search serving timezone IDs. Omit query to list all.
+	public func timeZones(_ query: String? = nil) async throws -> TimeZones {
+		try await timeZones(query, options: TimeZonesOptions())
+	}
+
+	/// Filters supported identifiers at one instant. Abbreviations return candidates.
+	public func timeZones(_ query: String? = nil, options: TimeZonesOptions) async throws -> TimeZones {
+		try await get("/time/zones", query: [("q", query), ("country", options.country), ("area", options.area), ("offset", options.offset), ("abbreviation", options.abbreviation), ("dst", options.dst.map { $0 ? "true" : "false" }), ("observes_dst", options.observesDst.map { $0 ? "true" : "false" }), ("at", options.at), ("details", options.details ? "true" : nil), ("sort", options.sort)])
+	}
+
+	/// Resolve an explicit location and convert its time. Ambiguity remains visible in location.
+	public func time(source: TimeSource, at: String? = nil, to: String? = nil, targets: [String]? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil) async throws -> Time {
+		if to != nil && targets != nil {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Pass to or targets, not both.", docs: nil, requestId: nil)
+		}
+		let targetValue = try targets.map { try timeTargets($0) }
+		return try await get("/time", query: timeSourceQuery(source) + [("at", at), ("to", to), ("targets", targetValue), ("lang", lang), ("disambiguation", disambiguation)] + deepQuery(deep))
+	}
+
+	private func timeSourceQuery(_ source: TimeSource) throws -> [(String, String?)] {
+		let values: [(String, String?)]
+		switch source {
+		case .ip(let value): values = [("ip", value)]
+		case .city(let value, let country, let state):
+			if state != nil && country == nil { throw ParseAPIError(status: 0, code: "invalid_argument", message: "State context requires country.", docs: nil, requestId: nil) }
+			values = [("city", value), ("country", country), ("state", state)]
+		case .country(let value): values = [("country", value)]
+		case .iata(let value): values = [("iata", value)]
+		case .icao(let value): values = [("icao", value)]
+		case .unlocode(let value): values = [("unlocode", value)]
+		case .address(let value, let country, let state): values = [("address", value), ("country", country), ("state", state)]
+		}
+		if values.contains(where: { $0.1?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == true }) {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Time source values must not be empty.", docs: nil, requestId: nil)
+		}
+		return values
+	}
+
+	private func timePath(_ timezone: String?) throws -> String {
+		if let timezone, ["zones", "help"].contains(timezone.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()) {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Time source must be an IANA timezone ID. Use timezone discovery to list IDs.", docs: nil, requestId: nil)
+		}
+		return timezone.map { "/time/\(enc($0))" } ?? "/time"
+	}
+
+	private func timeTargets(_ targets: [String]) throws -> String {
+		guard (1...10).contains(targets.count), targets.allSatisfy({ !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !$0.contains(",") }) else {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Time targets requires 1 to 10 timezone IDs.", docs: nil, requestId: nil)
+		}
+		return targets.joined(separator: ",")
 	}
 
 	/// Look up a named timezone, or convert a wall time with to.

@@ -1044,10 +1044,17 @@ ParseAPI.stateDistricts(_:country:deep:): func stateDistricts(_ code: String, co
 ParseAPI.stateDistricts(_:country:deep:lang:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateDistricts
 ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff
 ParseAPI.tariffSearch(_:): func tariffSearch(_ query: String) async throws -> TariffSearch
+ParseAPI.time(_:at:deep:lang:disambiguation:targets:): func time(_ timezone: String? = nil, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time
 ParseAPI.time(_:at:to:deep:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time
 ParseAPI.time(_:at:to:deep:lang:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time
+ParseAPI.time(_:at:to:deep:lang:disambiguation:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String) async throws -> Time
+ParseAPI.time(source:at:to:targets:deep:lang:disambiguation:): func time(source: TimeSource, at: String? = nil, to: String? = nil, targets: [String]? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil) async throws -> Time
+ParseAPI.timeAt(_:_:at:deep:lang:disambiguation:targets:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time
 ParseAPI.timeAt(_:_:at:to:deep:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time
 ParseAPI.timeAt(_:_:at:to:deep:lang:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time
+ParseAPI.timeAt(_:_:at:to:deep:lang:disambiguation:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String) async throws -> Time
+ParseAPI.timeZones(_:): func timeZones(_ query: String? = nil) async throws -> TimeZones
+ParseAPI.timeZones(_:options:): func timeZones(_ query: String? = nil, options: TimeZonesOptions) async throws -> TimeZones
 ParseAPI.timezone(_:at:to:deep:): func timezone(_ id: String, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Timezone
 ParseAPI.timezone(_:at:to:deep:lang:): func timezone(_ id: String, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Timezone
 ParseAPI.timezoneAt(_:_:at:deep:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false) async throws -> Timezone
@@ -1417,14 +1424,143 @@ TariffSearchHit: conformsTo Swift.Sendable
 TariffSearchHit: conformsTo Swift.SendableMetatype
 TariffSearchHit: struct TariffSearchHit
 Time: typealias Time = Timezone
+TimeLocation.candidates: let candidates: [TimeLocationCandidate]
+TimeLocation.init(from:): init(from decoder: any Decoder) throws
+TimeLocation.input: let input: TimeLocationInput
+TimeLocation.source: let source: String
+TimeLocation.status: let status: String
+TimeLocation.truncated: let truncated: Bool
+TimeLocation: conformsTo Swift.Decodable
+TimeLocation: conformsTo Swift.Encodable
+TimeLocation: conformsTo Swift.Sendable
+TimeLocation: conformsTo Swift.SendableMetatype
+TimeLocation: struct TimeLocation
+TimeLocationCandidate.country: let country: String?
+TimeLocationCandidate.id: let id: String?
+TimeLocationCandidate.init(from:): init(from decoder: any Decoder) throws
+TimeLocationCandidate.latitude: let latitude: Double?
+TimeLocationCandidate.longitude: let longitude: Double?
+TimeLocationCandidate.name: let name: String?
+TimeLocationCandidate.state: let state: String?
+TimeLocationCandidate.timezone: let timezone: String?
+TimeLocationCandidate: conformsTo Swift.Decodable
+TimeLocationCandidate: conformsTo Swift.Encodable
+TimeLocationCandidate: conformsTo Swift.Sendable
+TimeLocationCandidate: conformsTo Swift.SendableMetatype
+TimeLocationCandidate: struct TimeLocationCandidate
+TimeLocationInput.init(from:): init(from decoder: any Decoder) throws
+TimeLocationInput.type: let type: String
+TimeLocationInput.value: let value: String
+TimeLocationInput: conformsTo Swift.Decodable
+TimeLocationInput: conformsTo Swift.Encodable
+TimeLocationInput: conformsTo Swift.Sendable
+TimeLocationInput: conformsTo Swift.SendableMetatype
+TimeLocationInput: struct TimeLocationInput
+TimeResolution.adjustmentSeconds: let adjustmentSeconds: Int?
+TimeResolution.alternatives: let alternatives: [TimeResolutionAlternative]?
+TimeResolution.init(from:): init(from decoder: any Decoder) throws
+TimeResolution.kind: let kind: String?
+TimeResolution.policy: let policy: String?
+TimeResolution: conformsTo Swift.Decodable
+TimeResolution: conformsTo Swift.Encodable
+TimeResolution: conformsTo Swift.Sendable
+TimeResolution: conformsTo Swift.SendableMetatype
+TimeResolution: struct TimeResolution
+TimeResolutionAlternative.at: let at: String?
+TimeResolutionAlternative.init(from:): init(from decoder: any Decoder) throws
+TimeResolutionAlternative.offset: let offset: String?
+TimeResolutionAlternative.unix: let unix: Int64?
+TimeResolutionAlternative: conformsTo Swift.Decodable
+TimeResolutionAlternative: conformsTo Swift.Encodable
+TimeResolutionAlternative: conformsTo Swift.Sendable
+TimeResolutionAlternative: conformsTo Swift.SendableMetatype
+TimeResolutionAlternative: struct TimeResolutionAlternative
+TimeSeason.end: let end: TimeTransition?
+TimeSeason.init(from:): init(from decoder: any Decoder) throws
+TimeSeason.start: let start: TimeTransition?
+TimeSeason: conformsTo Swift.Decodable
+TimeSeason: conformsTo Swift.Encodable
+TimeSeason: conformsTo Swift.Sendable
+TimeSeason: conformsTo Swift.SendableMetatype
+TimeSeason: struct TimeSeason
+TimeSource.address(_:country:state:): case address(String, country: String, state: String? = nil)
+TimeSource.city(_:country:state:): case city(String, country: String? = nil, state: String? = nil)
+TimeSource.country(_:): case country(String)
+TimeSource.iata(_:): case iata(String)
+TimeSource.icao(_:): case icao(String)
+TimeSource.ip(_:): case ip(String)
+TimeSource.unlocode(_:): case unlocode(String)
+TimeSource: conformsTo Swift.Sendable
+TimeSource: conformsTo Swift.SendableMetatype
+TimeSource: enum TimeSource
+TimeTransition.after: let after: TimeTransitionState?
+TimeTransition.at: let at: String?
+TimeTransition.before: let before: TimeTransitionState?
+TimeTransition.changeSeconds: let changeSeconds: Int?
+TimeTransition.init(from:): init(from decoder: any Decoder) throws
+TimeTransition: conformsTo Swift.Decodable
+TimeTransition: conformsTo Swift.Encodable
+TimeTransition: conformsTo Swift.Sendable
+TimeTransition: conformsTo Swift.SendableMetatype
+TimeTransition: struct TimeTransition
+TimeTransitionState.abbreviation: let abbreviation: String?
+TimeTransitionState.at: let at: String?
+TimeTransitionState.dst: let dst: Bool?
+TimeTransitionState.init(from:): init(from decoder: any Decoder) throws
+TimeTransitionState.offset: let offset: String?
+TimeTransitionState.offsetSeconds: let offsetSeconds: Int?
+TimeTransitionState: conformsTo Swift.Decodable
+TimeTransitionState: conformsTo Swift.Encodable
+TimeTransitionState: conformsTo Swift.Sendable
+TimeTransitionState: conformsTo Swift.SendableMetatype
+TimeTransitionState: struct TimeTransitionState
+TimeZoneEntry.abbreviation: let abbreviation: String
+TimeZoneEntry.area: let area: String?
+TimeZoneEntry.countries: let countries: [String]
+TimeZoneEntry.dst: let dst: Bool
+TimeZoneEntry.init(from:): init(from decoder: any Decoder) throws
+TimeZoneEntry.observesDst: let observesDst: Bool
+TimeZoneEntry.offset: let offset: String
+TimeZoneEntry.offsetSeconds: let offsetSeconds: Int
+TimeZoneEntry.timezone: let timezone: String
+TimeZoneEntry: conformsTo Swift.Decodable
+TimeZoneEntry: conformsTo Swift.Encodable
+TimeZoneEntry: conformsTo Swift.Sendable
+TimeZoneEntry: conformsTo Swift.SendableMetatype
+TimeZoneEntry: struct TimeZoneEntry
+TimeZones.at: let at: String?
+TimeZones.init(from:): init(from decoder: any Decoder) throws
+TimeZones.timezoneDatabaseVersion: let timezoneDatabaseVersion: String
+TimeZones.timezones: let timezones: [String]
+TimeZones.zones: let zones: [TimeZoneEntry]?
+TimeZones: conformsTo Swift.Decodable
+TimeZones: conformsTo Swift.Encodable
+TimeZones: conformsTo Swift.Sendable
+TimeZones: conformsTo Swift.SendableMetatype
+TimeZones: struct TimeZones
+TimeZonesOptions.abbreviation: var abbreviation: String?
+TimeZonesOptions.area: var area: String?
+TimeZonesOptions.at: var at: String?
+TimeZonesOptions.country: var country: String?
+TimeZonesOptions.details: var details: Bool
+TimeZonesOptions.dst: var dst: Bool?
+TimeZonesOptions.init(country:area:offset:abbreviation:dst:observesDst:at:details:sort:): init(country: String? = nil, area: String? = nil, offset: String? = nil, abbreviation: String? = nil, dst: Bool? = nil, observesDst: Bool? = nil, at: String? = nil, details: Bool = false, sort: String? = nil)
+TimeZonesOptions.observesDst: var observesDst: Bool?
+TimeZonesOptions.offset: var offset: String?
+TimeZonesOptions.sort: var sort: String?
+TimeZonesOptions: conformsTo Swift.Sendable
+TimeZonesOptions: conformsTo Swift.SendableMetatype
+TimeZonesOptions: struct TimeZonesOptions
 Timezone.abbreviation: let abbreviation: String?
 Timezone.at: let at: String?
 Timezone.deep: let deep: TimezoneDeep?
 Timezone.dst: let dst: Bool?
 Timezone.init(from:): init(from decoder: any Decoder) throws
 Timezone.latitude: let latitude: Double?
+Timezone.location: let location: TimeLocation?
 Timezone.longitude: let longitude: Double?
 Timezone.offset: let offset: String?
+Timezone.targets: let targets: [TimezoneConversionTarget]?
 Timezone.timezone: let timezone: String?
 Timezone.to: let to: TimezoneConversionTarget?
 Timezone.unix: let unix: Int64?
@@ -1455,11 +1591,17 @@ TimezoneConversionTargetDeep: conformsTo Swift.Encodable
 TimezoneConversionTargetDeep: conformsTo Swift.Sendable
 TimezoneConversionTargetDeep: conformsTo Swift.SendableMetatype
 TimezoneConversionTargetDeep: struct TimezoneConversionTargetDeep
+TimezoneDeep.dstOffsetSeconds: let dstOffsetSeconds: Int?
 TimezoneDeep.init(from:): init(from decoder: any Decoder) throws
 TimezoneDeep.name: let name: String?
 TimezoneDeep.nextDst: let nextDst: TimezoneNextDST?
 TimezoneDeep.offsetMinutes: let offsetMinutes: Int?
 TimezoneDeep.offsetSeconds: let offsetSeconds: Int?
+TimezoneDeep.resolution: let resolution: TimeResolution?
+TimezoneDeep.season: let season: TimeSeason?
+TimezoneDeep.standardOffset: let standardOffset: String?
+TimezoneDeep.standardOffsetSeconds: let standardOffsetSeconds: Int?
+TimezoneDeep.timezoneDatabaseVersion: let timezoneDatabaseVersion: String?
 TimezoneDeep: conformsTo Swift.Decodable
 TimezoneDeep: conformsTo Swift.Encodable
 TimezoneDeep: conformsTo Swift.Sendable

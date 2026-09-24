@@ -311,6 +311,44 @@ func makeClient(
 }
 
 struct TimeTests {
+	@Test func targetListsAndDiscoveryKeepTheirShapes() async throws {
+		let stub = StubTransport(body: #"{"targets":[{"timezone":"UTC","offset":"+00:00","dst":false,"at":"1970-01-01T00:00:00+00:00","unix":0},{"timezone":"UTC","offset":"+00:00","dst":false,"at":"1970-01-01T00:00:00+00:00","unix":0}]}"#)
+		let parse = try makeClient(stub)
+		for targets in [[], [""], ["UTC,UTC"], Array(repeating: "UTC", count: 11)] {
+			await #expect(throws: ParseAPIError.self) { try await parse.time("UTC", targets: targets) }
+			await #expect(throws: ParseAPIError.self) { try await parse.timeAt(0, 0, targets: targets) }
+		}
+		#expect(stub.requests.isEmpty)
+		let result = try await parse.time("UTC", targets: ["UTC", "Asia/Tokyo", "UTC"])
+		#expect(stub.requests.last!.url!.absoluteString == "https://api.parseapi.com/time/UTC?targets=UTC%2CAsia%2FTokyo%2CUTC")
+		#expect(result.targets?.count == 2 && result.targets?.last?.unix == 0)
+		_ = try await parse.timeAt(0, 0, targets: ["UTC", "Asia/Tokyo", "UTC"])
+		#expect(stub.requests.last!.url!.absoluteString == "https://api.parseapi.com/time?lat=0&lon=0&targets=UTC%2CAsia%2FTokyo%2CUTC")
+		for body in ["{}", #"{"targets":null}"#] { #expect(try await makeClient(StubTransport(body: body)).time("UTC").targets == nil) }
+		#expect(try await makeClient(StubTransport(body: #"{"targets":[]}"#)).time("UTC").targets?.isEmpty == true)
+		let zonesStub = StubTransport(body: #"{"timezone_database_version":"2026c","timezones":[]}"#)
+		let zonesClient = try makeClient(zonesStub)
+		#expect(try await zonesClient.timeZones().timezoneDatabaseVersion == "2026c")
+		#expect(zonesStub.requests.last!.url!.absoluteString == "https://api.parseapi.com/time/zones")
+		#expect(try await zonesClient.timeZones("Europe").timezones.isEmpty)
+		#expect(zonesStub.requests.last!.url!.absoluteString == "https://api.parseapi.com/time/zones?q=Europe")
+	}
+	@Test func conversionPolicyIsOptionalAndForwarded() async throws {
+		let stub = StubTransport(body: "{}")
+		let parse = try makeClient(stub)
+		let oldTime: (String?, String?, String?, Bool) async throws -> Time = parse.time
+		let oldTimeAt: (Double, Double, String?, String?, Bool) async throws -> Time = parse.timeAt
+		_ = try await oldTime(nil, nil, nil, false)
+		_ = try await oldTimeAt(0, 0, nil, nil, false)
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/time")
+		#expect(stub.requests[1].url!.absoluteString == "https://api.parseapi.com/time?lat=0&lon=0")
+		for mode in ["compatible", "earlier", "later", "reject"] {
+			_ = try await parse.time("America/New_York", at: "2026-11-01T01:30:00", to: "UTC", disambiguation: mode)
+			#expect(stub.requests.last!.url!.absoluteString == "https://api.parseapi.com/time/America%2FNew_York?at=2026-11-01T01%3A30%3A00&to=UTC&disambiguation=\(mode)")
+			_ = try await parse.timeAt(40.71, -74.01, at: "2026-11-01T01:30:00", to: "UTC", disambiguation: mode)
+			#expect(stub.requests.last!.url!.absoluteString == "https://api.parseapi.com/time?lat=40.71&lon=-74.01&at=2026-11-01T01%3A30%3A00&to=UTC&disambiguation=\(mode)")
+		}
+	}
 	@Test func clocksKeepEpochZeroAndNulls() async throws {
 		let historical = try await makeClient(StubTransport(body: #"{"at":"1880-01-01T00:00:00-04:56:02","deep":{"offset_seconds":-17762,"offset_minutes":-296},"timezone":"America/New_York"}"#)).time("America/New_York")
 		#expect(historical.deep?.offsetSeconds == -17762 && historical.deep?.offsetMinutes == -296)
@@ -328,4 +366,48 @@ struct TimeTests {
 		let empty = try await makeClient(unknown).timeAt(0, 0)
 		#expect(empty.at == nil && empty.unix == nil && empty.to == nil)
 	}
+}
+
+@Suite struct TimeExcellenceTests {
+ @Test func resolutionAndReservedSourceRoutes() async throws {
+  let stub = StubTransport(body: #"{"deep":{"timezone_database_version":"2026c","resolution":{"kind":"gap","policy":"earlier","adjustment_seconds":-1800,"alternatives":[{"at":"1970-01-01T00:00:00.123+00:00","unix":0,"offset":"+00:00"},{"at":"1970-01-01T00:30:00.123+00:00","unix":1800,"offset":"+00:00"}],"future":true}}}"#)
+  let parse = try makeClient(stub)
+  for zone in ["zones", "help", " ZONES ", "Help"] {
+   await #expect(throws: ParseAPIError.self) { try await parse.time(zone) }
+  }
+  #expect(stub.requests.isEmpty)
+  let result = try await parse.time("UTC", deep: true)
+  #expect(result.deep?.timezoneDatabaseVersion == "2026c")
+  #expect(result.deep?.resolution?.adjustmentSeconds == -1800)
+  #expect(result.deep?.resolution?.alternatives?.first?.unix == 0)
+  for body in [#"{"deep":{}}"#, #"{"deep":{"resolution":null}}"#] {
+   #expect(try await makeClient(StubTransport(body: body)).time("UTC", deep: true).deep?.resolution == nil)
+  }
+  let unique = try await makeClient(StubTransport(body: #"{"deep":{"resolution":{"kind":"unique","alternatives":[]}}}"#)).time("UTC", deep: true)
+  #expect(unique.deep?.resolution?.alternatives?.isEmpty == true)
+ }
+}
+
+@Suite struct TimeGapsTests {
+ @Test func explicitSourceCatalogAndSeasonalEvidence() async throws {
+  let catalog = StubTransport(body: #"{"timezone_database_version": "2026c", "timezones": ["UTC"], "at": "1970-01-01T00:00:00.000Z", "zones": [{"timezone": "UTC", "countries": [], "area": null, "abbreviation": "UTC", "offset": "+00:00", "offset_seconds": 0, "dst": false, "observes_dst": false}]}"#)
+  let zones = try await makeClient(catalog).timeZones(options: TimeZonesOptions(country:"US", area:"America", offset:"+00:00", abbreviation:"UTC", dst:false, observesDst:false, at:"1970-01-01T00:00:00Z", details:true, sort:"offset"))
+  let query=URLComponents(url:catalog.requests[0].url!,resolvingAgainstBaseURL:false)!.queryItems!
+  #expect(query.contains { $0.name=="dst" && $0.value=="false" })
+  #expect(query.contains { $0.name=="observes_dst" && $0.value=="false" })
+  #expect(zones.zones?.first?.offsetSeconds==0 && zones.zones?.first?.dst==false)
+  let stub=StubTransport(body:#"{"timezone": null, "targets": null, "location": {"input": {"type": "city", "value": "Springfield"}, "status": "ambiguous", "candidates": [{"id": "city_a", "name": "Springfield", "country": "US", "state": "IL", "timezone": "America/Chicago", "latitude": 0, "longitude": 0}], "truncated": false, "source": "city_reference"}, "deep": {"standard_offset": "+01:00", "standard_offset_seconds": 3600, "dst_offset_seconds": -3600, "season": {"start": {"at": "2026-10-25T01:00:00Z", "before": {"offset_seconds": 3600, "dst": false}, "after": {"offset_seconds": 0, "dst": true}, "change_seconds": -3600}, "end": null}}}"#)
+  let parse=try makeClient(stub)
+  let result=try await parse.time(source:.city("Springfield",country:"US",state:"IL"),targets:["UTC"],deep:true)
+  #expect(result.timezone==nil && result.location?.status=="ambiguous")
+  #expect(result.location?.candidates.first?.latitude==0)
+  #expect(result.deep?.dstOffsetSeconds == -3600 && result.deep?.season?.start?.changeSeconds == -3600)
+  #expect(result.deep?.season?.start?.before?.dst == false)
+  for source in [TimeSource.ip("2001:db8::1"), .country("US"), .iata("JFK"), .icao("KJFK"), .unlocode("US NYC"), .address("1 Main Street",country:"US",state:"NY")] { _=try await parse.time(source:source) }
+  let count=stub.requests.count
+  await #expect(throws:ParseAPIError.self) { try await parse.time(source:.ip("")) }
+  await #expect(throws:ParseAPIError.self) { try await parse.time(source:.city("Paris",state:"IDF")) }
+  await #expect(throws:ParseAPIError.self) { try await parse.time(source:.country("US"),to:"UTC",targets:["UTC"]) }
+  #expect(stub.requests.count==count)
+ }
 }
