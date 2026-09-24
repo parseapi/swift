@@ -213,10 +213,19 @@ public struct PostalMetro: Codable, Sendable {
 	public let otherShare: Double?
 }
 
+/// A supported Australian postcode suburb choice, independent of the scalar city.
+public struct PostalLocality: Codable, Sendable {
+	public let city: String
+	public let state: String
+	public let stateName: String
+}
+
 public struct Postal: Codable, Sendable {
 	public let postal: String
 	public let city: String?
 	public let cityLocal: String?
+	/// Nil is unknown. An empty list has no eligible choices. One choice does not imply city.
+	public let localities: [PostalLocality]?
 	public let district: String?
 	public let districtName: String?
 	public let districtNameLocal: String?
