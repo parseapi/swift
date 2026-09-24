@@ -48,8 +48,8 @@ import FoundationNetworking
         formatter.timeZone = TimeZone(secondsFromGMT: 0)
         formatter.dateFormat = "EEE, dd MMM yyyy HH:mm:ss zzz"
         let future = formatter.string(from: Date().addingTimeInterval(60))
-        #expect(ParseAPI.retryDelayNanos(attempt: 0, retryAfter: future) == 5_000_000_000)
-        #expect(ParseAPI.retryDelayNanos(attempt: 999, retryAfter: "NaN") <= 5_000_000_000)
+        #expect(ParseAPI.retryDelayNanos(attempt: 0, retryAfter: future) == nil)
+        #expect(ParseAPI.retryDelayNanos(attempt: 999, retryAfter: "NaN")! <= 5_000_000_000)
     }
 
     @Test func invalidConfigurationFailsImmediately() {

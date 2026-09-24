@@ -65,27 +65,6 @@ AddressSuggestion: conformsTo Swift.Encodable
 AddressSuggestion: conformsTo Swift.Sendable
 AddressSuggestion: conformsTo Swift.SendableMetatype
 AddressSuggestion: struct AddressSuggestion
-Bin.bin: let bin: String
-Bin.brand: let brand: String?
-Bin.brandName: let brandName: String?
-Bin.country: let country: String?
-Bin.deep: let deep: BinDeep?
-Bin.init(from:): init(from decoder: any Decoder) throws
-Bin.issuer: let issuer: String?
-Bin.prefix: let prefix: String?
-Bin.prepaid: let prepaid: Bool?
-Bin.type: let type: String?
-Bin: conformsTo Swift.Decodable
-Bin: conformsTo Swift.Encodable
-Bin: conformsTo Swift.Sendable
-Bin: conformsTo Swift.SendableMetatype
-Bin: struct Bin
-BinDeep.init(from:): init(from decoder: any Decoder) throws
-BinDeep: conformsTo Swift.Decodable
-BinDeep: conformsTo Swift.Encodable
-BinDeep: conformsTo Swift.Sendable
-BinDeep: conformsTo Swift.SendableMetatype
-BinDeep: struct BinDeep
 Bloc.bloc: let bloc: String
 Bloc.init(from:): init(from decoder: any Decoder) throws
 Bloc.members: let members: Int
@@ -123,6 +102,20 @@ Caller: conformsTo Swift.Encodable
 Caller: conformsTo Swift.Sendable
 Caller: conformsTo Swift.SendableMetatype
 Caller: struct Caller
+Card.bin: let bin: String
+Card.brand: let brand: String?
+Card.brandName: let brandName: String?
+Card.country: let country: String?
+Card.init(from:): init(from decoder: any Decoder) throws
+Card.issuer: let issuer: String?
+Card.prefix: let prefix: String?
+Card.prepaid: let prepaid: Bool?
+Card.type: let type: String?
+Card: conformsTo Swift.Decodable
+Card: conformsTo Swift.Encodable
+Card: conformsTo Swift.Sendable
+Card: conformsTo Swift.SendableMetatype
+Card: struct Card
 Carrier.burner: let burner: Bool?
 Carrier.carrier: let carrier: String?
 Carrier.country: let country: String?
@@ -960,11 +953,11 @@ ParseAPI.address(_:country:deep:): func address(_ address: String, country: Stri
 ParseAPI.addressSearch(_:country:postal:city:state:ip:): func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch
 ParseAPI.asn(_:): func asn(_ asn: String) async throws -> ASN
 ParseAPI.asn(_:lang:): func asn(_ asn: String, lang: String?) async throws -> ASN
-ParseAPI.bin(_:deep:): func bin(_ bin: String, deep: Bool = false) async throws -> Bin
 ParseAPI.bloc(_:): func bloc(_ code: String) async throws -> Bloc
 ParseAPI.blocCountries(_:): func blocCountries(_ code: String) async throws -> BlocCountries
 ParseAPI.blocCountries(_:lang:): func blocCountries(_ code: String, lang: String?) async throws -> BlocCountries
 ParseAPI.caller(_:country:): func caller(_ number: String, country: String? = nil) async throws -> Caller
+ParseAPI.card(_:): func card(_ bin: String) async throws -> Card
 ParseAPI.carrier(_:country:deep:): func carrier(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Carrier
 ParseAPI.city(_:country:state:deep:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> City
 ParseAPI.city(_:country:state:deep:lang:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> City
@@ -1064,6 +1057,7 @@ ParseAPIError.docs: let docs: String?
 ParseAPIError.errorDescription: var errorDescription: String? { get }
 ParseAPIError.message: let message: String
 ParseAPIError.requestId: let requestId: String?
+ParseAPIError.retryAfter: let retryAfter: String?
 ParseAPIError.status: let status: Int
 ParseAPIError: conformsTo Foundation.LocalizedError
 ParseAPIError: conformsTo Swift.Error

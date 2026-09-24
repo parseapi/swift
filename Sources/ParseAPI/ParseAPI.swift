@@ -14,6 +14,13 @@ public struct ParseAPIError: Error, LocalizedError, Sendable {
 	public let docs: String?
 	/// Send this if you contact support.
 	public let requestId: String?
+	/// Raw Retry-After response header, when supplied.
+	public let retryAfter: String?
+
+	init(status: Int, code: String, message: String, docs: String?, requestId: String?, retryAfter: String? = nil) {
+		self.status = status; self.code = code; self.message = message
+		self.docs = docs; self.requestId = requestId; self.retryAfter = retryAfter
+	}
 
 	public var errorDescription: String? { message }
 }
@@ -418,8 +425,15 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Look up a 6-11 digit card prefix. Preserve leading zeros in the string.
-	public func bin(_ bin: String, deep: Bool = false) async throws -> Bin {
-		try await get("/bin/\(enc(bin))", query: deepQuery(deep))
+	public func card(_ bin: String) async throws -> Card {
+		guard bin.utf16.count <= 64 else {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 6-11 digit prefix string.", docs: nil, requestId: nil)
+		}
+		let digits = bin.utf8.filter { ![32, 9, 13, 10, 45].contains($0) }
+		guard (6...11).contains(digits.count), digits.allSatisfy({ (48...57).contains($0) }) else {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 6-11 digit prefix string.", docs: nil, requestId: nil)
+		}
+		return try await get("/card/\(enc(bin))")
 	}
 
 
@@ -674,7 +688,7 @@ public final class ParseAPI: Sendable {
 				}
 				try Task.checkCancellation()
 				if attempt < retryLimit {
-					try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: nil))
+					try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: nil)!)
 					attempt += 1
 					continue
 				}
@@ -688,9 +702,10 @@ public final class ParseAPI: Sendable {
 				return try decoder.decode(T.self, from: data)
 			}
 
-			if Self.retryStatus.contains(response.statusCode), attempt < retryLimit {
-				let retryAfter = response.value(forHTTPHeaderField: "Retry-After")
-				try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: retryAfter))
+			let retryAfter = response.value(forHTTPHeaderField: "Retry-After")
+			if Self.retryStatus.contains(response.statusCode), attempt < retryLimit,
+				let wait = Self.retryDelayNanos(attempt: attempt, retryAfter: retryAfter) {
+				try await Task.sleep(nanoseconds: wait)
 				attempt += 1
 				continue
 			}
@@ -701,14 +716,16 @@ public final class ParseAPI: Sendable {
 				code: body["code"] as? String ?? "unknown_error",
 				message: body["message"] as? String ?? "Request failed with status \(response.statusCode)",
 				docs: body["docs"] as? String,
-				requestId: body["request_id"] as? String
+				requestId: body["request_id"] as? String,
+				retryAfter: retryAfter
 			)
 		}
 	}
 
-	static func retryDelayNanos(attempt: Int, retryAfter: String?) -> UInt64 {
-		if let retryAfter, let seconds = Double(retryAfter), seconds.isFinite, seconds >= 0 {
-			return UInt64(min(seconds, retryAfterCapSeconds) * 1_000_000_000)
+	static func retryDelayNanos(attempt: Int, retryAfter: String?) -> UInt64? {
+		if let retryAfter, retryAfter.trimmingCharacters(in: .whitespaces).range(of: #"^[0-9]+(?:\.[0-9]+)?$"#, options: .regularExpression) != nil {
+			guard let seconds = Double(retryAfter.trimmingCharacters(in: .whitespaces)), seconds.isFinite, seconds <= retryAfterCapSeconds else { return nil }
+			return UInt64(ceil(seconds * 1_000_000_000))
 		}
 		if let retryAfter {
 			let formatter = DateFormatter()
@@ -718,7 +735,8 @@ public final class ParseAPI: Sendable {
 			for pattern in ["EEE, dd MMM yyyy HH:mm:ss zzz", "EEEE, dd-MMM-yy HH:mm:ss zzz", "EEE MMM d HH:mm:ss yyyy"] {
 				formatter.dateFormat = pattern
 				if let date = formatter.date(from: retryAfter) {
-					return UInt64(max(0, min(date.timeIntervalSinceNow, retryAfterCapSeconds)) * 1_000_000_000)
+					let seconds = max(0, date.timeIntervalSinceNow)
+					return seconds > retryAfterCapSeconds ? nil : UInt64(ceil(seconds * 1_000_000_000))
 				}
 			}
 		}

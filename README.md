@@ -72,7 +72,7 @@ try await parse.ipSelf()
 try await parse.email("hello@gmail.com")
 try await parse.vat("DE136695976")
 try await parse.iban("DE89370400440532013000")
-try await parse.bin("424242")
+try await parse.card("424242")
 try await parse.npi("1881018208")
 try await parse.phone("+14155552671")
 try await parse.postal("SW1A 1AA")
@@ -232,7 +232,7 @@ if ip.deep?.datacenter == true {
 
 ## Errors
 
-Every non-2xx response throws a `ParseAPIError` with `status`, `code`, `docs`, and `requestId`. Branch on `code`.
+Every non-2xx response throws a `ParseAPIError` with `status`, `code`, `docs`, and `requestId`, plus nullable `retryAfter` header metadata. Branch on `code`.
 
 ```swift
 do {
@@ -255,6 +255,8 @@ let parse = try ParseAPI(
 
 Ordinary lookups retry up to twice on network failures, 429, 500, 502, 503, and 504. Carrier, caller, HLR, and email/VAT deep lookups do not retry automatically. Address deep also uses zero retries, reserved for future verification. An explicit `retries` value applies to every lookup, including metered requests. A retry may count as another lookup.
 
+Automatic retries honor numeric and HTTP-date `Retry-After` values up to five seconds. A longer server wait returns the original API error immediately, with the raw header in `retryAfter`, so the application can schedule a later attempt. Missing or invalid headers use ordinary backoff.
+
 Cancelled tasks stop the lookup and are not retried. Redirects are returned as errors.
 
 Requires Swift 6.0 or later. iOS 15, macOS 12, watchOS 8, tvOS 15. Foundation only, zero dependencies.
@@ -269,7 +271,28 @@ Run `swift test` and `python3 scripts/check-api.py` before a release. The API ch
 
 Pushes and pull requests run the tests on Swift 6.0 and 6.3.3. The API check uses Swift 6.3.3, the compiler used for the baseline. Device-platform validation remains a release check.
 
-BIN lookup accepts 6-11 digits as a string, including leading zeros. Spaces and hyphens are accepted. `prefix` is the actual longest match and can be shorter than the input. Unknown reference fields are null. `deep` adds an empty object on every plan.
+## Card
+
+Card looks up issuer, network and type from a BIN/IIN. It accepts 6-11 digits as a string, including leading zeros. Spaces and hyphens are accepted. `prefix` is the actual longest match and can be shorter than the input. Unknown reference fields are null. Invalid prefixes and full card numbers are rejected locally before a request is sent. Accepted input is sent unchanged.
+
+Compare `prefix` with the normalized response `bin`. A matched row can still have all metadata unknown. Keep unknown prepaid status separate from true and false. Run it in your existing async task.
+
+```swift
+let card = try await parse.card("4242 42-99")
+let match: String
+if let prefix = card.prefix {
+    match = prefix == card.bin ? "Exact prefix match" : "Broader prefix match"
+} else {
+    match = "No reference match"
+}
+let prepaid: String
+switch card.prepaid {
+case nil: prepaid = "Unknown prepaid status"
+case true?: prepaid = "Prepaid"
+case false?: prepaid = "Not prepaid"
+}
+print("\(match), \(prepaid)")
+```
 
 ## Stack
 
