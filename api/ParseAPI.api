@@ -1042,8 +1042,10 @@ ParseAPI.state(_:country:deep:): func state(_ code: String, country: String? = n
 ParseAPI.state(_:country:deep:lang:): func state(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> State
 ParseAPI.stateDistricts(_:country:deep:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateDistricts
 ParseAPI.stateDistricts(_:country:deep:lang:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateDistricts
-ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff
+ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool, origin: String?) async throws -> Tariff
+ParseAPI.tariff(_:deep:origin:edition:date:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil, edition: String? = nil, date: String? = nil) async throws -> Tariff
 ParseAPI.tariffSearch(_:): func tariffSearch(_ query: String) async throws -> TariffSearch
+ParseAPI.tariffSearch(_:edition:date:): func tariffSearch(_ query: String, edition: String? = nil, date: String? = nil) async throws -> TariffSearch
 ParseAPI.time(_:at:deep:lang:disambiguation:targets:): func time(_ timezone: String? = nil, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time
 ParseAPI.time(_:at:to:deep:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time
 ParseAPI.time(_:at:to:deep:lang:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time
@@ -1369,8 +1371,10 @@ StateDistricts: conformsTo Swift.Encodable
 StateDistricts: conformsTo Swift.Sendable
 StateDistricts: conformsTo Swift.SendableMetatype
 StateDistricts: struct StateDistricts
+Tariff.date: let date: String?
 Tariff.deep: let deep: TariffDeep?
 Tariff.description: let description: String
+Tariff.edition: let edition: String?
 Tariff.general: let general: String?
 Tariff.hts: let hts: String
 Tariff.init(from:): init(from decoder: any Decoder) throws
@@ -1386,6 +1390,7 @@ TariffDeep.init(from:): init(from decoder: any Decoder) throws
 TariffDeep.measures: let measures: [TariffMeasure]?
 TariffDeep.origin: let origin: String?
 TariffDeep.other: let other: String?
+TariffDeep.reason: let reason: String?
 TariffDeep.special: let special: String?
 TariffDeep.units: let units: [String]?
 TariffDeep: conformsTo Swift.Decodable
@@ -1405,6 +1410,8 @@ TariffMeasure: conformsTo Swift.Encodable
 TariffMeasure: conformsTo Swift.Sendable
 TariffMeasure: conformsTo Swift.SendableMetatype
 TariffMeasure: struct TariffMeasure
+TariffSearch.date: let date: String?
+TariffSearch.edition: let edition: String?
 TariffSearch.init(from:): init(from decoder: any Decoder) throws
 TariffSearch.lines: let lines: [TariffSearchHit]
 TariffSearch.q: let q: String
@@ -1418,6 +1425,7 @@ TariffSearchHit.description: let description: String
 TariffSearchHit.general: let general: String?
 TariffSearchHit.hts: let hts: String
 TariffSearchHit.init(from:): init(from decoder: any Decoder) throws
+TariffSearchHit.lineage: let lineage: [String]?
 TariffSearchHit: conformsTo Swift.Decodable
 TariffSearchHit: conformsTo Swift.Encodable
 TariffSearchHit: conformsTo Swift.Sendable

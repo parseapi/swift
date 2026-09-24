@@ -65,7 +65,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.6.0"
+	static let version = "1.7.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -491,13 +491,34 @@ public final class ParseAPI: Sendable {
 	/// schedule columns. Add origin with deep to resolve country-specific measures. Without origin,
 	/// schedule detail remains available and origin-dependent fields are null. A null effective rate
 	/// is not a zero rate.
-	public func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff {
-		try await get("/tariff/\(enc(code))", query: [("origin", origin)] + deepQuery(deep))
+	/// Preserve the original method-reference signature.
+	public func tariff(_ code: String, deep: Bool, origin: String?) async throws -> Tariff {
+		try await tariff(code, deep: deep, origin: origin, edition: nil, date: nil)
+	}
+
+	public func tariff(_ code: String, deep: Bool = false, origin: String? = nil, edition: String? = nil, date: String? = nil) async throws -> Tariff {
+		let result: Tariff = try await get("/tariff/\(enc(code))", query: [("origin", origin), ("edition", edition), ("date", date)] + deepQuery(deep))
+		try tariffSelection(edition, date, result.edition, result.date)
+		return result
+	}
+
+	private func tariffSelection(_ edition: String?, _ date: String?, _ gotEdition: String?, _ gotDate: String?) throws {
+		let confirmedEdition = gotEdition.map { $0.utf8.count == 64 && $0.utf8.allSatisfy { (48...57).contains($0) || (97...102).contains($0) } } ?? false
+		if (edition != nil || date != nil) && (!confirmedEdition || (edition != nil && gotEdition != edition) || gotDate != date) {
+			throw ParseAPIError(status: 0, code: "tariff_selection_mismatch", message: "Tariff response did not confirm the requested edition/date. The server may not support this selection.", docs: nil, requestId: nil)
+		}
 	}
 
 	/// Searches tariff schedule descriptions by product.
+	/// Preserve the original method-reference signature.
 	public func tariffSearch(_ query: String) async throws -> TariffSearch {
-		try await get("/tariff", query: [("q", query)])
+		try await tariffSearch(query, edition: nil, date: nil)
+	}
+
+	public func tariffSearch(_ query: String, edition: String? = nil, date: String? = nil) async throws -> TariffSearch {
+		let result: TariffSearch = try await get("/tariff", query: [("q", query), ("edition", edition), ("date", date)])
+		try tariffSelection(edition, date, result.edition, result.date)
+		return result
 	}
 
 	/// US NAICS 2022 definition and hierarchy.

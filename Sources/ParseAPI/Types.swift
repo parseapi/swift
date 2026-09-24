@@ -398,8 +398,12 @@ public struct TariffMeasure: Codable, Sendable {
 }
 
 public struct TariffDeep: Codable, Sendable {
+	/// Open-string explanation when effectiveRate is nil.
+	public let reason: String?
 	public let origin: String?
+	/// Composed ad valorem percent for matched stored measures only, not complete duty or landed cost.
 	public let effectiveRate: Double?
+	/// Matching stored Chapter 99 schedule measures for this code and goods origin.
 	public let measures: [TariffMeasure]?
 	public let units: [String]?
 	public let special: String?
@@ -407,6 +411,9 @@ public struct TariffDeep: Codable, Sendable {
 }
 
 public struct Tariff: Codable, Sendable {
+	/// Exact edition and answering date. Older servers may omit both.
+	public let edition: String?
+	public let date: String?
 	public let hts: String
 	public let description: String
 	public let lineage: [String]
@@ -419,9 +426,14 @@ public struct TariffSearchHit: Codable, Sendable {
 	public let hts: String
 	public let description: String
 	public let general: String?
+	/// Parent descriptions, outermost first. Older responses may omit this context.
+	public let lineage: [String]?
 }
 
 public struct TariffSearch: Codable, Sendable {
+	/// Exact edition and answering date. Older servers may omit both.
+	public let edition: String?
+	public let date: String?
 	public let q: String
 	public let revision: String
 	/// Up to 20 tariff lines, best match first.
