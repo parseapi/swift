@@ -362,8 +362,22 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Checksum and structure. bank and branch are codes inside the number, not names.
-	public func iban(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Iban {
-		try await get("/iban/\(enc(iban))", query: [("country", country)] + deepQuery(deep))
+	public func bank(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Bank {
+		var body: [String: Any] = ["iban": iban]
+		if let country { body["country"] = country }
+		if deep { body["deep"] = true }
+		return try await get("/bank", body: JSONSerialization.data(withJSONObject: body))
+	}
+
+	/// Check supported US ACH format, not account existence or ACH eligibility.
+	public func bankUsAch(_ input: BankUsAchInput) async throws -> BankUsAch {
+		let body: [String: Any] = ["format": "us_ach", "country": "US", "routing": input.routing, "account": input.account]
+		return try await get("/bank", body: JSONSerialization.data(withJSONObject: body))
+	}
+
+	/// Required collection fields; an omitted format selects IBAN.
+	public func bankRequirements(_ country: String, format: String? = nil) async throws -> BankRequirements {
+		try await get("/bank/requirements", query: [("country", country), ("format", format)])
 	}
 
 	/// Look up a US healthcare provider by NPI.
@@ -650,7 +664,7 @@ public final class ParseAPI: Sendable {
 		deep ? [("deep", "true")] : []
 	}
 
-	private func get<T: Decodable>(_ path: String, query: [(String, String?)] = [], userAgent: String? = nil) async throws -> T {
+	private func get<T: Decodable>(_ path: String, query: [(String, String?)] = [], userAgent: String? = nil, body: Data? = nil) async throws -> T {
 		var url = baseURL + path
 		let pairs = query.compactMap { name, value in
 			value.map { "\(name)=\(enc($0))" }
@@ -670,6 +684,11 @@ public final class ParseAPI: Sendable {
 		while true {
 			try Task.checkCancellation()
 			var request = URLRequest(url: requestURL)
+			if let body {
+				request.httpMethod = "POST"
+				request.httpBody = body
+				request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+			}
 			request.timeoutInterval = !timeoutConfigured && path.hasPrefix("/stack/") ? 35 : timeout
 			request.setValue(key, forHTTPHeaderField: "X-API-Key")
 			request.setValue(Self.apiVersion, forHTTPHeaderField: "Parse-Version")

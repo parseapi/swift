@@ -65,6 +65,121 @@ AddressSuggestion: conformsTo Swift.Encodable
 AddressSuggestion: conformsTo Swift.Sendable
 AddressSuggestion: conformsTo Swift.SendableMetatype
 AddressSuggestion: struct AddressSuggestion
+Bank.bank: let bank: String?
+Bank.bankName: let bankName: String?
+Bank.bic: let bic: String?
+Bank.checks: let checks: BankChecks?
+Bank.country: let country: String?
+Bank.deep: let deep: BankDeep?
+Bank.formatted: let formatted: String?
+Bank.iban: let iban: String?
+Bank.init(from:): init(from decoder: any Decoder) throws
+Bank.issues: let issues: [BankIssue]?
+Bank.valid: let valid: Bool
+Bank: conformsTo Swift.Decodable
+Bank: conformsTo Swift.Encodable
+Bank: conformsTo Swift.Sendable
+Bank: conformsTo Swift.SendableMetatype
+Bank: struct Bank
+BankChecks.checksum: let checksum: String?
+BankChecks.country: let country: String?
+BankChecks.init(from:): init(from decoder: any Decoder) throws
+BankChecks.input: let input: String?
+BankChecks.length: let length: String?
+BankChecks.national: let national: String?
+BankChecks.structure: let structure: String?
+BankChecks: conformsTo Swift.Decodable
+BankChecks: conformsTo Swift.Encodable
+BankChecks: conformsTo Swift.Sendable
+BankChecks: conformsTo Swift.SendableMetatype
+BankChecks: struct BankChecks
+BankDeep.account: let account: String?
+BankDeep.branch: let branch: String?
+BankDeep.checksum: let checksum: String?
+BankDeep.directory: let directory: BankDirectory?
+BankDeep.init(from:): init(from decoder: any Decoder) throws
+BankDeep: conformsTo Swift.Decodable
+BankDeep: conformsTo Swift.Encodable
+BankDeep: conformsTo Swift.Sendable
+BankDeep: conformsTo Swift.SendableMetatype
+BankDeep: struct BankDeep
+BankDirectory.country: let country: String?
+BankDirectory.edition: let edition: String?
+BankDirectory.init(from:): init(from decoder: any Decoder) throws
+BankDirectory.match: let match: String?
+BankDirectory: conformsTo Swift.Decodable
+BankDirectory: conformsTo Swift.Encodable
+BankDirectory: conformsTo Swift.Sendable
+BankDirectory: conformsTo Swift.SendableMetatype
+BankDirectory: struct BankDirectory
+BankIssue.code: let code: String?
+BankIssue.field: let field: String?
+BankIssue.init(from:): init(from decoder: any Decoder) throws
+BankIssue.message: let message: String?
+BankIssue: conformsTo Swift.Decodable
+BankIssue: conformsTo Swift.Encodable
+BankIssue: conformsTo Swift.Sendable
+BankIssue: conformsTo Swift.SendableMetatype
+BankIssue: struct BankIssue
+BankRequirementField.init(from:): init(from decoder: any Decoder) throws
+BankRequirementField.key: let key: String
+BankRequirementField.label: let label: String
+BankRequirementField.length: let length: Int?
+BankRequirementField.lengthUnit: let lengthUnit: String?
+BankRequirementField.maxInputLength: let maxInputLength: Int?
+BankRequirementField.maxLength: let maxLength: Int?
+BankRequirementField.minLength: let minLength: Int?
+BankRequirementField.normalization: let normalization: String?
+BankRequirementField.pattern: let pattern: String?
+BankRequirementField.required: let required: Bool
+BankRequirementField.type: let type: String
+BankRequirementField: conformsTo Swift.Decodable
+BankRequirementField: conformsTo Swift.Encodable
+BankRequirementField: conformsTo Swift.Sendable
+BankRequirementField: conformsTo Swift.SendableMetatype
+BankRequirementField: struct BankRequirementField
+BankRequirements.checks: let checks: [String : String]
+BankRequirements.country: let country: String
+BankRequirements.fields: let fields: [BankRequirementField]
+BankRequirements.format: let format: String
+BankRequirements.init(from:): init(from decoder: any Decoder) throws
+BankRequirements.limitations: let limitations: [String]
+BankRequirements.supported: let supported: Bool
+BankRequirements: conformsTo Swift.Decodable
+BankRequirements: conformsTo Swift.Encodable
+BankRequirements: conformsTo Swift.Sendable
+BankRequirements: conformsTo Swift.SendableMetatype
+BankRequirements: struct BankRequirements
+BankUsAch.account: let account: String?
+BankUsAch.bankName: let bankName: String?
+BankUsAch.checks: let checks: BankUsAchChecks?
+BankUsAch.country: let country: String?
+BankUsAch.format: let format: String?
+BankUsAch.init(from:): init(from decoder: any Decoder) throws
+BankUsAch.issues: let issues: [BankIssue]?
+BankUsAch.routing: let routing: String?
+BankUsAch.valid: let valid: Bool
+BankUsAch: conformsTo Swift.Decodable
+BankUsAch: conformsTo Swift.Encodable
+BankUsAch: conformsTo Swift.Sendable
+BankUsAch: conformsTo Swift.SendableMetatype
+BankUsAch: struct BankUsAch
+BankUsAchChecks.accountChecksum: let accountChecksum: String?
+BankUsAchChecks.accountFormat: let accountFormat: String?
+BankUsAchChecks.init(from:): init(from decoder: any Decoder) throws
+BankUsAchChecks.routingChecksum: let routingChecksum: String?
+BankUsAchChecks.routingFormat: let routingFormat: String?
+BankUsAchChecks: conformsTo Swift.Decodable
+BankUsAchChecks: conformsTo Swift.Encodable
+BankUsAchChecks: conformsTo Swift.Sendable
+BankUsAchChecks: conformsTo Swift.SendableMetatype
+BankUsAchChecks: struct BankUsAchChecks
+BankUsAchInput.account: let account: String
+BankUsAchInput.init(routing:account:): init(routing: String, account: String)
+BankUsAchInput.routing: let routing: String
+BankUsAchInput: conformsTo Swift.Sendable
+BankUsAchInput: conformsTo Swift.SendableMetatype
+BankUsAchInput: struct BankUsAchInput
 Bloc.bloc: let bloc: String
 Bloc.init(from:): init(from decoder: any Decoder) throws
 Bloc.members: let members: Int
@@ -692,29 +807,6 @@ IPDeep: conformsTo Swift.Encodable
 IPDeep: conformsTo Swift.Sendable
 IPDeep: conformsTo Swift.SendableMetatype
 IPDeep: struct IPDeep
-Iban.bank: let bank: String?
-Iban.bankName: let bankName: String?
-Iban.bic: let bic: String?
-Iban.country: let country: String?
-Iban.deep: let deep: IbanDeep?
-Iban.formatted: let formatted: String?
-Iban.iban: let iban: String?
-Iban.init(from:): init(from decoder: any Decoder) throws
-Iban.valid: let valid: Bool
-Iban: conformsTo Swift.Decodable
-Iban: conformsTo Swift.Encodable
-Iban: conformsTo Swift.Sendable
-Iban: conformsTo Swift.SendableMetatype
-Iban: struct Iban
-IbanDeep.account: let account: String?
-IbanDeep.branch: let branch: String?
-IbanDeep.checksum: let checksum: String?
-IbanDeep.init(from:): init(from decoder: any Decoder) throws
-IbanDeep: conformsTo Swift.Decodable
-IbanDeep: conformsTo Swift.Encodable
-IbanDeep: conformsTo Swift.Sendable
-IbanDeep: conformsTo Swift.SendableMetatype
-IbanDeep: struct IbanDeep
 Language.deep: let deep: LanguageDeep?
 Language.direction: let direction: String
 Language.init(from:): init(from decoder: any Decoder) throws
@@ -953,6 +1045,9 @@ ParseAPI.address(_:country:deep:): func address(_ address: String, country: Stri
 ParseAPI.addressSearch(_:country:postal:city:state:ip:): func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch
 ParseAPI.asn(_:): func asn(_ asn: String) async throws -> ASN
 ParseAPI.asn(_:lang:): func asn(_ asn: String, lang: String?) async throws -> ASN
+ParseAPI.bank(_:country:deep:): func bank(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Bank
+ParseAPI.bankRequirements(_:format:): func bankRequirements(_ country: String, format: String? = nil) async throws -> BankRequirements
+ParseAPI.bankUsAch(_:): func bankUsAch(_ input: BankUsAchInput) async throws -> BankUsAch
 ParseAPI.bloc(_:): func bloc(_ code: String) async throws -> Bloc
 ParseAPI.blocCountries(_:): func blocCountries(_ code: String) async throws -> BlocCountries
 ParseAPI.blocCountries(_:lang:): func blocCountries(_ code: String, lang: String?) async throws -> BlocCountries
@@ -999,7 +1094,6 @@ ParseAPI.emojiSearch(_:limit:deep:lang:): func emojiSearch(_ query: String, limi
 ParseAPI.hlr(_:country:deep:): func hlr(_ number: String, country: String? = nil, deep: Bool = false) async throws -> HLR
 ParseAPI.holiday(_:year:): func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear
 ParseAPI.holidayDate(_:_:): func holidayDate(_ country: String, _ date: String) async throws -> HolidayDate
-ParseAPI.iban(_:country:deep:): func iban(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Iban
 ParseAPI.init(_:appId:baseURL:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.init(_:appId:baseURL:timeout:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, timeout: TimeInterval, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.ip(_:deep:): func ip(_ ip: String, deep: Bool = false) async throws -> IP

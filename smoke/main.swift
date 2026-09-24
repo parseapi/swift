@@ -84,10 +84,10 @@ await expectOk("vat", { try await parse.vat("DE136695976") }) { $0.valid && $0.c
 await expectOk("card", { try await parse.card("00 0000") }) {
 	$0.bin == "000000" ? nil : "BIN echo mismatch"
 }
-await expectOk("iban", { try await parse.iban("DE89370400440532013000") }) {
+await expectOk("bank", { try await parse.bank("DE89370400440532013000") }) {
 	$0.valid && $0.country == "DE" && $0.bank == "37040044" ? nil : "not valid DE"
 }
-await expectOk("iban junk", { try await parse.iban("hello") }) { $0.valid ? "expected invalid" : nil }
+await expectOk("bank junk", { try await parse.bank("hello") }) { $0.valid ? "expected invalid" : nil }
 await expectOk("npi", { try await parse.npi("1881018208") }) {
 	$0.valid && $0.registered == true ? nil : "not registered"
 }

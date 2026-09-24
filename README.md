@@ -71,7 +71,7 @@ try await parse.ip("8.8.8.8")
 try await parse.ipSelf()
 try await parse.email("hello@gmail.com")
 try await parse.vat("DE136695976")
-try await parse.iban("DE89370400440532013000")
+try await parse.bank("DE89370400440532013000")
 try await parse.card("424242")
 try await parse.npi("1881018208")
 try await parse.phone("+14155552671")
@@ -215,7 +215,7 @@ Choose enrichment for the question you need answered.
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
 | NPI | Deactivation date, Medicare enrollment, opt-out and enrollment rows from stored sources on paid plans. Exclusion evidence stays core. |
 | Company, VIN, NAICS, Name, Weather | Richer reference/profile facts on paid plans. |
-| Time, Date, Currency, Language, Emoji, IBAN | Optional same-question facts, pooled on every plan. |
+| Time, Date, Currency, Language, Emoji, Bank | Optional same-question facts, pooled on every plan. |
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |
 
@@ -243,6 +243,20 @@ if ip.deep?.datacenter == true {
     // datacenter IP
 }
 ```
+
+## Bank validation
+
+Bank results include optional `checks` and `issues` (`BankChecks` and `BankIssue`). Check statuses and issue codes are open strings; handle unknown future values. `not_supported` means the national check did not run, not that it passed. `issues: []` means no applicable check failed; a missing/null value supports older responses. These findings do not establish account existence or ownership. `deep.account` remains a string so leading zeros are preserved.
+
+
+Bank lookups send raw input in a JSON body (`POST /bank`), preserving leading zeros, separators and forbidden characters for server validation. `bank` keeps its existing call signature and IBAN result. Optional `deep.directory` identifies the directory edition, country and open-string match grain; absent data remains unknown.
+
+```swift
+let requirements = try await parse.bankRequirements("US", format: "us_ach")
+let result = try await parse.bankUsAch(BankUsAchInput(routing: "021000021", account: "000123456789"))
+```
+
+US ACH checks the routing checksum and supported account format, not account existence, ownership or ACH eligibility. Account checksum status stays `not_supported`; bank names are nullable partial-directory references. Account text is preserved, including letter case, spaces and hyphens. Requirements describe this validation workflow; they are not every field needed to initiate a payment. Unsupported country/format combinations return `supported: false`. Omit the format argument for IBAN requirements. The sample is synthetic, not an account to pay.
 
 ## Errors
 

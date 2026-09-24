@@ -340,7 +340,7 @@ public struct Vat: Codable, Sendable {
 	public let deep: VatDeep?
 }
 
-public struct Iban: Codable, Sendable {
+public struct Bank: Codable, Sendable {
 	public let iban: String?
 	public let valid: Bool
 	public let country: String?
@@ -348,7 +348,83 @@ public struct Iban: Codable, Sendable {
 	public let bank: String?
 	public let bankName: String?
 	public let bic: String?
-	public let deep: IbanDeep?
+	/// Performed IBAN checks; absent on older responses. Statuses are open strings.
+	public let checks: BankChecks?
+	/// Lookup findings, separate from HTTP errors. Empty when applicable checks pass.
+	public let issues: [BankIssue]?
+	public let deep: BankDeep?
+}
+
+public struct BankChecks: Codable, Sendable {
+	public let input: String?
+	public let country: String?
+	public let length: String?
+	public let structure: String?
+	public let checksum: String?
+	public let national: String?
+}
+
+public struct BankIssue: Codable, Sendable {
+	public let field: String?
+	public let code: String?
+	public let message: String?
+}
+
+/// Raw US ACH collection input. Preserve case, separators and leading zeros.
+public struct BankUsAchInput: Sendable {
+	public let routing: String
+	public let account: String
+	public init(routing: String, account: String) {
+		self.routing = routing
+		self.account = account
+	}
+}
+
+public struct BankDirectory: Codable, Sendable {
+	public let edition: String?
+	public let country: String?
+	public let match: String?
+}
+
+public struct BankUsAch: Codable, Sendable {
+	public let format: String?
+	public let country: String?
+	public let routing: String?
+	public let account: String?
+	public let valid: Bool
+	public let bankName: String?
+	public let checks: BankUsAchChecks?
+	public let issues: [BankIssue]?
+}
+
+public struct BankUsAchChecks: Codable, Sendable {
+	public let routingFormat: String?
+	public let routingChecksum: String?
+	public let accountFormat: String?
+	public let accountChecksum: String?
+}
+
+public struct BankRequirements: Codable, Sendable {
+	public let country: String
+	public let format: String
+	public let supported: Bool
+	public let fields: [BankRequirementField]
+	public let checks: [String: String]
+	public let limitations: [String]
+}
+
+public struct BankRequirementField: Codable, Sendable {
+	public let key: String
+	public let label: String
+	public let required: Bool
+	public let type: String
+	public let length: Int?
+	public let minLength: Int?
+	public let maxLength: Int?
+	public let maxInputLength: Int?
+	public let lengthUnit: String?
+	public let pattern: String?
+	public let normalization: String?
 }
 
 public struct Npi: Codable, Sendable {
@@ -1252,7 +1328,9 @@ public struct PostalMetroDeep: Codable, Sendable {
 }
 
 
-public struct IbanDeep: Codable, Sendable {
+public struct BankDeep: Codable, Sendable {
+	/// Directory edition and match grain, when available. Match is an open string.
+	public let directory: BankDirectory?
 	public let checksum: String?
 	public let branch: String?
 	public let account: String?

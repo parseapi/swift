@@ -168,17 +168,17 @@ import Testing
 	@Test func ibanDepth() async throws {
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		let core = try decoder.decode(Iban.self, from: Data(#"{"iban":"DE123","valid":true}"#.utf8))
-		let locked = try decoder.decode(Iban.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{}}"#.utf8))
-		let rich = try decoder.decode(Iban.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{"checksum":"00"}}"#.utf8))
+		let core = try decoder.decode(Bank.self, from: Data(#"{"iban":"DE123","valid":true}"#.utf8))
+		let locked = try decoder.decode(Bank.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{}}"#.utf8))
+		let rich = try decoder.decode(Bank.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{"checksum":"00"}}"#.utf8))
 		#expect(core.deep == nil)
 		#expect(locked.deep != nil && locked.deep?.checksum == nil)
 		#expect(rich.deep?.checksum == "00")
 		for depth in [false, true] {
 			let stub = StubTransport(body: #"{"iban":"DE123","valid":true,"deep":{"checksum":"00"}}"#)
-			_ = try await makeClient(stub).iban("DE123", deep: depth)
-			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
-			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
+			_ = try await makeClient(stub).bank("DE123", deep: depth)
+			let body = try JSONSerialization.jsonObject(with: #require(stub.requests[0].httpBody)) as? [String: Any]
+			#expect((body?["deep"] as? Bool ?? false) == depth)
 			#expect(stub.requests.count == 1)
 		}
 	}
