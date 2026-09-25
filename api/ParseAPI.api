@@ -1004,51 +1004,6 @@ NameDeep: conformsTo Swift.Encodable
 NameDeep: conformsTo Swift.Sendable
 NameDeep: conformsTo Swift.SendableMetatype
 NameDeep: struct NameDeep
-Npi.active: let active: Bool?
-Npi.address: let address: String?
-Npi.city: let city: String?
-Npi.country: let country: String?
-Npi.credential: let credential: String?
-Npi.deep: let deep: NpiDeep?
-Npi.excluded: let excluded: Bool?
-Npi.first: let first: String?
-Npi.init(from:): init(from decoder: any Decoder) throws
-Npi.last: let last: String?
-Npi.name: let name: String?
-Npi.npi: let npi: String?
-Npi.phone: let phone: String?
-Npi.postal: let postal: String?
-Npi.registered: let registered: Bool?
-Npi.specialty: let specialty: String?
-Npi.state: let state: String?
-Npi.stateName: let stateName: String?
-Npi.taxonomy: let taxonomy: String?
-Npi.type: let type: String?
-Npi.valid: let valid: Bool
-Npi: conformsTo Swift.Decodable
-Npi: conformsTo Swift.Encodable
-Npi: conformsTo Swift.Sendable
-Npi: conformsTo Swift.SendableMetatype
-Npi: struct Npi
-NpiDeep.deactivatedAt: let deactivatedAt: String?
-NpiDeep.enrollments: let enrollments: [NpiEnrollment]?
-NpiDeep.init(from:): init(from decoder: any Decoder) throws
-NpiDeep.medicare: let medicare: Bool?
-NpiDeep.optOut: let optOut: Bool?
-NpiDeep: conformsTo Swift.Decodable
-NpiDeep: conformsTo Swift.Encodable
-NpiDeep: conformsTo Swift.Sendable
-NpiDeep: conformsTo Swift.SendableMetatype
-NpiDeep: struct NpiDeep
-NpiEnrollment.init(from:): init(from decoder: any Decoder) throws
-NpiEnrollment.specialty: let specialty: String?
-NpiEnrollment.state: let state: String?
-NpiEnrollment.type: let type: String?
-NpiEnrollment: conformsTo Swift.Decodable
-NpiEnrollment: conformsTo Swift.Encodable
-NpiEnrollment: conformsTo Swift.Sendable
-NpiEnrollment: conformsTo Swift.SendableMetatype
-NpiEnrollment: struct NpiEnrollment
 ParseAPI.address(_:country:deep:): func address(_ address: String, country: String? = nil, deep: Bool = false) async throws -> Address
 ParseAPI.addressSearch(_:country:postal:city:state:ip:): func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch
 ParseAPI.asn(_:): func asn(_ asn: String) async throws -> ASN
@@ -1122,8 +1077,6 @@ ParseAPI.name(_:): func name(_ name: String) async throws -> Name
 ParseAPI.name(_:country:deep:): func name(_ name: String, country: String?, deep: Bool = false) async throws -> Name
 ParseAPI.name(_:country:deep:nameLocale:): func name(_ name: String, country: String? = nil, deep: Bool = false, nameLocale: String?) async throws -> Name
 ParseAPI.name(_:deep:): func name(_ name: String, deep: Bool) async throws -> Name
-ParseAPI.npi(_:deep:): func npi(_ npi: String, deep: Bool = false) async throws -> Npi
-ParseAPI.npi(_:deep:lang:): func npi(_ npi: String, deep: Bool = false, lang: String?) async throws -> Npi
 ParseAPI.phone(_:country:deep:): func phone(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Phone
 ParseAPI.point(_:_:deep:): func point(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Point
 ParseAPI.point(_:_:deep:lang:): func point(_ lat: Double, _ lon: Double, deep: Bool = false, lang: String?) async throws -> Point
@@ -1133,6 +1086,8 @@ ParseAPI.postalDistance(_:_:country:deep:): func postalDistance(_ from: String, 
 ParseAPI.postalDistance(_:_:country:deep:lang:): func postalDistance(_ from: String, _ to: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalDistance
 ParseAPI.postalNearby(_:country:radius:unit:deep:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false) async throws -> PostalNearby
 ParseAPI.postalNearby(_:country:radius:unit:deep:lang:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalNearby
+ParseAPI.provider(_:deep:): func provider(_ npi: String, deep: Bool = false) async throws -> Provider
+ParseAPI.provider(_:deep:lang:): func provider(_ npi: String, deep: Bool = false, lang: String?) async throws -> Provider
 ParseAPI.stack(_:deep:pretty:): func stack(_ domain: String, deep: Bool = false, pretty: Bool = false) async throws -> Stack
 ParseAPI.state(_:country:deep:): func state(_ code: String, country: String? = nil, deep: Bool = false) async throws -> State
 ParseAPI.state(_:country:deep:lang:): func state(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> State
@@ -1362,6 +1317,87 @@ PropertyTax: conformsTo Swift.Encodable
 PropertyTax: conformsTo Swift.Sendable
 PropertyTax: conformsTo Swift.SendableMetatype
 PropertyTax: struct PropertyTax
+Provider.active: let active: Bool?
+Provider.address: let address: String?
+Provider.city: let city: String?
+Provider.country: let country: String?
+Provider.credential: let credential: String?
+Provider.deep: let deep: ProviderDeep?
+Provider.excluded: let excluded: Bool?
+Provider.first: let first: String?
+Provider.init(from:): init(from decoder: any Decoder) throws
+Provider.last: let last: String?
+Provider.name: let name: String?
+Provider.npi: let npi: String?
+Provider.phone: let phone: String?
+Provider.postal: let postal: String?
+Provider.registered: let registered: Bool?
+Provider.sources: let sources: ProviderSources?
+Provider.specialty: let specialty: String?
+Provider.state: let state: String?
+Provider.stateName: let stateName: String?
+Provider.taxonomy: let taxonomy: String?
+Provider.type: let type: String?
+Provider.valid: let valid: Bool
+Provider: conformsTo Swift.Decodable
+Provider: conformsTo Swift.Encodable
+Provider: conformsTo Swift.Sendable
+Provider: conformsTo Swift.SendableMetatype
+Provider: struct Provider
+ProviderDeep.deactivatedAt: let deactivatedAt: String?
+ProviderDeep.enrollments: let enrollments: [ProviderEnrollment]?
+ProviderDeep.enumeratedAt: let enumeratedAt: String?
+ProviderDeep.init(from:): init(from decoder: any Decoder) throws
+ProviderDeep.medicare: let medicare: Bool?
+ProviderDeep.optOut: let optOut: Bool?
+ProviderDeep.reactivatedAt: let reactivatedAt: String?
+ProviderDeep.taxonomies: let taxonomies: [ProviderTaxonomy]?
+ProviderDeep.updatedAt: let updatedAt: String?
+ProviderDeep: conformsTo Swift.Decodable
+ProviderDeep: conformsTo Swift.Encodable
+ProviderDeep: conformsTo Swift.Sendable
+ProviderDeep: conformsTo Swift.SendableMetatype
+ProviderDeep: struct ProviderDeep
+ProviderEnrollment.init(from:): init(from decoder: any Decoder) throws
+ProviderEnrollment.specialty: let specialty: String?
+ProviderEnrollment.state: let state: String?
+ProviderEnrollment.type: let type: String?
+ProviderEnrollment: conformsTo Swift.Decodable
+ProviderEnrollment: conformsTo Swift.Encodable
+ProviderEnrollment: conformsTo Swift.Sendable
+ProviderEnrollment: conformsTo Swift.SendableMetatype
+ProviderEnrollment: struct ProviderEnrollment
+ProviderSource.edition: let edition: String?
+ProviderSource.importedAt: let importedAt: String?
+ProviderSource.init(from:): init(from decoder: any Decoder) throws
+ProviderSource.publishedAt: let publishedAt: String?
+ProviderSource.through: let through: String?
+ProviderSource: conformsTo Swift.Decodable
+ProviderSource: conformsTo Swift.Encodable
+ProviderSource: conformsTo Swift.Sendable
+ProviderSource: conformsTo Swift.SendableMetatype
+ProviderSource: struct ProviderSource
+ProviderSources.init(from:): init(from decoder: any Decoder) throws
+ProviderSources.leie: let leie: ProviderSource?
+ProviderSources.nppes: let nppes: ProviderSource?
+ProviderSources.optout: let optout: ProviderSource?
+ProviderSources.pecos: let pecos: ProviderSource?
+ProviderSources: conformsTo Swift.Decodable
+ProviderSources: conformsTo Swift.Encodable
+ProviderSources: conformsTo Swift.Sendable
+ProviderSources: conformsTo Swift.SendableMetatype
+ProviderSources: struct ProviderSources
+ProviderTaxonomy.init(from:): init(from decoder: any Decoder) throws
+ProviderTaxonomy.license: let license: String?
+ProviderTaxonomy.primary: let primary: Bool?
+ProviderTaxonomy.specialty: let specialty: String?
+ProviderTaxonomy.state: let state: String?
+ProviderTaxonomy.taxonomy: let taxonomy: String?
+ProviderTaxonomy: conformsTo Swift.Decodable
+ProviderTaxonomy: conformsTo Swift.Encodable
+ProviderTaxonomy: conformsTo Swift.Sendable
+ProviderTaxonomy: conformsTo Swift.SendableMetatype
+ProviderTaxonomy: struct ProviderTaxonomy
 Stack.analytics: let analytics: [StackTechnology]?
 Stack.chat: let chat: [StackTechnology]?
 Stack.checkedAt: let checkedAt: String?

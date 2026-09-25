@@ -186,15 +186,15 @@ import Testing
 	@Test func npiDepth() async throws {
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		let core = try decoder.decode(Npi.self, from: Data(#"{"npi":"123","valid":true,"excluded":true}"#.utf8))
-		let locked = try decoder.decode(Npi.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{}}"#.utf8))
-		let rich = try decoder.decode(Npi.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{"deactivated_at":"2026-09-08"}}"#.utf8))
+		let core = try decoder.decode(Provider.self, from: Data(#"{"npi":"123","valid":true,"excluded":true}"#.utf8))
+		let locked = try decoder.decode(Provider.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{}}"#.utf8))
+		let rich = try decoder.decode(Provider.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{"deactivated_at":"2026-09-08"}}"#.utf8))
 		#expect(core.deep == nil)
 		#expect(locked.deep != nil && locked.deep?.deactivatedAt == nil)
 		#expect(rich.deep?.deactivatedAt == "2026-09-08")
 		for depth in [false, true] {
 			let stub = StubTransport(body: #"{"npi":"123","valid":true,"excluded":true,"deep":{"deactivated_at":"2026-09-08"}}"#)
-			_ = try await makeClient(stub).npi("123", deep: depth)
+			_ = try await makeClient(stub).provider("123", deep: depth)
 			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
 			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
 			#expect(stub.requests.count == 1)

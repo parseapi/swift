@@ -427,7 +427,30 @@ public struct BankRequirementField: Codable, Sendable {
 	public let normalization: String?
 }
 
-public struct Npi: Codable, Sendable {
+public struct ProviderTaxonomy: Codable, Sendable {
+	public let taxonomy: String?
+	public let specialty: String?
+	public let primary: Bool?
+	public let license: String?
+	public let state: String?
+}
+
+public struct ProviderSource: Codable, Sendable {
+	public let edition: String?
+	public let publishedAt: String?
+	public let through: String?
+	public let importedAt: String?
+}
+
+public struct ProviderSources: Codable, Sendable {
+	public let nppes: ProviderSource?
+	public let leie: ProviderSource?
+	public let pecos: ProviderSource?
+	public let optout: ProviderSource?
+}
+
+public struct Provider: Codable, Sendable {
+	public let sources: ProviderSources?
 	/// Input with accepted separators removed; nil when empty. Invalid values remain visible.
 	public let npi: String?
 	/// Format and NPI checksum only; does not verify a provider or credentials.
@@ -452,23 +475,27 @@ public struct Npi: Codable, Sendable {
 	public let postal: String?
 	public let country: String?
 	public let phone: String?
-	public let deep: NpiDeep?
+	public let deep: ProviderDeep?
 }
 
-public struct NpiEnrollment: Codable, Sendable {
+public struct ProviderEnrollment: Codable, Sendable {
 	/// part_a, part_b, practitioner, dme, order_refer, mdpp. Nil when unknown.
 	public let type: String?
 	public let specialty: String?
 	public let state: String?
 }
 
-public struct NpiDeep: Codable, Sendable {
+public struct ProviderDeep: Codable, Sendable {
+	public let enumeratedAt: String?
+	public let updatedAt: String?
+	public let reactivatedAt: String?
+	public let taxonomies: [ProviderTaxonomy]?
 	/// Present in the stored Medicare FFS enrollment extract; not payment eligibility.
 	public let medicare: Bool?
 	/// NPI-only match in the stored CMS opt-out affidavit list. Nil when unavailable.
 	public let optOut: Bool?
 	/// Stored enrollment rows. Nil when unavailable; empty when no rows are returned.
-	public let enrollments: [NpiEnrollment]?
+	public let enrollments: [ProviderEnrollment]?
 	/// Recorded NPI deactivation date, YYYY-MM-DD. Nil when active or unavailable.
 	public let deactivatedAt: String?
 }

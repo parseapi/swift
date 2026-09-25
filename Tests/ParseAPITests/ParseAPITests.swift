@@ -101,10 +101,10 @@ func makeClient(
 		#expect(decoded.deep?.recalls?.isEmpty == true)
 	}
 
-	@Test func npi() async throws {
+	@Test func provider() async throws {
 		let stub = StubTransport(body: #"{"npi":"1881018208","valid":true,"registered":true,"type":"organization","name":"Mayo Clinic"}"#)
-		let record = try await makeClient(stub).npi("1881018208")
-		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/npi/1881018208")
+		let record = try await makeClient(stub).provider("1881018208")
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/provider/1881018208")
 		#expect(record.registered == true)
 	}
 

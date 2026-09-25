@@ -382,12 +382,12 @@ public final class ParseAPI: Sendable {
 
 	/// Look up a US healthcare provider by NPI.
 	/// Deep adds Medicare enrollment on paid plans.
-	public func npi(_ npi: String, deep: Bool = false) async throws -> Npi {
-		try await get("/npi/\(enc(npi))", query: deepQuery(deep))
+	public func provider(_ npi: String, deep: Bool = false) async throws -> Provider {
+		try await get("/provider/\(enc(npi))", query: deepQuery(deep))
 	}
 	/// Select translated display names for this request.
-	public func npi(_ npi: String, deep: Bool = false, lang: String?) async throws -> Npi {
-		try await get("/npi/\(enc(npi))", query: [("lang", lang)] + deepQuery(deep))
+	public func provider(_ npi: String, deep: Bool = false, lang: String?) async throws -> Provider {
+		try await get("/provider/\(enc(npi))", query: [("lang", lang)] + deepQuery(deep))
 	}
 
 	/// Parse a phone number and its formats. Pass country for national numbers when needed. Deep
