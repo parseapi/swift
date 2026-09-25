@@ -118,7 +118,7 @@ try await parse.mx("example.com")
 try await parse.dns("example.com")
 try await parse.dns("_dmarc.example.com", type: "TXT")
 try await parse.useragent(uaString)
-try await parse.vin("1HGCM82633A004352")
+try await parse.vehicle("1HGCM82633A004352")
 try await parse.industry("541511")
 try await parse.industrySearch("coffee shop", limit: 5)
 try await parse.tariff("8471.30.01.00")
@@ -339,3 +339,5 @@ Pass a public hostname without a scheme, path, port or IP address. Stack returns
 The complete technology result is included in the core response. The generic `deep=true` option adds only an empty object and is unnecessary for Stack. Successful checks may be reused for up to 24 hours. `pretty` optionally formats the wire JSON. Each lookup uses one request and API version 2.0.0 selected by this client.
 
 Stack defaults to 35 seconds per attempt so a first scan has time to finish. Other lookups retain their 10-second default. An explicit client timeout takes precedence.
+
+Vehicle lookups use `vin` as the input and response field. Existing VIN methods remain available for compatibility.

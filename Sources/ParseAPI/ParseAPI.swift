@@ -488,6 +488,11 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Decodes a 17-character VIN. Deep adds specifications and recalls on paid plans.
+	public func vehicle(_ vin: String, deep: Bool = false) async throws -> Vehicle {
+		try await get("/vehicle/\(enc(vin))", query: deepQuery(deep))
+	}
+
+	/// Compatibility entry for VIN callers.
 	public func vin(_ vin: String, deep: Bool = false) async throws -> Vin {
 		try await get("/vin/\(enc(vin))", query: deepQuery(deep))
 	}

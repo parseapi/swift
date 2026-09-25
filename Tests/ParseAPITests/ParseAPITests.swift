@@ -101,6 +101,15 @@ func makeClient(
 		#expect(decoded.deep?.recalls?.isEmpty == true)
 	}
 
+	@Test func vehicleDeep() async throws {
+		let stub = StubTransport(body: #"{"vin":"1HGCM82633A004352","valid":true,"year":2003,"make":"Honda","deep":{"recalls":[],"plant_city":"Marysville"}}"#)
+		let decoded = try await makeClient(stub).vehicle("1HGCM82633A004352", deep: true)
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/vehicle/1HGCM82633A004352?deep=true")
+		#expect(decoded.year == 2003)
+		#expect(decoded.deep?.plantCity == "Marysville")
+		#expect(decoded.deep?.recalls?.isEmpty == true)
+	}
+
 	@Test func provider() async throws {
 		let stub = StubTransport(body: #"{"npi":"1881018208","valid":true,"registered":true,"type":"organization","name":"Mayo Clinic"}"#)
 		let record = try await makeClient(stub).provider("1881018208")

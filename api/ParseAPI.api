@@ -1114,6 +1114,7 @@ ParseAPI.timezoneAt(_:_:at:deep:): func timezoneAt(_ lat: Double, _ lon: Double,
 ParseAPI.timezoneAt(_:_:at:deep:lang:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false, lang: String?) async throws -> Timezone
 ParseAPI.useragent(_:deep:): func useragent(_ ua: String, deep: Bool = false) async throws -> Useragent
 ParseAPI.vat(_:country:from:deep:): func vat(_ number: String, country: String? = nil, from: String? = nil, deep: Bool = false) async throws -> Vat
+ParseAPI.vehicle(_:deep:): func vehicle(_ vin: String, deep: Bool = false) async throws -> Vehicle
 ParseAPI.vin(_:deep:): func vin(_ vin: String, deep: Bool = false) async throws -> Vin
 ParseAPI.weather(_:_:deep:date:): func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather
 ParseAPI: conformsTo Swift.Sendable
@@ -1731,6 +1732,9 @@ VatDeep: conformsTo Swift.Encodable
 VatDeep: conformsTo Swift.Sendable
 VatDeep: conformsTo Swift.SendableMetatype
 VatDeep: struct VatDeep
+Vehicle: typealias Vehicle = Vin
+VehicleDeep: typealias VehicleDeep = VinDeep
+VehicleRecall: typealias VehicleRecall = VinRecall
 Vin.body: let body: String?
 Vin.deep: let deep: VinDeep?
 Vin.init(from:): init(from decoder: any Decoder) throws

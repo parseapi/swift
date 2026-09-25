@@ -1512,3 +1512,7 @@ public typealias IndustryDeep = NAICSDeep
 public typealias IndustryExclusion = NAICSExclusion
 public typealias IndustryMatch = NAICSMatch
 public typealias IndustrySearch = NAICSSearch
+
+public typealias Vehicle = Vin
+public typealias VehicleDeep = VinDeep
+public typealias VehicleRecall = VinRecall
