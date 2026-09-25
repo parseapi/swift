@@ -510,8 +510,12 @@ public struct TariffMeasure: Codable, Sendable {
 }
 
 public struct TariffDeep: Codable, Sendable {
+	/// Open-string explanation when effectiveRate is nil.
+	public let reason: String?
 	public let origin: String?
+	/// Composed ad valorem percent for matched stored measures only, not complete duty or landed cost.
 	public let effectiveRate: Double?
+	/// Matching stored Chapter 99 schedule measures for this code and goods origin.
 	public let measures: [TariffMeasure]?
 	public let units: [String]?
 	public let special: String?
@@ -519,6 +523,9 @@ public struct TariffDeep: Codable, Sendable {
 }
 
 public struct Tariff: Codable, Sendable {
+	/// Exact edition and answering date. Older servers may omit both.
+	public let edition: String?
+	public let date: String?
 	public let hts: String
 	public let description: String
 	public let lineage: [String]
@@ -531,9 +538,14 @@ public struct TariffSearchHit: Codable, Sendable {
 	public let hts: String
 	public let description: String
 	public let general: String?
+	/// Parent descriptions, outermost first. Older responses may omit this context.
+	public let lineage: [String]?
 }
 
 public struct TariffSearch: Codable, Sendable {
+	/// Exact edition and answering date. Older servers may omit both.
+	public let edition: String?
+	public let date: String?
 	public let q: String
 	public let revision: String
 	/// Up to 20 tariff lines, best match first.
@@ -837,7 +849,16 @@ public struct TimezoneNextDST: Codable, Sendable {
 
 public typealias Time = Timezone
 
+/// Serving timezone IDs and their pinned rule edition.
+public struct TimeZones: Codable, Sendable {
+	public let timezoneDatabaseVersion: String
+	public let timezones: [String]
+	public let at: String?
+	public let zones: [TimeZoneEntry]?
+}
+
 public struct Timezone: Codable, Sendable {
+	public let location: TimeLocation?
 	public let latitude: Double?
 	public let longitude: Double?
 	public let timezone: String?
@@ -847,6 +868,7 @@ public struct Timezone: Codable, Sendable {
 	public let at: String?
 	public let unix: Int64?
 	public let to: TimezoneConversionTarget?
+	public let targets: [TimezoneConversionTarget]?
 	public let deep: TimezoneDeep?
 }
 
@@ -1408,7 +1430,26 @@ public struct NameDeep: Codable, Sendable {
 }
 
 
+public struct TimeResolutionAlternative: Codable, Sendable {
+	public let at: String?
+	public let unix: Int64?
+	public let offset: String?
+}
+
+public struct TimeResolution: Codable, Sendable {
+	public let kind: String?
+	public let policy: String?
+	public let adjustmentSeconds: Int?
+	public let alternatives: [TimeResolutionAlternative]?
+}
+
 public struct TimezoneDeep: Codable, Sendable {
+	public let standardOffset: String?
+	public let standardOffsetSeconds: Int?
+	public let dstOffsetSeconds: Int?
+	public let season: TimeSeason?
+	public let timezoneDatabaseVersion: String?
+	public let resolution: TimeResolution?
 	public let name: String?
 	public let offsetMinutes: Int?
 	public let offsetSeconds: Int?
@@ -1502,6 +1543,55 @@ public struct PropertyTax: Codable, Sendable {
 	public let currency: String
 	/// Reporting period, YYYY-YYYY. Monetary amounts use the final year of this period.
 	public let period: String
+}
+
+public struct TimeZoneEntry: Codable, Sendable {
+	public let timezone: String
+	public let countries: [String]
+	public let area: String?
+	public let abbreviation: String
+	public let offset: String
+	public let offsetSeconds: Int
+	public let dst: Bool
+	public let observesDst: Bool
+}
+public struct TimeTransitionState: Codable, Sendable {
+	public let at: String?
+	public let offset: String?
+	public let offsetSeconds: Int?
+	public let abbreviation: String?
+	public let dst: Bool?
+}
+public struct TimeTransition: Codable, Sendable {
+	public let at: String?
+	public let before: TimeTransitionState?
+	public let after: TimeTransitionState?
+	public let changeSeconds: Int?
+}
+public struct TimeSeason: Codable, Sendable {
+	public let start: TimeTransition?
+	public let end: TimeTransition?
+}
+
+public struct TimeLocationInput: Codable, Sendable {
+	public let type: String
+	public let value: String
+}
+public struct TimeLocationCandidate: Codable, Sendable {
+	public let id: String?
+	public let name: String?
+	public let country: String?
+	public let state: String?
+	public let timezone: String?
+	public let latitude: Double?
+	public let longitude: Double?
+}
+public struct TimeLocation: Codable, Sendable {
+	public let input: TimeLocationInput
+	public let status: String
+	public let candidates: [TimeLocationCandidate]
+	public let truncated: Bool
+	public let source: String
 }
 
 // Industry names for the existing US NAICS response contract.

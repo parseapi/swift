@@ -357,6 +357,20 @@ Company: conformsTo Swift.Encodable
 Company: conformsTo Swift.Sendable
 Company: conformsTo Swift.SendableMetatype
 Company: struct Company
+CompanyCandidate.address: let address: CompanyProfileAddress?
+CompanyCandidate.country: let country: String?
+CompanyCandidate.deep: let deep: CompanyProfileDeep?
+CompanyCandidate.id: let id: String
+CompanyCandidate.init(from:): init(from decoder: any Decoder) throws
+CompanyCandidate.listings: let listings: [CompanyProfileListing]
+CompanyCandidate.match: let match: CompanyMatch
+CompanyCandidate.name: let name: String
+CompanyCandidate.website: let website: String?
+CompanyCandidate: conformsTo Swift.Decodable
+CompanyCandidate: conformsTo Swift.Encodable
+CompanyCandidate: conformsTo Swift.Sendable
+CompanyCandidate: conformsTo Swift.SendableMetatype
+CompanyCandidate: struct CompanyCandidate
 CompanyCountry.blocs: let blocs: [String]
 CompanyCountry.init(from:): init(from decoder: any Decoder) throws
 CompanyCountry.name: let name: String?
@@ -366,6 +380,21 @@ CompanyCountry: conformsTo Swift.Encodable
 CompanyCountry: conformsTo Swift.Sendable
 CompanyCountry: conformsTo Swift.SendableMetatype
 CompanyCountry: struct CompanyCountry
+CompanyCoverage.companies: let companies: Int
+CompanyCoverage.countries: let countries: [String]
+CompanyCoverage.description: let description: String
+CompanyCoverage.init(from:): init(from decoder: any Decoder) throws
+CompanyCoverage.label: let label: String
+CompanyCoverage.scope: let scope: String
+CompanyCoverage.snapshotAt: let snapshotAt: String
+CompanyCoverage.withAddress: let withAddress: Int
+CompanyCoverage.withListings: let withListings: Int
+CompanyCoverage.withWebsite: let withWebsite: Int
+CompanyCoverage: conformsTo Swift.Decodable
+CompanyCoverage: conformsTo Swift.Encodable
+CompanyCoverage: conformsTo Swift.Sendable
+CompanyCoverage: conformsTo Swift.SendableMetatype
+CompanyCoverage: struct CompanyCoverage
 CompanyDeep.acn: let acn: String?
 CompanyDeep.activity: let activity: String?
 CompanyDeep.countryName: let countryName: String?
@@ -382,6 +411,144 @@ CompanyDeep: conformsTo Swift.Encodable
 CompanyDeep: conformsTo Swift.Sendable
 CompanyDeep: conformsTo Swift.SendableMetatype
 CompanyDeep: struct CompanyDeep
+CompanyMatch.authority: let authority: String?
+CompanyMatch.exchange: let exchange: String?
+CompanyMatch.field: let field: String?
+CompanyMatch.init(from:): init(from decoder: any Decoder) throws
+CompanyMatch.type: let type: String?
+CompanyMatch.value: let value: String?
+CompanyMatch: conformsTo Swift.Decodable
+CompanyMatch: conformsTo Swift.Encodable
+CompanyMatch: conformsTo Swift.Sendable
+CompanyMatch: conformsTo Swift.SendableMetatype
+CompanyMatch: struct CompanyMatch
+CompanyProfile.address: let address: CompanyProfileAddress?
+CompanyProfile.country: let country: String?
+CompanyProfile.deep: let deep: CompanyProfileDeep?
+CompanyProfile.id: let id: String
+CompanyProfile.init(from:): init(from decoder: any Decoder) throws
+CompanyProfile.listings: let listings: [CompanyProfileListing]
+CompanyProfile.name: let name: String
+CompanyProfile.website: let website: String?
+CompanyProfile: conformsTo Swift.Decodable
+CompanyProfile: conformsTo Swift.Encodable
+CompanyProfile: conformsTo Swift.Sendable
+CompanyProfile: conformsTo Swift.SendableMetatype
+CompanyProfile: struct CompanyProfile
+CompanyProfileAddress.city: let city: String?
+CompanyProfileAddress.country: let country: String?
+CompanyProfileAddress.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileAddress.postal: let postal: String?
+CompanyProfileAddress.state: let state: String?
+CompanyProfileAddress.street: let street: String?
+CompanyProfileAddress.type: let type: String
+CompanyProfileAddress: conformsTo Swift.Decodable
+CompanyProfileAddress: conformsTo Swift.Encodable
+CompanyProfileAddress: conformsTo Swift.Sendable
+CompanyProfileAddress: conformsTo Swift.SendableMetatype
+CompanyProfileAddress: struct CompanyProfileAddress
+CompanyProfileDeep.addresses: let addresses: [CompanyProfileAddress]?
+CompanyProfileDeep.aliases: let aliases: [String]?
+CompanyProfileDeep.description: let description: String?
+CompanyProfileDeep.employees: let employees: CompanyProfileEmployees?
+CompanyProfileDeep.founded: let founded: CompanyProfileFounding?
+CompanyProfileDeep.identifiers: let identifiers: [CompanyProfileIdentifier]?
+CompanyProfileDeep.incorporated: let incorporated: String?
+CompanyProfileDeep.industries: let industries: [CompanyProfileIndustry]?
+CompanyProfileDeep.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileDeep.jurisdiction: let jurisdiction: CompanyProfileJurisdiction?
+CompanyProfileDeep.legalName: let legalName: String?
+CompanyProfileDeep.logo: let logo: String?
+CompanyProfileDeep.parent: let parent: String?
+CompanyProfileDeep.socials: let socials: [String]?
+CompanyProfileDeep.sources: let sources: [CompanyProfileSource]?
+CompanyProfileDeep.status: let status: String?
+CompanyProfileDeep.websites: let websites: [CompanyProfileWebsite]?
+CompanyProfileDeep: conformsTo Swift.Decodable
+CompanyProfileDeep: conformsTo Swift.Encodable
+CompanyProfileDeep: conformsTo Swift.Sendable
+CompanyProfileDeep: conformsTo Swift.SendableMetatype
+CompanyProfileDeep: struct CompanyProfileDeep
+CompanyProfileEmployees.approximate: let approximate: Bool
+CompanyProfileEmployees.asOf: let asOf: String
+CompanyProfileEmployees.count: let count: Int
+CompanyProfileEmployees.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileEmployees.method: let method: String
+CompanyProfileEmployees.scope: let scope: String
+CompanyProfileEmployees: conformsTo Swift.Decodable
+CompanyProfileEmployees: conformsTo Swift.Encodable
+CompanyProfileEmployees: conformsTo Swift.Sendable
+CompanyProfileEmployees: conformsTo Swift.SendableMetatype
+CompanyProfileEmployees: struct CompanyProfileEmployees
+CompanyProfileFounding.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileFounding.precision: let precision: String
+CompanyProfileFounding.value: let value: String
+CompanyProfileFounding: conformsTo Swift.Decodable
+CompanyProfileFounding: conformsTo Swift.Encodable
+CompanyProfileFounding: conformsTo Swift.Sendable
+CompanyProfileFounding: conformsTo Swift.SendableMetatype
+CompanyProfileFounding: struct CompanyProfileFounding
+CompanyProfileIdentifier.authority: let authority: String
+CompanyProfileIdentifier.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileIdentifier.type: let type: String
+CompanyProfileIdentifier.value: let value: String
+CompanyProfileIdentifier: conformsTo Swift.Decodable
+CompanyProfileIdentifier: conformsTo Swift.Encodable
+CompanyProfileIdentifier: conformsTo Swift.Sendable
+CompanyProfileIdentifier: conformsTo Swift.SendableMetatype
+CompanyProfileIdentifier: struct CompanyProfileIdentifier
+CompanyProfileIndustry.code: let code: String
+CompanyProfileIndustry.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileIndustry.name: let name: String?
+CompanyProfileIndustry.type: let type: String
+CompanyProfileIndustry: conformsTo Swift.Decodable
+CompanyProfileIndustry: conformsTo Swift.Encodable
+CompanyProfileIndustry: conformsTo Swift.Sendable
+CompanyProfileIndustry: conformsTo Swift.SendableMetatype
+CompanyProfileIndustry: struct CompanyProfileIndustry
+CompanyProfileJurisdiction.country: let country: String
+CompanyProfileJurisdiction.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileJurisdiction.state: let state: String?
+CompanyProfileJurisdiction: conformsTo Swift.Decodable
+CompanyProfileJurisdiction: conformsTo Swift.Encodable
+CompanyProfileJurisdiction: conformsTo Swift.Sendable
+CompanyProfileJurisdiction: conformsTo Swift.SendableMetatype
+CompanyProfileJurisdiction: struct CompanyProfileJurisdiction
+CompanyProfileListing.exchange: let exchange: String
+CompanyProfileListing.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileListing.symbol: let symbol: String
+CompanyProfileListing: conformsTo Swift.Decodable
+CompanyProfileListing: conformsTo Swift.Encodable
+CompanyProfileListing: conformsTo Swift.Sendable
+CompanyProfileListing: conformsTo Swift.SendableMetatype
+CompanyProfileListing: struct CompanyProfileListing
+CompanyProfileSource.fields: let fields: [String]
+CompanyProfileSource.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileSource.observedAt: let observedAt: String
+CompanyProfileSource.type: let type: String
+CompanyProfileSource.updatedAt: let updatedAt: String?
+CompanyProfileSource.url: let url: String
+CompanyProfileSource: conformsTo Swift.Decodable
+CompanyProfileSource: conformsTo Swift.Encodable
+CompanyProfileSource: conformsTo Swift.Sendable
+CompanyProfileSource: conformsTo Swift.SendableMetatype
+CompanyProfileSource: struct CompanyProfileSource
+CompanyProfileWebsite.domain: let domain: String
+CompanyProfileWebsite.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileWebsite.url: let url: String?
+CompanyProfileWebsite: conformsTo Swift.Decodable
+CompanyProfileWebsite: conformsTo Swift.Encodable
+CompanyProfileWebsite: conformsTo Swift.Sendable
+CompanyProfileWebsite: conformsTo Swift.SendableMetatype
+CompanyProfileWebsite: struct CompanyProfileWebsite
+CompanySearch.companies: let companies: [CompanyCandidate]
+CompanySearch.init(from:): init(from decoder: any Decoder) throws
+CompanySearch.next: let next: String?
+CompanySearch: conformsTo Swift.Decodable
+CompanySearch: conformsTo Swift.Encodable
+CompanySearch: conformsTo Swift.Sendable
+CompanySearch: conformsTo Swift.SendableMetatype
+CompanySearch: struct CompanySearch
 Continent.area: let area: Double?
 Continent.continent: let continent: String
 Continent.emoji: let emoji: String
@@ -1037,6 +1204,10 @@ ParseAPI.citySearch(_:country:state:limit:deep:): func citySearch(_ query: Strin
 ParseAPI.citySearch(_:country:state:limit:deep:lang:): func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false, lang: String?) async throws -> CitySearch
 ParseAPI.company(_:country:deep:): func company(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Company
 ParseAPI.company(_:country:deep:lang:): func company(_ number: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> Company
+ParseAPI.companyCoverage(): func companyCoverage() async throws -> CompanyCoverage
+ParseAPI.companyId(_:deep:): func companyId(_ id: String, deep: Bool = false) async throws -> CompanyProfile
+ParseAPI.companySearch(query:domain:ticker:identifier:country:exchange:authority:limit:cursor:deep:): func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil, identifier: String? = nil, country: String? = nil, exchange: String? = nil, authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false) async throws -> CompanySearch
+ParseAPI.companySearch(query:domain:ticker:identifier:country:exchange:authority:limit:cursor:deep:industry:industryType:): func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil, identifier: String? = nil, country: String? = nil, exchange: String? = nil, authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false, industry: String?, industryType: String? = nil) async throws -> CompanySearch
 ParseAPI.continent(_:): func continent(_ code: String) async throws -> Continent
 ParseAPI.continent(_:lang:): func continent(_ code: String, lang: String?) async throws -> Continent
 ParseAPI.continentCountries(_:): func continentCountries(_ code: String) async throws -> ContinentCountries
@@ -1102,12 +1273,19 @@ ParseAPI.state(_:country:deep:): func state(_ code: String, country: String? = n
 ParseAPI.state(_:country:deep:lang:): func state(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> State
 ParseAPI.stateDistricts(_:country:deep:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateDistricts
 ParseAPI.stateDistricts(_:country:deep:lang:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateDistricts
-ParseAPI.tariff(_:deep:origin:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil) async throws -> Tariff
-ParseAPI.tariffSearch(_:): func tariffSearch(_ query: String) async throws -> TariffSearch
+ParseAPI.tariff(_:deep:origin:edition:date:): func tariff(_ code: String, deep: Bool = false, origin: String? = nil, edition: String? = nil, date: String? = nil) async throws -> Tariff
+ParseAPI.tariffSearch(_:edition:date:): func tariffSearch(_ query: String, edition: String? = nil, date: String? = nil) async throws -> TariffSearch
+ParseAPI.time(_:at:deep:lang:disambiguation:targets:): func time(_ timezone: String? = nil, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time
 ParseAPI.time(_:at:to:deep:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time
 ParseAPI.time(_:at:to:deep:lang:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time
+ParseAPI.time(_:at:to:deep:lang:disambiguation:): func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String) async throws -> Time
+ParseAPI.time(source:at:to:targets:deep:lang:disambiguation:): func time(source: TimeSource, at: String? = nil, to: String? = nil, targets: [String]? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil) async throws -> Time
+ParseAPI.timeAt(_:_:at:deep:lang:disambiguation:targets:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time
 ParseAPI.timeAt(_:_:at:to:deep:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time
 ParseAPI.timeAt(_:_:at:to:deep:lang:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Time
+ParseAPI.timeAt(_:_:at:to:deep:lang:disambiguation:): func timeAt(_ lat: Double, _ lon: Double, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String) async throws -> Time
+ParseAPI.timeZones(_:): func timeZones(_ query: String? = nil) async throws -> TimeZones
+ParseAPI.timeZones(_:options:): func timeZones(_ query: String? = nil, options: TimeZonesOptions) async throws -> TimeZones
 ParseAPI.timezone(_:at:to:deep:): func timezone(_ id: String, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Timezone
 ParseAPI.timezone(_:at:to:deep:lang:): func timezone(_ id: String, at: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> Timezone
 ParseAPI.timezoneAt(_:_:at:deep:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false) async throws -> Timezone
@@ -1505,8 +1683,10 @@ StateDistricts: conformsTo Swift.Encodable
 StateDistricts: conformsTo Swift.Sendable
 StateDistricts: conformsTo Swift.SendableMetatype
 StateDistricts: struct StateDistricts
+Tariff.date: let date: String?
 Tariff.deep: let deep: TariffDeep?
 Tariff.description: let description: String
+Tariff.edition: let edition: String?
 Tariff.general: let general: String?
 Tariff.hts: let hts: String
 Tariff.init(from:): init(from decoder: any Decoder) throws
@@ -1522,6 +1702,7 @@ TariffDeep.init(from:): init(from decoder: any Decoder) throws
 TariffDeep.measures: let measures: [TariffMeasure]?
 TariffDeep.origin: let origin: String?
 TariffDeep.other: let other: String?
+TariffDeep.reason: let reason: String?
 TariffDeep.special: let special: String?
 TariffDeep.units: let units: [String]?
 TariffDeep: conformsTo Swift.Decodable
@@ -1541,6 +1722,8 @@ TariffMeasure: conformsTo Swift.Encodable
 TariffMeasure: conformsTo Swift.Sendable
 TariffMeasure: conformsTo Swift.SendableMetatype
 TariffMeasure: struct TariffMeasure
+TariffSearch.date: let date: String?
+TariffSearch.edition: let edition: String?
 TariffSearch.init(from:): init(from decoder: any Decoder) throws
 TariffSearch.lines: let lines: [TariffSearchHit]
 TariffSearch.q: let q: String
@@ -1554,20 +1737,150 @@ TariffSearchHit.description: let description: String
 TariffSearchHit.general: let general: String?
 TariffSearchHit.hts: let hts: String
 TariffSearchHit.init(from:): init(from decoder: any Decoder) throws
+TariffSearchHit.lineage: let lineage: [String]?
 TariffSearchHit: conformsTo Swift.Decodable
 TariffSearchHit: conformsTo Swift.Encodable
 TariffSearchHit: conformsTo Swift.Sendable
 TariffSearchHit: conformsTo Swift.SendableMetatype
 TariffSearchHit: struct TariffSearchHit
 Time: typealias Time = Timezone
+TimeLocation.candidates: let candidates: [TimeLocationCandidate]
+TimeLocation.init(from:): init(from decoder: any Decoder) throws
+TimeLocation.input: let input: TimeLocationInput
+TimeLocation.source: let source: String
+TimeLocation.status: let status: String
+TimeLocation.truncated: let truncated: Bool
+TimeLocation: conformsTo Swift.Decodable
+TimeLocation: conformsTo Swift.Encodable
+TimeLocation: conformsTo Swift.Sendable
+TimeLocation: conformsTo Swift.SendableMetatype
+TimeLocation: struct TimeLocation
+TimeLocationCandidate.country: let country: String?
+TimeLocationCandidate.id: let id: String?
+TimeLocationCandidate.init(from:): init(from decoder: any Decoder) throws
+TimeLocationCandidate.latitude: let latitude: Double?
+TimeLocationCandidate.longitude: let longitude: Double?
+TimeLocationCandidate.name: let name: String?
+TimeLocationCandidate.state: let state: String?
+TimeLocationCandidate.timezone: let timezone: String?
+TimeLocationCandidate: conformsTo Swift.Decodable
+TimeLocationCandidate: conformsTo Swift.Encodable
+TimeLocationCandidate: conformsTo Swift.Sendable
+TimeLocationCandidate: conformsTo Swift.SendableMetatype
+TimeLocationCandidate: struct TimeLocationCandidate
+TimeLocationInput.init(from:): init(from decoder: any Decoder) throws
+TimeLocationInput.type: let type: String
+TimeLocationInput.value: let value: String
+TimeLocationInput: conformsTo Swift.Decodable
+TimeLocationInput: conformsTo Swift.Encodable
+TimeLocationInput: conformsTo Swift.Sendable
+TimeLocationInput: conformsTo Swift.SendableMetatype
+TimeLocationInput: struct TimeLocationInput
+TimeResolution.adjustmentSeconds: let adjustmentSeconds: Int?
+TimeResolution.alternatives: let alternatives: [TimeResolutionAlternative]?
+TimeResolution.init(from:): init(from decoder: any Decoder) throws
+TimeResolution.kind: let kind: String?
+TimeResolution.policy: let policy: String?
+TimeResolution: conformsTo Swift.Decodable
+TimeResolution: conformsTo Swift.Encodable
+TimeResolution: conformsTo Swift.Sendable
+TimeResolution: conformsTo Swift.SendableMetatype
+TimeResolution: struct TimeResolution
+TimeResolutionAlternative.at: let at: String?
+TimeResolutionAlternative.init(from:): init(from decoder: any Decoder) throws
+TimeResolutionAlternative.offset: let offset: String?
+TimeResolutionAlternative.unix: let unix: Int64?
+TimeResolutionAlternative: conformsTo Swift.Decodable
+TimeResolutionAlternative: conformsTo Swift.Encodable
+TimeResolutionAlternative: conformsTo Swift.Sendable
+TimeResolutionAlternative: conformsTo Swift.SendableMetatype
+TimeResolutionAlternative: struct TimeResolutionAlternative
+TimeSeason.end: let end: TimeTransition?
+TimeSeason.init(from:): init(from decoder: any Decoder) throws
+TimeSeason.start: let start: TimeTransition?
+TimeSeason: conformsTo Swift.Decodable
+TimeSeason: conformsTo Swift.Encodable
+TimeSeason: conformsTo Swift.Sendable
+TimeSeason: conformsTo Swift.SendableMetatype
+TimeSeason: struct TimeSeason
+TimeSource.address(_:country:state:): case address(String, country: String, state: String? = nil)
+TimeSource.city(_:country:state:): case city(String, country: String? = nil, state: String? = nil)
+TimeSource.country(_:): case country(String)
+TimeSource.iata(_:): case iata(String)
+TimeSource.icao(_:): case icao(String)
+TimeSource.ip(_:): case ip(String)
+TimeSource.unlocode(_:): case unlocode(String)
+TimeSource: conformsTo Swift.Sendable
+TimeSource: conformsTo Swift.SendableMetatype
+TimeSource: enum TimeSource
+TimeTransition.after: let after: TimeTransitionState?
+TimeTransition.at: let at: String?
+TimeTransition.before: let before: TimeTransitionState?
+TimeTransition.changeSeconds: let changeSeconds: Int?
+TimeTransition.init(from:): init(from decoder: any Decoder) throws
+TimeTransition: conformsTo Swift.Decodable
+TimeTransition: conformsTo Swift.Encodable
+TimeTransition: conformsTo Swift.Sendable
+TimeTransition: conformsTo Swift.SendableMetatype
+TimeTransition: struct TimeTransition
+TimeTransitionState.abbreviation: let abbreviation: String?
+TimeTransitionState.at: let at: String?
+TimeTransitionState.dst: let dst: Bool?
+TimeTransitionState.init(from:): init(from decoder: any Decoder) throws
+TimeTransitionState.offset: let offset: String?
+TimeTransitionState.offsetSeconds: let offsetSeconds: Int?
+TimeTransitionState: conformsTo Swift.Decodable
+TimeTransitionState: conformsTo Swift.Encodable
+TimeTransitionState: conformsTo Swift.Sendable
+TimeTransitionState: conformsTo Swift.SendableMetatype
+TimeTransitionState: struct TimeTransitionState
+TimeZoneEntry.abbreviation: let abbreviation: String
+TimeZoneEntry.area: let area: String?
+TimeZoneEntry.countries: let countries: [String]
+TimeZoneEntry.dst: let dst: Bool
+TimeZoneEntry.init(from:): init(from decoder: any Decoder) throws
+TimeZoneEntry.observesDst: let observesDst: Bool
+TimeZoneEntry.offset: let offset: String
+TimeZoneEntry.offsetSeconds: let offsetSeconds: Int
+TimeZoneEntry.timezone: let timezone: String
+TimeZoneEntry: conformsTo Swift.Decodable
+TimeZoneEntry: conformsTo Swift.Encodable
+TimeZoneEntry: conformsTo Swift.Sendable
+TimeZoneEntry: conformsTo Swift.SendableMetatype
+TimeZoneEntry: struct TimeZoneEntry
+TimeZones.at: let at: String?
+TimeZones.init(from:): init(from decoder: any Decoder) throws
+TimeZones.timezoneDatabaseVersion: let timezoneDatabaseVersion: String
+TimeZones.timezones: let timezones: [String]
+TimeZones.zones: let zones: [TimeZoneEntry]?
+TimeZones: conformsTo Swift.Decodable
+TimeZones: conformsTo Swift.Encodable
+TimeZones: conformsTo Swift.Sendable
+TimeZones: conformsTo Swift.SendableMetatype
+TimeZones: struct TimeZones
+TimeZonesOptions.abbreviation: var abbreviation: String?
+TimeZonesOptions.area: var area: String?
+TimeZonesOptions.at: var at: String?
+TimeZonesOptions.country: var country: String?
+TimeZonesOptions.details: var details: Bool
+TimeZonesOptions.dst: var dst: Bool?
+TimeZonesOptions.init(country:area:offset:abbreviation:dst:observesDst:at:details:sort:): init(country: String? = nil, area: String? = nil, offset: String? = nil, abbreviation: String? = nil, dst: Bool? = nil, observesDst: Bool? = nil, at: String? = nil, details: Bool = false, sort: String? = nil)
+TimeZonesOptions.observesDst: var observesDst: Bool?
+TimeZonesOptions.offset: var offset: String?
+TimeZonesOptions.sort: var sort: String?
+TimeZonesOptions: conformsTo Swift.Sendable
+TimeZonesOptions: conformsTo Swift.SendableMetatype
+TimeZonesOptions: struct TimeZonesOptions
 Timezone.abbreviation: let abbreviation: String?
 Timezone.at: let at: String?
 Timezone.deep: let deep: TimezoneDeep?
 Timezone.dst: let dst: Bool?
 Timezone.init(from:): init(from decoder: any Decoder) throws
 Timezone.latitude: let latitude: Double?
+Timezone.location: let location: TimeLocation?
 Timezone.longitude: let longitude: Double?
 Timezone.offset: let offset: String?
+Timezone.targets: let targets: [TimezoneConversionTarget]?
 Timezone.timezone: let timezone: String?
 Timezone.to: let to: TimezoneConversionTarget?
 Timezone.unix: let unix: Int64?
@@ -1598,11 +1911,17 @@ TimezoneConversionTargetDeep: conformsTo Swift.Encodable
 TimezoneConversionTargetDeep: conformsTo Swift.Sendable
 TimezoneConversionTargetDeep: conformsTo Swift.SendableMetatype
 TimezoneConversionTargetDeep: struct TimezoneConversionTargetDeep
+TimezoneDeep.dstOffsetSeconds: let dstOffsetSeconds: Int?
 TimezoneDeep.init(from:): init(from decoder: any Decoder) throws
 TimezoneDeep.name: let name: String?
 TimezoneDeep.nextDst: let nextDst: TimezoneNextDST?
 TimezoneDeep.offsetMinutes: let offsetMinutes: Int?
 TimezoneDeep.offsetSeconds: let offsetSeconds: Int?
+TimezoneDeep.resolution: let resolution: TimeResolution?
+TimezoneDeep.season: let season: TimeSeason?
+TimezoneDeep.standardOffset: let standardOffset: String?
+TimezoneDeep.standardOffsetSeconds: let standardOffsetSeconds: Int?
+TimezoneDeep.timezoneDatabaseVersion: let timezoneDatabaseVersion: String?
 TimezoneDeep: conformsTo Swift.Decodable
 TimezoneDeep: conformsTo Swift.Encodable
 TimezoneDeep: conformsTo Swift.Sendable
