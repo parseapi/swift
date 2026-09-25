@@ -460,6 +460,7 @@ CompanyProfileDeep.jurisdiction: let jurisdiction: CompanyProfileJurisdiction?
 CompanyProfileDeep.legalName: let legalName: String?
 CompanyProfileDeep.logo: let logo: String?
 CompanyProfileDeep.parent: let parent: String?
+CompanyProfileDeep.registrations: let registrations: [CompanyProfileRegistration]?
 CompanyProfileDeep.socials: let socials: [String]?
 CompanyProfileDeep.sources: let sources: [CompanyProfileSource]?
 CompanyProfileDeep.status: let status: String?
@@ -522,6 +523,41 @@ CompanyProfileListing: conformsTo Swift.Encodable
 CompanyProfileListing: conformsTo Swift.Sendable
 CompanyProfileListing: conformsTo Swift.SendableMetatype
 CompanyProfileListing: struct CompanyProfileListing
+CompanyProfileRegistration.address: let address: CompanyProfileRegistrationAddress?
+CompanyProfileRegistration.authority: let authority: String
+CompanyProfileRegistration.formationDate: let formationDate: String?
+CompanyProfileRegistration.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileRegistration.jurisdiction: let jurisdiction: CompanyProfileJurisdiction
+CompanyProfileRegistration.legalForm: let legalForm: CompanyProfileRegistrationLegalForm
+CompanyProfileRegistration.number: let number: String
+CompanyProfileRegistration.role: let role: String
+CompanyProfileRegistration.status: let status: String
+CompanyProfileRegistration: conformsTo Swift.Decodable
+CompanyProfileRegistration: conformsTo Swift.Encodable
+CompanyProfileRegistration: conformsTo Swift.Sendable
+CompanyProfileRegistration: conformsTo Swift.SendableMetatype
+CompanyProfileRegistration: struct CompanyProfileRegistration
+CompanyProfileRegistrationAddress.city: let city: String?
+CompanyProfileRegistrationAddress.countryRaw: let countryRaw: String?
+CompanyProfileRegistrationAddress.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileRegistrationAddress.kind: let kind: String
+CompanyProfileRegistrationAddress.line1: let line1: String?
+CompanyProfileRegistrationAddress.line2: let line2: String?
+CompanyProfileRegistrationAddress.postal: let postal: String?
+CompanyProfileRegistrationAddress.state: let state: String?
+CompanyProfileRegistrationAddress: conformsTo Swift.Decodable
+CompanyProfileRegistrationAddress: conformsTo Swift.Encodable
+CompanyProfileRegistrationAddress: conformsTo Swift.Sendable
+CompanyProfileRegistrationAddress: conformsTo Swift.SendableMetatype
+CompanyProfileRegistrationAddress: struct CompanyProfileRegistrationAddress
+CompanyProfileRegistrationLegalForm.code: let code: String
+CompanyProfileRegistrationLegalForm.init(from:): init(from decoder: any Decoder) throws
+CompanyProfileRegistrationLegalForm.name: let name: String
+CompanyProfileRegistrationLegalForm: conformsTo Swift.Decodable
+CompanyProfileRegistrationLegalForm: conformsTo Swift.Encodable
+CompanyProfileRegistrationLegalForm: conformsTo Swift.Sendable
+CompanyProfileRegistrationLegalForm: conformsTo Swift.SendableMetatype
+CompanyProfileRegistrationLegalForm: struct CompanyProfileRegistrationLegalForm
 CompanyProfileSource.fields: let fields: [String]
 CompanyProfileSource.init(from:): init(from decoder: any Decoder) throws
 CompanyProfileSource.observedAt: let observedAt: String
@@ -1208,6 +1244,7 @@ ParseAPI.companyCoverage(): func companyCoverage() async throws -> CompanyCovera
 ParseAPI.companyId(_:deep:): func companyId(_ id: String, deep: Bool = false) async throws -> CompanyProfile
 ParseAPI.companySearch(query:domain:ticker:identifier:country:exchange:authority:limit:cursor:deep:): func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil, identifier: String? = nil, country: String? = nil, exchange: String? = nil, authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false) async throws -> CompanySearch
 ParseAPI.companySearch(query:domain:ticker:identifier:country:exchange:authority:limit:cursor:deep:industry:industryType:): func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil, identifier: String? = nil, country: String? = nil, exchange: String? = nil, authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false, industry: String?, industryType: String? = nil) async throws -> CompanySearch
+ParseAPI.companySearch(query:domain:ticker:identifier:country:exchange:authority:limit:cursor:deep:industry:industryType:registrationAuthority:registrationForm:registrationStatus:): func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil, identifier: String? = nil, country: String? = nil, exchange: String? = nil, authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false, industry: String? = nil, industryType: String? = nil, registrationAuthority: String?, registrationForm: String? = nil, registrationStatus: String? = nil) async throws -> CompanySearch
 ParseAPI.continent(_:): func continent(_ code: String) async throws -> Continent
 ParseAPI.continent(_:lang:): func continent(_ code: String, lang: String?) async throws -> Continent
 ParseAPI.continentCountries(_:): func continentCountries(_ code: String) async throws -> ContinentCountries
