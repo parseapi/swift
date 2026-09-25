@@ -1503,3 +1503,12 @@ public struct PropertyTax: Codable, Sendable {
 	/// Reporting period, YYYY-YYYY. Monetary amounts use the final year of this period.
 	public let period: String
 }
+
+// Industry names for the existing US NAICS response contract.
+public typealias Industry = NAICS
+public typealias IndustryChild = NAICSChild
+public typealias IndustryCorrection = NAICSCorrection
+public typealias IndustryDeep = NAICSDeep
+public typealias IndustryExclusion = NAICSExclusion
+public typealias IndustryMatch = NAICSMatch
+public typealias IndustrySearch = NAICSSearch

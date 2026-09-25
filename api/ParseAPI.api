@@ -815,6 +815,13 @@ IPDeep: conformsTo Swift.Encodable
 IPDeep: conformsTo Swift.Sendable
 IPDeep: conformsTo Swift.SendableMetatype
 IPDeep: struct IPDeep
+Industry: typealias Industry = NAICS
+IndustryChild: typealias IndustryChild = NAICSChild
+IndustryCorrection: typealias IndustryCorrection = NAICSCorrection
+IndustryDeep: typealias IndustryDeep = NAICSDeep
+IndustryExclusion: typealias IndustryExclusion = NAICSExclusion
+IndustryMatch: typealias IndustryMatch = NAICSMatch
+IndustrySearch: typealias IndustrySearch = NAICSSearch
 Language.deep: let deep: LanguageDeep?
 Language.direction: let direction: String
 Language.init(from:): init(from decoder: any Decoder) throws
@@ -1058,6 +1065,8 @@ ParseAPI.emojiSearch(_:limit:deep:lang:): func emojiSearch(_ query: String, limi
 ParseAPI.hlr(_:country:deep:): func hlr(_ number: String, country: String? = nil, deep: Bool = false) async throws -> HLR
 ParseAPI.holiday(_:year:): func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear
 ParseAPI.holidayDate(_:_:): func holidayDate(_ country: String, _ date: String) async throws -> HolidayDate
+ParseAPI.industry(_:deep:): func industry(_ code: String, deep: Bool = false) async throws -> Industry
+ParseAPI.industrySearch(_:limit:deep:): func industrySearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> IndustrySearch
 ParseAPI.init(_:appId:baseURL:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.init(_:appId:baseURL:timeout:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, timeout: TimeInterval, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.ip(_:deep:): func ip(_ ip: String, deep: Bool = false) async throws -> IP

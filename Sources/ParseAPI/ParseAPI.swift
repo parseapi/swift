@@ -507,12 +507,19 @@ public final class ParseAPI: Sendable {
 
 	/// US NAICS 2022 definition and hierarchy.
 	public func naics(_ code: String, deep: Bool = false) async throws -> NAICS {
-		try await get("/naics/\(enc(code))", query: deepQuery(deep))
+		try await industry(code, deep: deep)
+	}
+	public func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch {
+		try await industrySearch(query, limit: limit, deep: deep)
+	}
+
+	public func industry(_ code: String, deep: Bool = false) async throws -> Industry {
+		try await get("/industry/\(enc(code))", query: deepQuery(deep))
 	}
 
 	/// Keyword search. Limit defaults to 10 and accepts 1-50.
-	public func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch {
-		try await get("/naics", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
+	public func industrySearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> IndustrySearch {
+		try await get("/industry", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
 
 	public func currency(_ code: String, deep: Bool = false) async throws -> Currency {
