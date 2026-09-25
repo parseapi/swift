@@ -438,16 +438,21 @@ public final class ParseAPI: Sendable {
 		try await get("/mac/\(enc(mac))")
 	}
 
-	/// Look up a 6-11 digit card prefix. Preserve leading zeros in the string.
+	/// Look up a 2-11 digit card prefix. Preserve leading zeros in the string.
 	public func card(_ bin: String) async throws -> Card {
+		try await card(bin, deep: false)
+	}
+
+	/// Optional recorded issuer details, included on every plan.
+	public func card(_ bin: String, deep: Bool) async throws -> Card {
 		guard bin.utf16.count <= 64 else {
-			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 6-11 digit prefix string.", docs: nil, requestId: nil)
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 2-11 digit prefix string.", docs: nil, requestId: nil)
 		}
 		let digits = bin.utf8.filter { ![32, 9, 13, 10, 45].contains($0) }
-		guard (6...11).contains(digits.count), digits.allSatisfy({ (48...57).contains($0) }) else {
-			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 6-11 digit prefix string.", docs: nil, requestId: nil)
+		guard (2...11).contains(digits.count), digits.allSatisfy({ (48...57).contains($0) }) else {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 2-11 digit prefix string.", docs: nil, requestId: nil)
 		}
-		return try await get("/card/\(enc(bin))")
+		return try await get("/card/\(enc(bin))", query: [("deep", deep ? "true" : nil)])
 	}
 
 

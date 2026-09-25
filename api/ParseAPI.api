@@ -220,17 +220,25 @@ Caller: struct Caller
 Card.bin: let bin: String
 Card.brand: let brand: String?
 Card.brandName: let brandName: String?
-Card.country: let country: String?
+Card.deep: let deep: CardDeep?
 Card.init(from:): init(from decoder: any Decoder) throws
-Card.issuer: let issuer: String?
-Card.prefix: let prefix: String?
-Card.prepaid: let prepaid: Bool?
-Card.type: let type: String?
+Card.logo: let logo: String
 Card: conformsTo Swift.Decodable
 Card: conformsTo Swift.Encodable
 Card: conformsTo Swift.Sendable
 Card: conformsTo Swift.SendableMetatype
 Card: struct Card
+CardDeep.country: let country: String?
+CardDeep.init(from:): init(from decoder: any Decoder) throws
+CardDeep.issuer: let issuer: String?
+CardDeep.prefix: let prefix: String?
+CardDeep.prepaid: let prepaid: Bool?
+CardDeep.type: let type: String?
+CardDeep: conformsTo Swift.Decodable
+CardDeep: conformsTo Swift.Encodable
+CardDeep: conformsTo Swift.Sendable
+CardDeep: conformsTo Swift.SendableMetatype
+CardDeep: struct CardDeep
 Carrier.burner: let burner: Bool?
 Carrier.carrier: let carrier: String?
 Carrier.country: let country: String?
@@ -1053,6 +1061,7 @@ ParseAPI.blocCountries(_:): func blocCountries(_ code: String) async throws -> B
 ParseAPI.blocCountries(_:lang:): func blocCountries(_ code: String, lang: String?) async throws -> BlocCountries
 ParseAPI.caller(_:country:): func caller(_ number: String, country: String? = nil) async throws -> Caller
 ParseAPI.card(_:): func card(_ bin: String) async throws -> Card
+ParseAPI.card(_:deep:): func card(_ bin: String, deep: Bool) async throws -> Card
 ParseAPI.carrier(_:country:deep:): func carrier(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Carrier
 ParseAPI.city(_:country:state:deep:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> City
 ParseAPI.city(_:country:state:deep:lang:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> City

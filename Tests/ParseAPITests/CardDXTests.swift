@@ -4,13 +4,13 @@ import Testing
 
 @Suite struct CardDXTests {
     @Test func invalidPrefixesNeverDispatchAndAcceptedInputIsPreserved() async throws {
-        let stub = StubTransport(body: #"{"bin":"001234"}"#)
+        let stub = StubTransport(body: #"{"bin":"001234","logo":"https://cdn.parseapi.com/card/generic.svg"}"#)
         let parse = try makeClient(stub)
-        for raw in ["4111111111111111", "4111-1111-1111-1111", "12345", "123456789012", "１２３４５６", "001\u{00a0}234", "001\u{200b}234", "00%20234", "001\u{000b}234", String(repeating: " ", count: 59) + "001234"] {
+        for raw in ["4111111111111111", "4111-1111-1111-1111", "1", "123456789012", "１２３４５６", "001\u{00a0}234", "001\u{200b}234", "00%20234", "001\u{000b}234", String(repeating: " ", count: 59) + "001234"] {
             do { _ = try await parse.card(raw); Issue.record("expected local rejection") }
             catch let error as ParseAPIError {
                 #expect(error.status == 0)
-                #expect(error.message == "Card requires a 6-11 digit prefix string.")
+                #expect(error.message == "Card requires a 2-11 digit prefix string.")
             }
         }
         #expect(stub.requests.isEmpty)

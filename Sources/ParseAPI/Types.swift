@@ -665,19 +665,23 @@ public struct MAC: Codable, Sendable {
 	public let multicast: Bool?
 }
 
-/// Card-prefix reference data. Nil means unknown.
+/// Network identity. Nil brand means unknown or ambiguous.
 public struct Card: Codable, Sendable {
 	public let bin: String
-	/// Actual longest matched prefix, which may be shorter than the input.
-	public let prefix: String?
-	public let country: String?
-	public let issuer: String?
 	public let brand: String?
 	public let brandName: String?
+	public let logo: String
+	public let deep: CardDeep?
+}
+
+/// Optional recorded issuer details. Nil fields mean unknown.
+public struct CardDeep: Codable, Sendable {
+	public let prefix: String?
+	public let issuer: String?
+	public let country: String?
 	public let type: String?
 	public let prepaid: Bool?
 }
-
 
 /// A published DNS record. Value retains DNS presentation syntax, including TXT quoting.
 public struct DNSRecord: Codable, Sendable {
