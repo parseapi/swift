@@ -42,6 +42,13 @@ public struct ParseAPIError: Error, LocalizedError, Sendable {
 	public let docs: String?
 	/// Send this if you contact support.
 	public let requestId: String?
+	/// Raw Retry-After response header, when supplied.
+	public let retryAfter: String?
+
+	init(status: Int, code: String, message: String, docs: String?, requestId: String?, retryAfter: String? = nil) {
+		self.status = status; self.code = code; self.message = message
+		self.docs = docs; self.requestId = requestId; self.retryAfter = retryAfter
+	}
 
 	public var errorDescription: String? { message }
 }
@@ -65,7 +72,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.7.0"
+	static let version = "1.8.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -387,14 +394,48 @@ public final class ParseAPI: Sendable {
 		try await get("/iban/\(enc(iban))", query: [("country", country)] + deepQuery(deep))
 	}
 
-	/// Look up a US healthcare provider by NPI.
-	/// Deep adds Medicare enrollment on paid plans.
+
 	public func npi(_ npi: String, deep: Bool = false) async throws -> Npi {
 		try await get("/npi/\(enc(npi))", query: deepQuery(deep))
 	}
-	/// Select translated display names for this request.
+
 	public func npi(_ npi: String, deep: Bool = false, lang: String?) async throws -> Npi {
 		try await get("/npi/\(enc(npi))", query: [("lang", lang)] + deepQuery(deep))
+	}
+
+
+	public func bin(_ bin: String, deep: Bool = false) async throws -> Bin {
+		try await get("/bin/\(enc(bin))", query: deepQuery(deep))
+	}
+
+
+
+	public func bank(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Bank {
+		var body: [String: Any] = ["iban": iban]
+		if let country { body["country"] = country }
+		if deep { body["deep"] = true }
+		return try await get("/bank", body: JSONSerialization.data(withJSONObject: body))
+	}
+
+	/// Check supported US ACH format, not account existence or ACH eligibility.
+	public func bankUsAch(_ input: BankUsAchInput) async throws -> BankUsAch {
+		let body: [String: Any] = ["format": "us_ach", "country": "US", "routing": input.routing, "account": input.account]
+		return try await get("/bank", body: JSONSerialization.data(withJSONObject: body))
+	}
+
+	/// Required collection fields; an omitted format selects IBAN.
+	public func bankRequirements(_ country: String, format: String? = nil) async throws -> BankRequirements {
+		try await get("/bank/requirements", query: [("country", country), ("format", format)])
+	}
+
+	/// Look up a US healthcare provider by NPI.
+	/// Deep adds Medicare enrollment on paid plans.
+	public func provider(_ npi: String, deep: Bool = false) async throws -> Provider {
+		try await get("/provider/\(enc(npi))", query: deepQuery(deep))
+	}
+	/// Select translated display names for this request.
+	public func provider(_ npi: String, deep: Bool = false, lang: String?) async throws -> Provider {
+		try await get("/provider/\(enc(npi))", query: [("lang", lang)] + deepQuery(deep))
 	}
 
 	/// Parse a phone number and its formats. Pass country for national numbers when needed. Deep
@@ -445,9 +486,21 @@ public final class ParseAPI: Sendable {
 		try await get("/mac/\(enc(mac))")
 	}
 
-	/// Look up a 6-11 digit card prefix. Preserve leading zeros in the string.
-	public func bin(_ bin: String, deep: Bool = false) async throws -> Bin {
-		try await get("/bin/\(enc(bin))", query: deepQuery(deep))
+	/// Look up a 2-11 digit card prefix. Preserve leading zeros in the string.
+	public func card(_ bin: String) async throws -> Card {
+		try await card(bin, deep: false)
+	}
+
+	/// Optional recorded issuer details, included on every plan.
+	public func card(_ bin: String, deep: Bool) async throws -> Card {
+		guard bin.utf16.count <= 64 else {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 2-11 digit prefix string.", docs: nil, requestId: nil)
+		}
+		let digits = bin.utf8.filter { ![32, 9, 13, 10, 45].contains($0) }
+		guard (2...11).contains(digits.count), digits.allSatisfy({ (48...57).contains($0) }) else {
+			throw ParseAPIError(status: 0, code: "invalid_argument", message: "Card requires a 2-11 digit prefix string.", docs: nil, requestId: nil)
+		}
+		return try await get("/card/\(enc(bin))", query: [("deep", deep ? "true" : nil)])
 	}
 
 
@@ -483,6 +536,11 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Decodes a 17-character VIN. Deep adds specifications and recalls on paid plans.
+	public func vehicle(_ vin: String, deep: Bool = false) async throws -> Vehicle {
+		try await get("/vehicle/\(enc(vin))", query: deepQuery(deep))
+	}
+
+	/// Compatibility entry for VIN callers.
 	public func vin(_ vin: String, deep: Bool = false) async throws -> Vin {
 		try await get("/vin/\(enc(vin))", query: deepQuery(deep))
 	}
@@ -523,12 +581,19 @@ public final class ParseAPI: Sendable {
 
 	/// US NAICS 2022 definition and hierarchy.
 	public func naics(_ code: String, deep: Bool = false) async throws -> NAICS {
-		try await get("/naics/\(enc(code))", query: deepQuery(deep))
+		try await industry(code, deep: deep)
+	}
+	public func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch {
+		try await industrySearch(query, limit: limit, deep: deep)
+	}
+
+	public func industry(_ code: String, deep: Bool = false) async throws -> Industry {
+		try await get("/industry/\(enc(code))", query: deepQuery(deep))
 	}
 
 	/// Keyword search. Limit defaults to 10 and accepts 1-50.
-	public func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch {
-		try await get("/naics", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
+	public func industrySearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> IndustrySearch {
+		try await get("/industry", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
 
 	public func currency(_ code: String, deep: Bool = false) async throws -> Currency {
@@ -759,7 +824,7 @@ public final class ParseAPI: Sendable {
 		deep ? [("deep", "true")] : []
 	}
 
-	private func get<T: Decodable>(_ path: String, query: [(String, String?)] = [], userAgent: String? = nil) async throws -> T {
+	private func get<T: Decodable>(_ path: String, query: [(String, String?)] = [], userAgent: String? = nil, body: Data? = nil) async throws -> T {
 		var url = baseURL + path
 		let pairs = query.compactMap { name, value in
 			value.map { "\(name)=\(enc($0))" }
@@ -779,6 +844,11 @@ public final class ParseAPI: Sendable {
 		while true {
 			try Task.checkCancellation()
 			var request = URLRequest(url: requestURL)
+			if let body {
+				request.httpMethod = "POST"
+				request.httpBody = body
+				request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+			}
 			request.timeoutInterval = !timeoutConfigured && path.hasPrefix("/stack/") ? 35 : timeout
 			request.setValue(key, forHTTPHeaderField: "X-API-Key")
 			request.setValue(Self.apiVersion, forHTTPHeaderField: "Parse-Version")
@@ -797,7 +867,7 @@ public final class ParseAPI: Sendable {
 				}
 				try Task.checkCancellation()
 				if attempt < retryLimit {
-					try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: nil))
+					try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: nil)!)
 					attempt += 1
 					continue
 				}
@@ -811,9 +881,10 @@ public final class ParseAPI: Sendable {
 				return try decoder.decode(T.self, from: data)
 			}
 
-			if Self.retryStatus.contains(response.statusCode), attempt < retryLimit {
-				let retryAfter = response.value(forHTTPHeaderField: "Retry-After")
-				try await Task.sleep(nanoseconds: Self.retryDelayNanos(attempt: attempt, retryAfter: retryAfter))
+			let retryAfter = response.value(forHTTPHeaderField: "Retry-After")
+			if Self.retryStatus.contains(response.statusCode), attempt < retryLimit,
+				let wait = Self.retryDelayNanos(attempt: attempt, retryAfter: retryAfter) {
+				try await Task.sleep(nanoseconds: wait)
 				attempt += 1
 				continue
 			}
@@ -824,14 +895,16 @@ public final class ParseAPI: Sendable {
 				code: body["code"] as? String ?? "unknown_error",
 				message: body["message"] as? String ?? "Request failed with status \(response.statusCode)",
 				docs: body["docs"] as? String,
-				requestId: body["request_id"] as? String
+				requestId: body["request_id"] as? String,
+				retryAfter: retryAfter
 			)
 		}
 	}
 
-	static func retryDelayNanos(attempt: Int, retryAfter: String?) -> UInt64 {
-		if let retryAfter, let seconds = Double(retryAfter), seconds.isFinite, seconds >= 0 {
-			return UInt64(min(seconds, retryAfterCapSeconds) * 1_000_000_000)
+	static func retryDelayNanos(attempt: Int, retryAfter: String?) -> UInt64? {
+		if let retryAfter, retryAfter.trimmingCharacters(in: .whitespaces).range(of: #"^[0-9]+(?:\.[0-9]+)?$"#, options: .regularExpression) != nil {
+			guard let seconds = Double(retryAfter.trimmingCharacters(in: .whitespaces)), seconds.isFinite, seconds <= retryAfterCapSeconds else { return nil }
+			return UInt64(ceil(seconds * 1_000_000_000))
 		}
 		if let retryAfter {
 			let formatter = DateFormatter()
@@ -841,7 +914,8 @@ public final class ParseAPI: Sendable {
 			for pattern in ["EEE, dd MMM yyyy HH:mm:ss zzz", "EEEE, dd-MMM-yy HH:mm:ss zzz", "EEE MMM d HH:mm:ss yyyy"] {
 				formatter.dateFormat = pattern
 				if let date = formatter.date(from: retryAfter) {
-					return UInt64(max(0, min(date.timeIntervalSinceNow, retryAfterCapSeconds)) * 1_000_000_000)
+					let seconds = max(0, date.timeIntervalSinceNow)
+					return seconds > retryAfterCapSeconds ? nil : UInt64(ceil(seconds * 1_000_000_000))
 				}
 			}
 		}

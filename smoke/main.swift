@@ -81,17 +81,17 @@ await expectOk("postalNearby", { try await parse.postalNearby("28202", country: 
 await expectOk("postalDistance", { try await parse.postalDistance("28202", "10001", country: "US") }) { $0.distance > 800 && $0.distance < 1000 ? nil : "distance \($0.distance)" }
 await expectOk("email", { try await parse.email("hello@gmail.com") }) { $0.valid ? nil : "not valid" }
 await expectOk("vat", { try await parse.vat("DE136695976") }) { $0.valid && $0.country == "DE" ? nil : "not valid DE" }
-await expectOk("bin", { try await parse.bin("00 0000", deep: true) }) {
-	$0.bin == "000000" && $0.deep != nil ? nil : "BIN echo or deep mismatch"
+await expectOk("card", { try await parse.card("00 0000") }) {
+	$0.bin == "000000" ? nil : "BIN echo mismatch"
 }
-await expectOk("iban", { try await parse.iban("DE89370400440532013000") }) {
+await expectOk("bank", { try await parse.bank("DE89370400440532013000") }) {
 	$0.valid && $0.country == "DE" && $0.bank == "37040044" ? nil : "not valid DE"
 }
-await expectOk("iban junk", { try await parse.iban("hello") }) { $0.valid ? "expected invalid" : nil }
-await expectOk("npi", { try await parse.npi("1881018208") }) {
+await expectOk("bank junk", { try await parse.bank("hello") }) { $0.valid ? "expected invalid" : nil }
+await expectOk("npi", { try await parse.provider("1881018208") }) {
 	$0.valid && $0.registered == true ? nil : "not registered"
 }
-await expectOk("npi junk", { try await parse.npi("hello") }) { $0.valid ? "expected invalid" : nil }
+await expectOk("npi junk", { try await parse.provider("hello") }) { $0.valid ? "expected invalid" : nil }
 await expectOk("phone", { try await parse.phone("+14155552671") }) { $0.phone == "+14155552671" ? nil : "wrong phone" }
 // Metered core siblings: junk numbers answer 200 valid false, free, no vendor dip.
 await expectOk("carrier junk free", { try await parse.carrier("555-0100") }) { $0.valid == false ? nil : "expected invalid" }

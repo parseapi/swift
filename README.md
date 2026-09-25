@@ -71,9 +71,9 @@ try await parse.ip("8.8.8.8")
 try await parse.ipSelf()
 try await parse.email("hello@gmail.com")
 try await parse.vat("DE136695976")
-try await parse.iban("DE89370400440532013000")
-try await parse.bin("424242")
-try await parse.npi("1881018208")
+try await parse.bank("DE89370400440532013000")
+try await parse.card("424242")
+try await parse.provider("1881018208")
 try await parse.phone("+14155552671")
 try await parse.postal("SW1A 1AA")
 try await parse.postal("28202", country: "US")
@@ -118,9 +118,9 @@ try await parse.mx("example.com")
 try await parse.dns("example.com")
 try await parse.dns("_dmarc.example.com", type: "TXT")
 try await parse.useragent(uaString)
-try await parse.vin("1HGCM82633A004352")
-try await parse.naics("541511")
-try await parse.naicsSearch("coffee shop", limit: 5)
+try await parse.vehicle("1HGCM82633A004352")
+try await parse.industry("541511")
+try await parse.industrySearch("coffee shop", limit: 5)
 try await parse.tariff("8471.30.01.00")
 try await parse.tariffSearch("sunglasses")
 try await parse.emoji("rocket")
@@ -130,7 +130,7 @@ try await parse.addressSearch("123 Main", country: "US", postal: "28202")
 try await parse.company("01234567", country: "GB")
 ```
 
-NAICS records include classification `exclusions`, each with a description and linked codes. Generic exclusions can have no linked codes. Omitted or null exclusions in older responses remain unknown. Search results also include `match`: the matched `field` (`name`, `term` or `naics`) and `text`, plus `corrections` with `from` and `to` tokens for typo fallback. Corrections are empty for exact, plural and prefix matches. Direct code lookups omit `match`. Older responses may omit it.
+Industry records include classification `exclusions`, each with a description and linked codes. Generic exclusions can have no linked codes. Omitted or null exclusions in older responses remain unknown. Search results also include `match`: the matched `field` (`name`, `term` or `naics`) and `text`, plus `corrections` with `from` and `to` tokens for typo fallback. Corrections are empty for exact, plural and prefix matches. Direct code lookups omit `match`. Older responses may omit it.
 
 Every response is a typed struct. Nullable fields are optionals. Unknown response fields are ignored.
 
@@ -239,6 +239,21 @@ Address search uses context from the form: prefer postal, or city and state. An 
 
 HLR reports status at the last check. `live` means assigned and `connected` means reachable at that check. Cached results may be returned. Null means unconfirmed. Deep diagnostics stay within the same metered lookup.
 
+## Provider lookup
+
+```swift
+let provider = try await parse.provider("1881018208")
+let profile = try await parse.provider("1881018208", deep: true)
+```
+
+Pass the original NPI as a string. `valid` checks its format and checksum; `registered` means a match in the stored NPPES snapshot. `active` reflects recorded NPI deactivation, not licensure. `excluded` is an NPI-only OIG LEIE match; `false` is not a complete exclusion clearance. These directory facts do not verify credentials, current practice contact or payment eligibility.
+
+Invalid input returns `valid: false` with unknown provider fields. A checksum-valid number missing from the snapshot returns `registered: false`; unavailable storage remains an API error. Preserve `null` as unknown.
+
+The default pooled lookup includes provider identity, specialty and practice contact where held. Paid `deep` adds `deactivated_at`, `medicare`, `opt_out` and `enrollments` from stored source files, with no separate check meter or live verification. `enrollments: null` means unavailable; `[]` means no enrollment rows are returned. The API omits unrequested `deep` and returns `{}` when requested on Free.
+
+Paid Deep also returns `taxonomies` in published order, with taxonomy code, specialty label, primary flag and provider-reported license number/state, plus `enumerated_at`, `updated_at` and `reactivated_at` record dates. Reported licenses are not verified licenses. Null lists mean unavailable; empty lists mean the edition contains no entries. Core `sources` is available on every plan: NPPES, LEIE, PECOS and opt-out each have nullable edition metadata (`edition`, `published_at`, `through`, `imported_at`). Provider record dates are separate from source publication and completed import dates. Older responses may omit these additions. Edition details remain null until a verified source is served.
+
 ## Deep
 
 Choose enrichment for the question you need answered.
@@ -251,8 +266,9 @@ Choose enrichment for the question you need answered.
 | VAT | A metered registry check where supported, using included VAT checks or enabled on-demand usage. |
 | Phone | Numbering-plan state and timezone, pooled on every plan. |
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
-| Company, VIN, NPI, NAICS, Name, Weather | Richer reference/profile facts on paid plans. |
-| Time, Date, Currency, Language, Emoji, IBAN | Optional same-question facts, pooled on every plan. |
+| NPI | Deactivation date, Medicare enrollment, opt-out and enrollment rows from stored sources on paid plans. Exclusion evidence stays core. |
+| Company, VIN, Industry, Name, Weather | Richer reference/profile facts on paid plans. |
+| Time, Date, Currency, Language, Emoji, Bank | Optional same-question facts, pooled on every plan. |
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |
 
@@ -281,9 +297,23 @@ if ip.deep?.datacenter == true {
 }
 ```
 
+## Bank validation
+
+Bank results include optional `checks` and `issues` (`BankChecks` and `BankIssue`). Check statuses and issue codes are open strings; handle unknown future values. `not_supported` means the national check did not run, not that it passed. `issues: []` means no applicable check failed; a missing/null value supports older responses. These findings do not establish account existence or ownership. `deep.account` remains a string so leading zeros are preserved.
+
+
+Bank lookups send raw input in a JSON body (`POST /bank`), preserving leading zeros, separators and forbidden characters for server validation. `bank` keeps its existing call signature and IBAN result. Optional `deep.directory` identifies the directory edition, country and open-string match grain; absent data remains unknown.
+
+```swift
+let requirements = try await parse.bankRequirements("US", format: "us_ach")
+let result = try await parse.bankUsAch(BankUsAchInput(routing: "021000021", account: "000123456789"))
+```
+
+US ACH checks the routing checksum and supported account format, not account existence, ownership or ACH eligibility. Account checksum status stays `not_supported`; bank names are nullable partial-directory references. Account text is preserved, including letter case, spaces and hyphens. Requirements describe this validation workflow; they are not every field needed to initiate a payment. Unsupported country/format combinations return `supported: false`. Omit the format argument for IBAN requirements. The sample is synthetic, not an account to pay.
+
 ## Errors
 
-Every non-2xx response throws a `ParseAPIError` with `status`, `code`, `docs`, and `requestId`. Branch on `code`.
+Every non-2xx response throws a `ParseAPIError` with `status`, `code`, `docs`, and `requestId`, plus nullable `retryAfter` header metadata. Branch on `code`.
 
 ```swift
 do {
@@ -306,6 +336,8 @@ let parse = try ParseAPI(
 
 Ordinary lookups retry up to twice on network failures, 429, 500, 502, 503, and 504. Carrier, caller, HLR, and email/VAT deep lookups do not retry automatically. Address deep also uses zero retries, reserved for future verification. An explicit `retries` value applies to every lookup, including metered requests. A retry may count as another lookup.
 
+Automatic retries honor numeric and HTTP-date `Retry-After` values up to five seconds. A longer server wait returns the original API error immediately, with the raw header in `retryAfter`, so the application can schedule a later attempt. Missing or invalid headers use ordinary backoff.
+
 Cancelled tasks stop the lookup and are not retried. Redirects are returned as errors.
 
 Requires Swift 6.0 or later. iOS 15, macOS 12, watchOS 8, tvOS 15. Foundation only, zero dependencies.
@@ -320,7 +352,30 @@ Run `swift test` and `python3 scripts/check-api.py` before a release. The API ch
 
 Pushes and pull requests run the tests on Swift 6.0 and 6.3.3. The API check uses Swift 6.3.3, the compiler used for the baseline. Device-platform validation remains a release check.
 
-BIN lookup accepts 6-11 digits as a string, including leading zeros. Spaces and hyphens are accepted. `prefix` is the actual longest match and can be shorter than the input. Unknown reference fields are null. `deep` adds an empty object on every plan.
+## Card
+
+Send 2–11 leading digits as a string. Core returns `bin`, `brand`, `brand_name`
+and a CDN SVG `logo`. Brand detection uses reviewed network rules independently
+of issuer records. Unknown or ambiguous prefixes return null brand fields and a
+generic logo; a known network without reviewed artwork also uses the generic logo.
+
+Optional Deep adds `prefix`, `issuer`, `country`, `type` and `prepaid`, included
+in the same pooled request on every plan. Six or more digits enable directory
+matching. Fewer digits return all-null Deep fields. Compare `deep.prefix` with
+`bin`: equal is an exact recorded match; shorter is broader; null is no match.
+The longest row wins, including null fields. `prepaid: null` means unknown, not
+false. This is partial reference data, not card validity or payment acceptance.
+
+```swift
+let card = try await parse.card("51")
+print(card.logo)
+let details = try await parse.card("43737400", deep: true)
+print(details.deep?.prefix as Any)
+```
+
+Leading zeros are preserved. Only ASCII spaces, tabs, CR, LF and hyphens are
+removed; raw input is limited to 64 characters. Invalid prefixes are rejected
+before dispatch, accepted input is forwarded unchanged. Never send a full card number.
 
 ## Stack
 
@@ -335,3 +390,5 @@ Pass a public hostname without a scheme, path, port or IP address. Stack returns
 The complete technology result is included in the core response. The generic `deep=true` option adds only an empty object and is unnecessary for Stack. Successful checks may be reused for up to 24 hours. `pretty` optionally formats the wire JSON. Each lookup uses one request and API version 2.0.0 selected by this client.
 
 Stack defaults to 35 seconds per attempt so a first scan has time to finish. Other lookups retain their 10-second default. An explicit client timeout takes precedence.
+
+Vehicle lookups use `vin` as the input and response field. Existing VIN methods remain available for compatibility.

@@ -37,7 +37,7 @@ import Testing
 			("ipSelf", { _ = try await $0.ipSelf(lang: "fr-CA") }, { _ = try await $0.ipSelf() }),
 			("asn", { _ = try await $0.asn("15169", lang: "fr-CA") }, { _ = try await $0.asn("15169") }),
 			("company", { _ = try await $0.company("01234567", lang: "fr-CA") }, { _ = try await $0.company("01234567") }),
-			("npi", { _ = try await $0.npi("1881018208", lang: "fr-CA") }, { _ = try await $0.npi("1881018208") }),
+			("npi", { _ = try await $0.provider("1881018208", lang: "fr-CA") }, { _ = try await $0.provider("1881018208") }),
 		]
 		for (name, localized, plain) in cases {
 			// A normal API miss exercises request construction without inventing

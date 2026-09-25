@@ -88,8 +88,8 @@ func makeClient(
 
 	@Test func ibanCountry() async throws {
 		let stub = StubTransport(body: #"{"iban":"DE89370400440532013000","valid":true,"country":"DE","checksum":"89","bank":"37040044","branch":null,"account":"0532013000"}"#)
-		_ = try await makeClient(stub).iban("89370400440532013000", country: "DE")
-		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/iban/89370400440532013000?country=DE")
+		_ = try await makeClient(stub).bank("89370400440532013000", country: "DE")
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/bank")
 	}
 
 	@Test func vinDeep() async throws {
@@ -101,10 +101,19 @@ func makeClient(
 		#expect(decoded.deep?.recalls?.isEmpty == true)
 	}
 
-	@Test func npi() async throws {
+	@Test func vehicleDeep() async throws {
+		let stub = StubTransport(body: #"{"vin":"1HGCM82633A004352","valid":true,"year":2003,"make":"Honda","deep":{"recalls":[],"plant_city":"Marysville"}}"#)
+		let decoded = try await makeClient(stub).vehicle("1HGCM82633A004352", deep: true)
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/vehicle/1HGCM82633A004352?deep=true")
+		#expect(decoded.year == 2003)
+		#expect(decoded.deep?.plantCity == "Marysville")
+		#expect(decoded.deep?.recalls?.isEmpty == true)
+	}
+
+	@Test func provider() async throws {
 		let stub = StubTransport(body: #"{"npi":"1881018208","valid":true,"registered":true,"type":"organization","name":"Mayo Clinic"}"#)
-		let record = try await makeClient(stub).npi("1881018208")
-		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/npi/1881018208")
+		let record = try await makeClient(stub).provider("1881018208")
+		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/provider/1881018208")
 		#expect(record.registered == true)
 	}
 

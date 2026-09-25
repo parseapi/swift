@@ -65,6 +65,121 @@ AddressSuggestion: conformsTo Swift.Encodable
 AddressSuggestion: conformsTo Swift.Sendable
 AddressSuggestion: conformsTo Swift.SendableMetatype
 AddressSuggestion: struct AddressSuggestion
+Bank.bank: let bank: String?
+Bank.bankName: let bankName: String?
+Bank.bic: let bic: String?
+Bank.checks: let checks: BankChecks?
+Bank.country: let country: String?
+Bank.deep: let deep: BankDeep?
+Bank.formatted: let formatted: String?
+Bank.iban: let iban: String?
+Bank.init(from:): init(from decoder: any Decoder) throws
+Bank.issues: let issues: [BankIssue]?
+Bank.valid: let valid: Bool
+Bank: conformsTo Swift.Decodable
+Bank: conformsTo Swift.Encodable
+Bank: conformsTo Swift.Sendable
+Bank: conformsTo Swift.SendableMetatype
+Bank: struct Bank
+BankChecks.checksum: let checksum: String?
+BankChecks.country: let country: String?
+BankChecks.init(from:): init(from decoder: any Decoder) throws
+BankChecks.input: let input: String?
+BankChecks.length: let length: String?
+BankChecks.national: let national: String?
+BankChecks.structure: let structure: String?
+BankChecks: conformsTo Swift.Decodable
+BankChecks: conformsTo Swift.Encodable
+BankChecks: conformsTo Swift.Sendable
+BankChecks: conformsTo Swift.SendableMetatype
+BankChecks: struct BankChecks
+BankDeep.account: let account: String?
+BankDeep.branch: let branch: String?
+BankDeep.checksum: let checksum: String?
+BankDeep.directory: let directory: BankDirectory?
+BankDeep.init(from:): init(from decoder: any Decoder) throws
+BankDeep: conformsTo Swift.Decodable
+BankDeep: conformsTo Swift.Encodable
+BankDeep: conformsTo Swift.Sendable
+BankDeep: conformsTo Swift.SendableMetatype
+BankDeep: struct BankDeep
+BankDirectory.country: let country: String?
+BankDirectory.edition: let edition: String?
+BankDirectory.init(from:): init(from decoder: any Decoder) throws
+BankDirectory.match: let match: String?
+BankDirectory: conformsTo Swift.Decodable
+BankDirectory: conformsTo Swift.Encodable
+BankDirectory: conformsTo Swift.Sendable
+BankDirectory: conformsTo Swift.SendableMetatype
+BankDirectory: struct BankDirectory
+BankIssue.code: let code: String?
+BankIssue.field: let field: String?
+BankIssue.init(from:): init(from decoder: any Decoder) throws
+BankIssue.message: let message: String?
+BankIssue: conformsTo Swift.Decodable
+BankIssue: conformsTo Swift.Encodable
+BankIssue: conformsTo Swift.Sendable
+BankIssue: conformsTo Swift.SendableMetatype
+BankIssue: struct BankIssue
+BankRequirementField.init(from:): init(from decoder: any Decoder) throws
+BankRequirementField.key: let key: String
+BankRequirementField.label: let label: String
+BankRequirementField.length: let length: Int?
+BankRequirementField.lengthUnit: let lengthUnit: String?
+BankRequirementField.maxInputLength: let maxInputLength: Int?
+BankRequirementField.maxLength: let maxLength: Int?
+BankRequirementField.minLength: let minLength: Int?
+BankRequirementField.normalization: let normalization: String?
+BankRequirementField.pattern: let pattern: String?
+BankRequirementField.required: let required: Bool
+BankRequirementField.type: let type: String
+BankRequirementField: conformsTo Swift.Decodable
+BankRequirementField: conformsTo Swift.Encodable
+BankRequirementField: conformsTo Swift.Sendable
+BankRequirementField: conformsTo Swift.SendableMetatype
+BankRequirementField: struct BankRequirementField
+BankRequirements.checks: let checks: [String : String]
+BankRequirements.country: let country: String
+BankRequirements.fields: let fields: [BankRequirementField]
+BankRequirements.format: let format: String
+BankRequirements.init(from:): init(from decoder: any Decoder) throws
+BankRequirements.limitations: let limitations: [String]
+BankRequirements.supported: let supported: Bool
+BankRequirements: conformsTo Swift.Decodable
+BankRequirements: conformsTo Swift.Encodable
+BankRequirements: conformsTo Swift.Sendable
+BankRequirements: conformsTo Swift.SendableMetatype
+BankRequirements: struct BankRequirements
+BankUsAch.account: let account: String?
+BankUsAch.bankName: let bankName: String?
+BankUsAch.checks: let checks: BankUsAchChecks?
+BankUsAch.country: let country: String?
+BankUsAch.format: let format: String?
+BankUsAch.init(from:): init(from decoder: any Decoder) throws
+BankUsAch.issues: let issues: [BankIssue]?
+BankUsAch.routing: let routing: String?
+BankUsAch.valid: let valid: Bool
+BankUsAch: conformsTo Swift.Decodable
+BankUsAch: conformsTo Swift.Encodable
+BankUsAch: conformsTo Swift.Sendable
+BankUsAch: conformsTo Swift.SendableMetatype
+BankUsAch: struct BankUsAch
+BankUsAchChecks.accountChecksum: let accountChecksum: String?
+BankUsAchChecks.accountFormat: let accountFormat: String?
+BankUsAchChecks.init(from:): init(from decoder: any Decoder) throws
+BankUsAchChecks.routingChecksum: let routingChecksum: String?
+BankUsAchChecks.routingFormat: let routingFormat: String?
+BankUsAchChecks: conformsTo Swift.Decodable
+BankUsAchChecks: conformsTo Swift.Encodable
+BankUsAchChecks: conformsTo Swift.Sendable
+BankUsAchChecks: conformsTo Swift.SendableMetatype
+BankUsAchChecks: struct BankUsAchChecks
+BankUsAchInput.account: let account: String
+BankUsAchInput.init(routing:account:): init(routing: String, account: String)
+BankUsAchInput.routing: let routing: String
+BankUsAchInput: conformsTo Swift.Sendable
+BankUsAchInput: conformsTo Swift.SendableMetatype
+BankUsAchInput: struct BankUsAchInput
 Bin.bin: let bin: String
 Bin.brand: let brand: String?
 Bin.brandName: let brandName: String?
@@ -123,6 +238,28 @@ Caller: conformsTo Swift.Encodable
 Caller: conformsTo Swift.Sendable
 Caller: conformsTo Swift.SendableMetatype
 Caller: struct Caller
+Card.bin: let bin: String
+Card.brand: let brand: String?
+Card.brandName: let brandName: String?
+Card.deep: let deep: CardDeep?
+Card.init(from:): init(from decoder: any Decoder) throws
+Card.logo: let logo: String
+Card: conformsTo Swift.Decodable
+Card: conformsTo Swift.Encodable
+Card: conformsTo Swift.Sendable
+Card: conformsTo Swift.SendableMetatype
+Card: struct Card
+CardDeep.country: let country: String?
+CardDeep.init(from:): init(from decoder: any Decoder) throws
+CardDeep.issuer: let issuer: String?
+CardDeep.prefix: let prefix: String?
+CardDeep.prepaid: let prepaid: Bool?
+CardDeep.type: let type: String?
+CardDeep: conformsTo Swift.Decodable
+CardDeep: conformsTo Swift.Encodable
+CardDeep: conformsTo Swift.Sendable
+CardDeep: conformsTo Swift.SendableMetatype
+CardDeep: struct CardDeep
 Carrier.burner: let burner: Bool?
 Carrier.carrier: let carrier: String?
 Carrier.country: let country: String?
@@ -722,6 +859,13 @@ IbanDeep: conformsTo Swift.Encodable
 IbanDeep: conformsTo Swift.Sendable
 IbanDeep: conformsTo Swift.SendableMetatype
 IbanDeep: struct IbanDeep
+Industry: typealias Industry = NAICS
+IndustryChild: typealias IndustryChild = NAICSChild
+IndustryCorrection: typealias IndustryCorrection = NAICSCorrection
+IndustryDeep: typealias IndustryDeep = NAICSDeep
+IndustryExclusion: typealias IndustryExclusion = NAICSExclusion
+IndustryMatch: typealias IndustryMatch = NAICSMatch
+IndustrySearch: typealias IndustrySearch = NAICSSearch
 Language.deep: let deep: LanguageDeep?
 Language.direction: let direction: String
 Language.init(from:): init(from decoder: any Decoder) throws
@@ -960,11 +1104,16 @@ ParseAPI.address(_:country:deep:): func address(_ address: String, country: Stri
 ParseAPI.addressSearch(_:country:postal:city:state:ip:): func addressSearch(_ query: String, country: String? = nil, postal: String? = nil, city: String? = nil, state: String? = nil, ip: String? = nil) async throws -> AddressSearch
 ParseAPI.asn(_:): func asn(_ asn: String) async throws -> ASN
 ParseAPI.asn(_:lang:): func asn(_ asn: String, lang: String?) async throws -> ASN
+ParseAPI.bank(_:country:deep:): func bank(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Bank
+ParseAPI.bankRequirements(_:format:): func bankRequirements(_ country: String, format: String? = nil) async throws -> BankRequirements
+ParseAPI.bankUsAch(_:): func bankUsAch(_ input: BankUsAchInput) async throws -> BankUsAch
 ParseAPI.bin(_:deep:): func bin(_ bin: String, deep: Bool = false) async throws -> Bin
 ParseAPI.bloc(_:): func bloc(_ code: String) async throws -> Bloc
 ParseAPI.blocCountries(_:): func blocCountries(_ code: String) async throws -> BlocCountries
 ParseAPI.blocCountries(_:lang:): func blocCountries(_ code: String, lang: String?) async throws -> BlocCountries
 ParseAPI.caller(_:country:): func caller(_ number: String, country: String? = nil) async throws -> Caller
+ParseAPI.card(_:): func card(_ bin: String) async throws -> Card
+ParseAPI.card(_:deep:): func card(_ bin: String, deep: Bool) async throws -> Card
 ParseAPI.carrier(_:country:deep:): func carrier(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Carrier
 ParseAPI.city(_:country:state:deep:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> City
 ParseAPI.city(_:country:state:deep:lang:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> City
@@ -1007,6 +1156,8 @@ ParseAPI.hlr(_:country:deep:): func hlr(_ number: String, country: String? = nil
 ParseAPI.holiday(_:year:): func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear
 ParseAPI.holidayDate(_:_:): func holidayDate(_ country: String, _ date: String) async throws -> HolidayDate
 ParseAPI.iban(_:country:deep:): func iban(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Iban
+ParseAPI.industry(_:deep:): func industry(_ code: String, deep: Bool = false) async throws -> Industry
+ParseAPI.industrySearch(_:limit:deep:): func industrySearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> IndustrySearch
 ParseAPI.init(_:appId:baseURL:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.init(_:appId:baseURL:timeout:retries:transport:): convenience init(_ key: String? = nil, appId: String? = Bundle.main.bundleIdentifier, baseURL: String? = nil, timeout: TimeInterval, retries: Int? = nil, transport: ParseAPITransport? = nil) throws
 ParseAPI.ip(_:deep:): func ip(_ ip: String, deep: Bool = false) async throws -> IP
@@ -1037,6 +1188,8 @@ ParseAPI.postalDistance(_:_:country:deep:): func postalDistance(_ from: String, 
 ParseAPI.postalDistance(_:_:country:deep:lang:): func postalDistance(_ from: String, _ to: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalDistance
 ParseAPI.postalNearby(_:country:radius:unit:deep:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false) async throws -> PostalNearby
 ParseAPI.postalNearby(_:country:radius:unit:deep:lang:): func postalNearby(_ code: String, country: String? = nil, radius: Double? = nil, unit: String? = nil, deep: Bool = false, lang: String?) async throws -> PostalNearby
+ParseAPI.provider(_:deep:): func provider(_ npi: String, deep: Bool = false) async throws -> Provider
+ParseAPI.provider(_:deep:lang:): func provider(_ npi: String, deep: Bool = false, lang: String?) async throws -> Provider
 ParseAPI.stack(_:deep:pretty:): func stack(_ domain: String, deep: Bool = false, pretty: Bool = false) async throws -> Stack
 ParseAPI.state(_:country:deep:): func state(_ code: String, country: String? = nil, deep: Bool = false) async throws -> State
 ParseAPI.state(_:country:deep:lang:): func state(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> State
@@ -1063,6 +1216,7 @@ ParseAPI.timezoneAt(_:_:at:deep:): func timezoneAt(_ lat: Double, _ lon: Double,
 ParseAPI.timezoneAt(_:_:at:deep:lang:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false, lang: String?) async throws -> Timezone
 ParseAPI.useragent(_:deep:): func useragent(_ ua: String, deep: Bool = false) async throws -> Useragent
 ParseAPI.vat(_:country:from:deep:): func vat(_ number: String, country: String? = nil, from: String? = nil, deep: Bool = false) async throws -> Vat
+ParseAPI.vehicle(_:deep:): func vehicle(_ vin: String, deep: Bool = false) async throws -> Vehicle
 ParseAPI.vin(_:deep:): func vin(_ vin: String, deep: Bool = false) async throws -> Vin
 ParseAPI.weather(_:_:deep:date:): func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather
 ParseAPI: conformsTo Swift.Sendable
@@ -1073,6 +1227,7 @@ ParseAPIError.docs: let docs: String?
 ParseAPIError.errorDescription: var errorDescription: String? { get }
 ParseAPIError.message: let message: String
 ParseAPIError.requestId: let requestId: String?
+ParseAPIError.retryAfter: let retryAfter: String?
 ParseAPIError.status: let status: Int
 ParseAPIError: conformsTo Foundation.LocalizedError
 ParseAPIError: conformsTo Swift.Error
@@ -1274,6 +1429,87 @@ PropertyTax: conformsTo Swift.Encodable
 PropertyTax: conformsTo Swift.Sendable
 PropertyTax: conformsTo Swift.SendableMetatype
 PropertyTax: struct PropertyTax
+Provider.active: let active: Bool?
+Provider.address: let address: String?
+Provider.city: let city: String?
+Provider.country: let country: String?
+Provider.credential: let credential: String?
+Provider.deep: let deep: ProviderDeep?
+Provider.excluded: let excluded: Bool?
+Provider.first: let first: String?
+Provider.init(from:): init(from decoder: any Decoder) throws
+Provider.last: let last: String?
+Provider.name: let name: String?
+Provider.npi: let npi: String?
+Provider.phone: let phone: String?
+Provider.postal: let postal: String?
+Provider.registered: let registered: Bool?
+Provider.sources: let sources: ProviderSources?
+Provider.specialty: let specialty: String?
+Provider.state: let state: String?
+Provider.stateName: let stateName: String?
+Provider.taxonomy: let taxonomy: String?
+Provider.type: let type: String?
+Provider.valid: let valid: Bool
+Provider: conformsTo Swift.Decodable
+Provider: conformsTo Swift.Encodable
+Provider: conformsTo Swift.Sendable
+Provider: conformsTo Swift.SendableMetatype
+Provider: struct Provider
+ProviderDeep.deactivatedAt: let deactivatedAt: String?
+ProviderDeep.enrollments: let enrollments: [ProviderEnrollment]?
+ProviderDeep.enumeratedAt: let enumeratedAt: String?
+ProviderDeep.init(from:): init(from decoder: any Decoder) throws
+ProviderDeep.medicare: let medicare: Bool?
+ProviderDeep.optOut: let optOut: Bool?
+ProviderDeep.reactivatedAt: let reactivatedAt: String?
+ProviderDeep.taxonomies: let taxonomies: [ProviderTaxonomy]?
+ProviderDeep.updatedAt: let updatedAt: String?
+ProviderDeep: conformsTo Swift.Decodable
+ProviderDeep: conformsTo Swift.Encodable
+ProviderDeep: conformsTo Swift.Sendable
+ProviderDeep: conformsTo Swift.SendableMetatype
+ProviderDeep: struct ProviderDeep
+ProviderEnrollment.init(from:): init(from decoder: any Decoder) throws
+ProviderEnrollment.specialty: let specialty: String?
+ProviderEnrollment.state: let state: String?
+ProviderEnrollment.type: let type: String?
+ProviderEnrollment: conformsTo Swift.Decodable
+ProviderEnrollment: conformsTo Swift.Encodable
+ProviderEnrollment: conformsTo Swift.Sendable
+ProviderEnrollment: conformsTo Swift.SendableMetatype
+ProviderEnrollment: struct ProviderEnrollment
+ProviderSource.edition: let edition: String?
+ProviderSource.importedAt: let importedAt: String?
+ProviderSource.init(from:): init(from decoder: any Decoder) throws
+ProviderSource.publishedAt: let publishedAt: String?
+ProviderSource.through: let through: String?
+ProviderSource: conformsTo Swift.Decodable
+ProviderSource: conformsTo Swift.Encodable
+ProviderSource: conformsTo Swift.Sendable
+ProviderSource: conformsTo Swift.SendableMetatype
+ProviderSource: struct ProviderSource
+ProviderSources.init(from:): init(from decoder: any Decoder) throws
+ProviderSources.leie: let leie: ProviderSource?
+ProviderSources.nppes: let nppes: ProviderSource?
+ProviderSources.optout: let optout: ProviderSource?
+ProviderSources.pecos: let pecos: ProviderSource?
+ProviderSources: conformsTo Swift.Decodable
+ProviderSources: conformsTo Swift.Encodable
+ProviderSources: conformsTo Swift.Sendable
+ProviderSources: conformsTo Swift.SendableMetatype
+ProviderSources: struct ProviderSources
+ProviderTaxonomy.init(from:): init(from decoder: any Decoder) throws
+ProviderTaxonomy.license: let license: String?
+ProviderTaxonomy.primary: let primary: Bool?
+ProviderTaxonomy.specialty: let specialty: String?
+ProviderTaxonomy.state: let state: String?
+ProviderTaxonomy.taxonomy: let taxonomy: String?
+ProviderTaxonomy: conformsTo Swift.Decodable
+ProviderTaxonomy: conformsTo Swift.Encodable
+ProviderTaxonomy: conformsTo Swift.Sendable
+ProviderTaxonomy: conformsTo Swift.SendableMetatype
+ProviderTaxonomy: struct ProviderTaxonomy
 Stack.analytics: let analytics: [StackTechnology]?
 Stack.chat: let chat: [StackTechnology]?
 Stack.checkedAt: let checkedAt: String?
@@ -1739,6 +1975,9 @@ VatDeep: conformsTo Swift.Encodable
 VatDeep: conformsTo Swift.Sendable
 VatDeep: conformsTo Swift.SendableMetatype
 VatDeep: struct VatDeep
+Vehicle: typealias Vehicle = Vin
+VehicleDeep: typealias VehicleDeep = VinDeep
+VehicleRecall: typealias VehicleRecall = VinRecall
 Vin.body: let body: String?
 Vin.deep: let deep: VinDeep?
 Vin.init(from:): init(from decoder: any Decoder) throws

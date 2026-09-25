@@ -168,17 +168,17 @@ import Testing
 	@Test func ibanDepth() async throws {
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		let core = try decoder.decode(Iban.self, from: Data(#"{"iban":"DE123","valid":true}"#.utf8))
-		let locked = try decoder.decode(Iban.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{}}"#.utf8))
-		let rich = try decoder.decode(Iban.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{"checksum":"00"}}"#.utf8))
+		let core = try decoder.decode(Bank.self, from: Data(#"{"iban":"DE123","valid":true}"#.utf8))
+		let locked = try decoder.decode(Bank.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{}}"#.utf8))
+		let rich = try decoder.decode(Bank.self, from: Data(#"{"iban":"DE123","valid":true,"deep":{"checksum":"00"}}"#.utf8))
 		#expect(core.deep == nil)
 		#expect(locked.deep != nil && locked.deep?.checksum == nil)
 		#expect(rich.deep?.checksum == "00")
 		for depth in [false, true] {
 			let stub = StubTransport(body: #"{"iban":"DE123","valid":true,"deep":{"checksum":"00"}}"#)
-			_ = try await makeClient(stub).iban("DE123", deep: depth)
-			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
-			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
+			_ = try await makeClient(stub).bank("DE123", deep: depth)
+			let body = try JSONSerialization.jsonObject(with: #require(stub.requests[0].httpBody)) as? [String: Any]
+			#expect((body?["deep"] as? Bool ?? false) == depth)
 			#expect(stub.requests.count == 1)
 		}
 	}
@@ -186,15 +186,15 @@ import Testing
 	@Test func npiDepth() async throws {
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		let core = try decoder.decode(Npi.self, from: Data(#"{"npi":"123","valid":true,"excluded":true}"#.utf8))
-		let locked = try decoder.decode(Npi.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{}}"#.utf8))
-		let rich = try decoder.decode(Npi.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{"deactivated_at":"2026-09-08"}}"#.utf8))
+		let core = try decoder.decode(Provider.self, from: Data(#"{"npi":"123","valid":true,"excluded":true}"#.utf8))
+		let locked = try decoder.decode(Provider.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{}}"#.utf8))
+		let rich = try decoder.decode(Provider.self, from: Data(#"{"npi":"123","valid":true,"excluded":true,"deep":{"deactivated_at":"2026-09-08"}}"#.utf8))
 		#expect(core.deep == nil)
 		#expect(locked.deep != nil && locked.deep?.deactivatedAt == nil)
 		#expect(rich.deep?.deactivatedAt == "2026-09-08")
 		for depth in [false, true] {
 			let stub = StubTransport(body: #"{"npi":"123","valid":true,"excluded":true,"deep":{"deactivated_at":"2026-09-08"}}"#)
-			_ = try await makeClient(stub).npi("123", deep: depth)
+			_ = try await makeClient(stub).provider("123", deep: depth)
 			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
 			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
 			#expect(stub.requests.count == 1)
@@ -384,15 +384,15 @@ import Testing
 	@Test func nAICSDepth() async throws {
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		let core = try decoder.decode(NAICS.self, from: Data(#"{"naics":"123","name":"Fixture","level":3,"country":"US","year":2022}"#.utf8))
-		let locked = try decoder.decode(NAICS.self, from: Data(#"{"naics":"123","name":"Fixture","level":3,"country":"US","year":2022,"deep":{}}"#.utf8))
-		let rich = try decoder.decode(NAICS.self, from: Data(#"{"naics":"123","name":"Fixture","level":3,"country":"US","year":2022,"deep":{"description":"Definition","children":[]}}"#.utf8))
+		let core = try decoder.decode(Industry.self, from: Data(#"{"naics":"123","name":"Fixture","level":3,"country":"US","year":2022}"#.utf8))
+		let locked = try decoder.decode(Industry.self, from: Data(#"{"naics":"123","name":"Fixture","level":3,"country":"US","year":2022,"deep":{}}"#.utf8))
+		let rich = try decoder.decode(Industry.self, from: Data(#"{"naics":"123","name":"Fixture","level":3,"country":"US","year":2022,"deep":{"description":"Definition","children":[]}}"#.utf8))
 		#expect(core.deep == nil)
 		#expect(locked.deep != nil && locked.deep?.description == nil)
 		#expect(rich.deep?.description == "Definition")
 		for depth in [false, true] {
 			let stub = StubTransport(body: #"{"naics":"123","name":"Fixture","level":3,"country":"US","year":2022,"deep":{"description":"Definition","children":[]}}"#)
-			_ = try await makeClient(stub).naics("123", deep: depth)
+			_ = try await makeClient(stub).industry("123", deep: depth)
 			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
 			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
 			#expect(stub.requests.count == 1)
@@ -430,7 +430,7 @@ import Testing
 		#expect(stub6.requests[0].url!.query!.contains("deep=true"))
 		#expect(stub6.requests.count == 1)
 		let stub7 = StubTransport(body: #"{"q":"fixture","country":"US","year":2022,"results":[{"naics":"123","name":"Fixture","level":3,"deep":{"children":[]},"match":{"field":"term","text":"Fixture","corrections":[]}}]}"#)
-		_ = try await makeClient(stub7).naicsSearch("fixture", deep: true)
+		_ = try await makeClient(stub7).industrySearch("fixture", deep: true)
 		#expect(stub7.requests[0].url!.query!.contains("deep=true"))
 		#expect(stub7.requests.count == 1)
 		let stub8 = StubTransport(body: #"{"q":"grin","emojis":[{"emoji":"😀","name":"Fixture","shortcodes":[],"deep":{"skins":[]}}]}"#)

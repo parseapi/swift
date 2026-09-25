@@ -340,7 +340,7 @@ public struct Vat: Codable, Sendable {
 	public let deep: VatDeep?
 }
 
-public struct Iban: Codable, Sendable {
+public struct Bank: Codable, Sendable {
 	public let iban: String?
 	public let valid: Bool
 	public let country: String?
@@ -348,14 +348,118 @@ public struct Iban: Codable, Sendable {
 	public let bank: String?
 	public let bankName: String?
 	public let bic: String?
-	public let deep: IbanDeep?
+	/// Performed IBAN checks; absent on older responses. Statuses are open strings.
+	public let checks: BankChecks?
+	/// Lookup findings, separate from HTTP errors. Empty when applicable checks pass.
+	public let issues: [BankIssue]?
+	public let deep: BankDeep?
 }
 
-public struct Npi: Codable, Sendable {
-	public let npi: String?
+public struct BankChecks: Codable, Sendable {
+	public let input: String?
+	public let country: String?
+	public let length: String?
+	public let structure: String?
+	public let checksum: String?
+	public let national: String?
+}
+
+public struct BankIssue: Codable, Sendable {
+	public let field: String?
+	public let code: String?
+	public let message: String?
+}
+
+/// Raw US ACH collection input. Preserve case, separators and leading zeros.
+public struct BankUsAchInput: Sendable {
+	public let routing: String
+	public let account: String
+	public init(routing: String, account: String) {
+		self.routing = routing
+		self.account = account
+	}
+}
+
+public struct BankDirectory: Codable, Sendable {
+	public let edition: String?
+	public let country: String?
+	public let match: String?
+}
+
+public struct BankUsAch: Codable, Sendable {
+	public let format: String?
+	public let country: String?
+	public let routing: String?
+	public let account: String?
 	public let valid: Bool
+	public let bankName: String?
+	public let checks: BankUsAchChecks?
+	public let issues: [BankIssue]?
+}
+
+public struct BankUsAchChecks: Codable, Sendable {
+	public let routingFormat: String?
+	public let routingChecksum: String?
+	public let accountFormat: String?
+	public let accountChecksum: String?
+}
+
+public struct BankRequirements: Codable, Sendable {
+	public let country: String
+	public let format: String
+	public let supported: Bool
+	public let fields: [BankRequirementField]
+	public let checks: [String: String]
+	public let limitations: [String]
+}
+
+public struct BankRequirementField: Codable, Sendable {
+	public let key: String
+	public let label: String
+	public let required: Bool
+	public let type: String
+	public let length: Int?
+	public let minLength: Int?
+	public let maxLength: Int?
+	public let maxInputLength: Int?
+	public let lengthUnit: String?
+	public let pattern: String?
+	public let normalization: String?
+}
+
+public struct ProviderTaxonomy: Codable, Sendable {
+	public let taxonomy: String?
+	public let specialty: String?
+	public let primary: Bool?
+	public let license: String?
+	public let state: String?
+}
+
+public struct ProviderSource: Codable, Sendable {
+	public let edition: String?
+	public let publishedAt: String?
+	public let through: String?
+	public let importedAt: String?
+}
+
+public struct ProviderSources: Codable, Sendable {
+	public let nppes: ProviderSource?
+	public let leie: ProviderSource?
+	public let pecos: ProviderSource?
+	public let optout: ProviderSource?
+}
+
+public struct Provider: Codable, Sendable {
+	public let sources: ProviderSources?
+	/// Input with accepted separators removed; nil when empty. Invalid values remain visible.
+	public let npi: String?
+	/// Format and NPI checksum only; does not verify a provider or credentials.
+	public let valid: Bool
+	/// Found in the stored NPPES snapshot. Nil when input is invalid.
 	public let registered: Bool?
+	/// Recorded NPI activation status. Nil when unknown; not licensure or practice status.
 	public let active: Bool?
+	/// NPI-only match in the stored OIG LEIE file. False is not complete exclusion clearance.
 	public let excluded: Bool?
 	public let type: String?
 	public let name: String?
@@ -371,20 +475,28 @@ public struct Npi: Codable, Sendable {
 	public let postal: String?
 	public let country: String?
 	public let phone: String?
-	public let deep: NpiDeep?
+	public let deep: ProviderDeep?
 }
 
-public struct NpiEnrollment: Codable, Sendable {
+public struct ProviderEnrollment: Codable, Sendable {
 	/// part_a, part_b, practitioner, dme, order_refer, mdpp. Nil when unknown.
 	public let type: String?
 	public let specialty: String?
 	public let state: String?
 }
 
-public struct NpiDeep: Codable, Sendable {
+public struct ProviderDeep: Codable, Sendable {
+	public let enumeratedAt: String?
+	public let updatedAt: String?
+	public let reactivatedAt: String?
+	public let taxonomies: [ProviderTaxonomy]?
+	/// Present in the stored Medicare FFS enrollment extract; not payment eligibility.
 	public let medicare: Bool?
+	/// NPI-only match in the stored CMS opt-out affidavit list. Nil when unavailable.
 	public let optOut: Bool?
-	public let enrollments: [NpiEnrollment]?
+	/// Stored enrollment rows. Nil when unavailable; empty when no rows are returned.
+	public let enrollments: [ProviderEnrollment]?
+	/// Recorded NPI deactivation date, YYYY-MM-DD. Nil when active or unavailable.
 	public let deactivatedAt: String?
 }
 
@@ -592,22 +704,23 @@ public struct MAC: Codable, Sendable {
 	public let multicast: Bool?
 }
 
-public struct BinDeep: Codable, Sendable {}
-
-/// Card-prefix reference data. Nil means unknown.
-public struct Bin: Codable, Sendable {
+/// Network identity. Nil brand means unknown or ambiguous.
+public struct Card: Codable, Sendable {
 	public let bin: String
-	/// Actual longest matched prefix, which may be shorter than the input.
-	public let prefix: String?
-	public let country: String?
-	public let issuer: String?
 	public let brand: String?
 	public let brandName: String?
-	public let type: String?
-	public let prepaid: Bool?
-	public let deep: BinDeep?
+	public let logo: String
+	public let deep: CardDeep?
 }
 
+/// Optional recorded issuer details. Nil fields mean unknown.
+public struct CardDeep: Codable, Sendable {
+	public let prefix: String?
+	public let issuer: String?
+	public let country: String?
+	public let type: String?
+	public let prepaid: Bool?
+}
 
 /// A published DNS record. Value retains DNS presentation syntax, including TXT quoting.
 public struct DNSRecord: Codable, Sendable {
@@ -1268,7 +1381,9 @@ public struct PostalMetroDeep: Codable, Sendable {
 }
 
 
-public struct IbanDeep: Codable, Sendable {
+public struct BankDeep: Codable, Sendable {
+	/// Directory edition and match grain, when available. Match is an open string.
+	public let directory: BankDirectory?
 	public let checksum: String?
 	public let branch: String?
 	public let account: String?
@@ -1477,4 +1592,98 @@ public struct TimeLocation: Codable, Sendable {
 	public let candidates: [TimeLocationCandidate]
 	public let truncated: Bool
 	public let source: String
+}
+
+// Industry names for the existing US NAICS response contract.
+public typealias Industry = NAICS
+public typealias IndustryChild = NAICSChild
+public typealias IndustryCorrection = NAICSCorrection
+public typealias IndustryDeep = NAICSDeep
+public typealias IndustryExclusion = NAICSExclusion
+public typealias IndustryMatch = NAICSMatch
+public typealias IndustrySearch = NAICSSearch
+
+public typealias Vehicle = Vin
+public typealias VehicleDeep = VinDeep
+public typealias VehicleRecall = VinRecall
+
+// Published compatibility declarations.
+public struct Iban: Codable, Sendable {
+	public let iban: String?
+	public let valid: Bool
+	public let country: String?
+	public let formatted: String?
+	public let bank: String?
+	public let bankName: String?
+	public let bic: String?
+	public let deep: IbanDeep?
+}
+
+
+public struct Npi: Codable, Sendable {
+	public let npi: String?
+	public let valid: Bool
+	public let registered: Bool?
+	public let active: Bool?
+	public let excluded: Bool?
+	public let type: String?
+	public let name: String?
+	public let first: String?
+	public let last: String?
+	public let credential: String?
+	public let specialty: String?
+	public let taxonomy: String?
+	public let address: String?
+	public let city: String?
+	public let state: String?
+	public let stateName: String?
+	public let postal: String?
+	public let country: String?
+	public let phone: String?
+	public let deep: NpiDeep?
+}
+
+
+public struct NpiEnrollment: Codable, Sendable {
+	/// part_a, part_b, practitioner, dme, order_refer, mdpp. Nil when unknown.
+	public let type: String?
+	public let specialty: String?
+	public let state: String?
+}
+
+
+public struct NpiDeep: Codable, Sendable {
+	public let medicare: Bool?
+	public let optOut: Bool?
+	public let enrollments: [NpiEnrollment]?
+	public let deactivatedAt: String?
+}
+
+
+public struct BinDeep: Codable, Sendable {}
+
+/// Card-prefix reference data. Nil means unknown.
+public struct Bin: Codable, Sendable {
+	public let bin: String
+	/// Actual longest matched prefix, which may be shorter than the input.
+	public let prefix: String?
+	public let country: String?
+	public let issuer: String?
+	public let brand: String?
+	public let brandName: String?
+	public let type: String?
+	public let prepaid: Bool?
+	public let deep: BinDeep?
+}
+
+
+
+
+
+
+
+public struct IbanDeep: Codable, Sendable {
+	public let checksum: String?
+	public let branch: String?
+	public let account: String?
 }
