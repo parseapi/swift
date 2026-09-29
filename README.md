@@ -140,6 +140,34 @@ Reuse a client across calls. Each method performs its own lookup and returns dat
 
 DNS uses pooled requests on every plan. Omit `type` to check A, AAAA, CNAME, MX, NS, TXT, SOA, CAA, SRV and PTR. Records contain `name`, `type`, `ttl` in seconds and a DNS presentation `value`. TXT values retain quoting and chunk boundaries. A selected question can include its CNAME chain. Empty records mean no records. Lookup failures remain errors.
 
+## Company directory
+
+`companyId`, `companySearch`, `companyCoverage` retrieve directory profiles, search candidates and edition coverage. Existing national company-number validation stays unchanged. Use at most one of query (sent as `q`), domain, ticker or identifier, or discover by country or exact industry; country filters the candidates, exchange narrows a ticker and authority narrows an identifier. The API validates combinations. Each call makes one request and does not automatically resolve candidates or fetch linked assets.
+
+```swift
+let page = try await parse.companySearch(domain: "cloudflare.com", deep: true)
+if let candidate = page.companies.first {
+    let profile = try await parse.companyId(candidate.id, deep: true)
+    // profile.deep and each CompanyProfileDeep member are optional.
+}
+let coverage = try await parse.companyCoverage()
+
+// Continue a name search with the same selector, filters and limit.
+let first = try await parse.companySearch(query: "Example", country: "US", limit: 10)
+if let cursor = first.next {
+    let next = try await parse.companySearch(query: "Example", country: "US", limit: 10, cursor: cursor)
+}
+```
+
+Directory `deep` adds detail to each profile in the same pooled request on every plan. Omitted deep, empty deep and partial detail remain distinct; description, logo, social_profiles, phone_numbers, email_addresses, domains, founded, employees, registrations and sources may be absent on older server releases. Sources attribute only their listed selected enrichment fields. Founding precision is preserved separately from incorporation. Missing listings do not establish private ownership, and a domain match does not prove legal identity. Coverage describes the returned edition, not every company worldwide.
+
+Company directory social profiles contain `platform`, `url` and `handle`; unknown metadata stays null. Phone and email records use `type` for the source-reported purpose. Earlier response fields remain readable by the client.
+
+Discovery example: `try await parse.companySearch(country: "US", industry: "0700", industryType: "sic")`
+
+Supply `industry` and `industryType` together. The supported namespace is `sic`, with an exact four-digit string such as `0700`; leading zeros are meaningful. Country-only discovery is also supported. Filters intersect and may narrow an existing selector. Country matches the profile country, not a headquarters or operating-presence claim. Unknown values do not match a requested filter. Filter-only candidates use `match.field: "filters"` and `match.value: null`; reuse the same filters and limit with a returned cursor. Counts describe this directory edition, not complete country coverage.
+
+
 ## Time
 
 `time` returns local ISO `at` with its UTC offset and integer Unix seconds in `unix`. With `deep: true`, `deep.offsetSeconds` is the exact offset and `deep.offsetMinutes` is whole minutes. Historical offsets and ISO times can include offset seconds. Omitted `at` means now. With `to` or `targets`, an offsetless `at` is source wall time. Otherwise it is UTC. Include an offset for repeated local times around a clock change. Current time and conversion use pooled requests on every plan. Coordinate clock fields can be null when the timezone is unknown. Existing `timezone` methods remain supported.
@@ -260,14 +288,14 @@ Choose enrichment for the question you need answered.
 
 | Operation | What `deep` requests |
 |---|---|
+| NPI | All published taxonomies, reported license details, provider record dates and Medicare detail on paid plans. Primary specialty, exclusion flag and source metadata stay core. |
 | IP | Richer IP fields included with a paid plan. No separate check meter. |
 | Domain | Registration dates, registrar, status and DNSSEC, included with a paid plan. Use `dns` for DNS records and `mx` for mail routing. |
 | Email | A metered mailbox check with deliverability, catch-all, status, reason and address hints, using included email checks or enabled on-demand usage. |
 | VAT | A metered registry check where supported, using included VAT checks or enabled on-demand usage. |
 | Phone | Numbering-plan state and timezone, pooled on every plan. |
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
-| NPI | Deactivation date, Medicare enrollment, opt-out and enrollment rows from stored sources on paid plans. Exclusion evidence stays core. |
-| Company, VIN, Industry, Name, Weather | Richer reference/profile facts on paid plans. |
+| Company (national number), VIN, Industry, Name, Weather | Richer reference/profile facts on paid plans. |
 | Time, Date, Currency, Language, Emoji, Bank | Optional same-question facts, pooled on every plan. |
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |

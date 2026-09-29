@@ -807,6 +807,39 @@ public final class ParseAPI: Sendable {
 		try await get("/company/\(enc(number))", query: [("lang", lang)] + [("country", country)] + deepQuery(deep))
 	}
 
+	/// Retrieve a directory profile by stable co_ ID. Deep adds detail in the same pooled request.
+	/// National company-number validation remains company(_:country:deep:).
+	public func companyId(_ id: String, deep: Bool = false) async throws -> CompanyProfile {
+		try await get("/company/id/\(enc(id))", query: deepQuery(deep))
+	}
+
+	/// Use one selector or a country filter; the API validates combinations.
+	/// Reuse cursor with the same selector, filters and limit. Deep belongs to each profile.
+	public func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil,
+		identifier: String? = nil, country: String? = nil, exchange: String? = nil,
+		authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false) async throws -> CompanySearch {
+		try await companySearch(query: query, domain: domain, ticker: ticker, identifier: identifier,
+			country: country, exchange: exchange, authority: authority, limit: limit, cursor: cursor,
+			deep: deep, industry: nil, industryType: nil)
+	}
+
+	/// Discover or narrow candidates by exact industry: pair a four-digit SIC string with industryType "sic".
+	/// The required industry label preserves the original method's function-reference signature.
+	public func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil,
+		identifier: String? = nil, country: String? = nil, exchange: String? = nil,
+		authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false,
+		industry: String?, industryType: String? = nil) async throws -> CompanySearch {
+		try await get("/company", query: [("q", query), ("domain", domain), ("ticker", ticker),
+			("identifier", identifier), ("country", country), ("exchange", exchange),
+			("authority", authority), ("limit", limit.map(String.init)), ("cursor", cursor),
+			("industry", industry), ("industry_type", industryType)] + deepQuery(deep))
+	}
+
+	/// Counts for this directory edition, not complete country or worldwide coverage.
+	public func companyCoverage() async throws -> CompanyCoverage {
+		try await get("/company/directory/coverage")
+	}
+
 	// MARK: - Transport
 
 	private func enc(_ value: String) -> String {
