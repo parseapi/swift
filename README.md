@@ -1,6 +1,6 @@
 ```swift
 // Package.swift dependencies
-.package(url: "https://github.com/parseapi/swift", from: "1.8.0")
+.package(url: "https://github.com/parseapi/swift", from: "1.9.0")
 ```
 
 ```swift
