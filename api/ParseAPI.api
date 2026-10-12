@@ -992,17 +992,6 @@ CurrencySummaryRow: conformsTo Swift.Encodable
 CurrencySummaryRow: conformsTo Swift.Sendable
 CurrencySummaryRow: conformsTo Swift.SendableMetatype
 CurrencySummaryRow: struct CurrencySummaryRow
-ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
-ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
-ParseAPI.currencyHistory(_:_:from:to:amount:): func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil) async throws -> CurrencyHistory
-ParseAPI.currencyHistory(_:_:from:to:amount:interval:): func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyHistory
-ParseAPI.currencyList(q:country:deep:lang:): func currencyList(q: String? = nil, country: String? = nil, deep: Bool = false, lang: String? = nil) async throws -> CurrencyList
-ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
-ParseAPI.currencyRates(_:date:amount:): func currencyRates(_ base: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates
-ParseAPI.currencyRates(_:quotes:date:amount:): func currencyRates(_ base: String, quotes: [String], date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates
-ParseAPI.currencyRatesHistory(_:quotes:from:to:amount:): func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil) async throws -> CurrencyRatesHistory
-ParseAPI.currencyRatesHistory(_:quotes:from:to:amount:interval:): func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyRatesHistory
-ParseAPI.currencyRatesSummary(_:quotes:from:to:interval:): func currencyRatesSummary(_ base: String, quotes: [String], from: String, to: String, interval: String = "month") async throws -> CurrencyRatesSummary
 DNS.domain: let domain: String
 DNS.init(from:): init(from decoder: any Decoder) throws
 DNS.records: let records: [DNSRecord]
@@ -1578,6 +1567,17 @@ ParseAPI.country(_:deep:): func country(_ code: String, deep: Bool = false) asyn
 ParseAPI.country(_:deep:lang:): func country(_ code: String, deep: Bool = false, lang: String?) async throws -> Country
 ParseAPI.countryStates(_:): func countryStates(_ code: String) async throws -> CountryStates
 ParseAPI.countryStates(_:lang:): func countryStates(_ code: String, lang: String?) async throws -> CountryStates
+ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
+ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
+ParseAPI.currencyHistory(_:_:from:to:amount:): func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil) async throws -> CurrencyHistory
+ParseAPI.currencyHistory(_:_:from:to:amount:interval:): func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyHistory
+ParseAPI.currencyList(q:country:deep:lang:): func currencyList(q: String? = nil, country: String? = nil, deep: Bool = false, lang: String? = nil) async throws -> CurrencyList
+ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
+ParseAPI.currencyRates(_:date:amount:): func currencyRates(_ base: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates
+ParseAPI.currencyRates(_:quotes:date:amount:): func currencyRates(_ base: String, quotes: [String], date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates
+ParseAPI.currencyRatesHistory(_:quotes:from:to:amount:): func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil) async throws -> CurrencyRatesHistory
+ParseAPI.currencyRatesHistory(_:quotes:from:to:amount:interval:): func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyRatesHistory
+ParseAPI.currencyRatesSummary(_:quotes:from:to:interval:): func currencyRatesSummary(_ base: String, quotes: [String], from: String, to: String, interval: String = "month") async throws -> CurrencyRatesSummary
 ParseAPI.date(_:format:to:deep:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false) async throws -> DateInfo
 ParseAPI.date(_:format:to:deep:lang:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> DateInfo
 ParseAPI.dateToday(to:deep:): func dateToday(to: String? = nil, deep: Bool = false) async throws -> DateInfo

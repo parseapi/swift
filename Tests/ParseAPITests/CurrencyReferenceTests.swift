@@ -72,11 +72,11 @@ private let currencyRateFixture = #"{"base":"USD","quote":"JPY","rate":148.99,"d
 		#expect(report.missing[1].reason == "no_observations" && report.missing[0].missingDayCount == 31)
 		#expect(summary.requests[0].url?.absoluteString == "https://api.parseapi.com/currency/U%2FS/rates/summary?quotes=EUR%2CJPY%2CXCG&from=2024-01-01&to=2024-02-15&interval=month")
 	}
-	@Test func oldHistoryFunctionReferenceRemainsAvailable() async throws {
+	@Test func dailyHistoryFunctionReferenceRemainsAvailable() async throws {
 		let stub = StubTransport(body: try captured("sampled-history"))
 		let client = try makeClient(stub)
-		let old: (String, String, String, String, Double?, String?, Bool?) async throws -> CurrencyHistory = client.currencyHistory
-		_ = try await old("USD", "EUR", "2024-01-01", "2024-01-31", nil, nil, nil)
+		let old: (String, String, String, String, Double?) async throws -> CurrencyHistory = client.currencyHistory
+		_ = try await old("USD", "EUR", "2024-01-01", "2024-01-31", nil)
 		#expect(stub.requests[0].url?.query == "from=2024-01-01&to=2024-01-31")
 	}
 
