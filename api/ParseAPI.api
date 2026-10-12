@@ -803,19 +803,206 @@ CurrencyDeep: conformsTo Swift.Encodable
 CurrencyDeep: conformsTo Swift.Sendable
 CurrencyDeep: conformsTo Swift.SendableMetatype
 CurrencyDeep: struct CurrencyDeep
+CurrencyHistory.amount: let amount: Double?
+CurrencyHistory.base: let base: String
+CurrencyHistory.data: let data: [CurrencyObservation]
+CurrencyHistory.from: let from: String
+CurrencyHistory.init(from:): init(from decoder: any Decoder) throws
+CurrencyHistory.interval: let interval: String?
+CurrencyHistory.missing: let missing: [String]
+CurrencyHistory.quote: let quote: String
+CurrencyHistory.to: let to: String
+CurrencyHistory: conformsTo Swift.Decodable
+CurrencyHistory: conformsTo Swift.Encodable
+CurrencyHistory: conformsTo Swift.Sendable
+CurrencyHistory: conformsTo Swift.SendableMetatype
+CurrencyHistory: struct CurrencyHistory
+CurrencyHistoryMissing.init(from:): init(from decoder: any Decoder) throws
+CurrencyHistoryMissing.quote: let quote: String
+CurrencyHistoryMissing.reason: let reason: String
+CurrencyHistoryMissing.requestedDate: let requestedDate: String
+CurrencyHistoryMissing: conformsTo Swift.Decodable
+CurrencyHistoryMissing: conformsTo Swift.Encodable
+CurrencyHistoryMissing: conformsTo Swift.Sendable
+CurrencyHistoryMissing: conformsTo Swift.SendableMetatype
+CurrencyHistoryMissing: struct CurrencyHistoryMissing
+CurrencyList.data: let data: [CurrencyResource]
+CurrencyList.init(from:): init(from decoder: any Decoder) throws
+CurrencyList: conformsTo Swift.Decodable
+CurrencyList: conformsTo Swift.Encodable
+CurrencyList: conformsTo Swift.Sendable
+CurrencyList: conformsTo Swift.SendableMetatype
+CurrencyList: struct CurrencyList
+CurrencyMissingQuote.init(from:): init(from decoder: any Decoder) throws
+CurrencyMissingQuote.quote: let quote: String
+CurrencyMissingQuote.reason: let reason: String
+CurrencyMissingQuote: conformsTo Swift.Decodable
+CurrencyMissingQuote: conformsTo Swift.Encodable
+CurrencyMissingQuote: conformsTo Swift.Sendable
+CurrencyMissingQuote: conformsTo Swift.SendableMetatype
+CurrencyMissingQuote: struct CurrencyMissingQuote
+CurrencyObservation.converted: let converted: Double?
+CurrencyObservation.date: let date: String
+CurrencyObservation.dates: let dates: CurrencyRateDates?
+CurrencyObservation.init(from:): init(from decoder: any Decoder) throws
+CurrencyObservation.rate: let rate: Double
+CurrencyObservation.requestedDate: let requestedDate: String
+CurrencyObservation.stale: let stale: Bool?
+CurrencyObservation.units: let units: CurrencyRateUnits?
+CurrencyObservation: conformsTo Swift.Decodable
+CurrencyObservation: conformsTo Swift.Encodable
+CurrencyObservation: conformsTo Swift.Sendable
+CurrencyObservation: conformsTo Swift.SendableMetatype
+CurrencyObservation: struct CurrencyObservation
+CurrencyQuote.converted: let converted: Double?
+CurrencyQuote.date: let date: String
+CurrencyQuote.dates: let dates: CurrencyRateDates?
+CurrencyQuote.init(from:): init(from decoder: any Decoder) throws
+CurrencyQuote.rate: let rate: Double
+CurrencyQuote.stale: let stale: Bool?
+CurrencyQuote.units: let units: CurrencyRateUnits?
+CurrencyQuote: conformsTo Swift.Decodable
+CurrencyQuote: conformsTo Swift.Encodable
+CurrencyQuote: conformsTo Swift.Sendable
+CurrencyQuote: conformsTo Swift.SendableMetatype
+CurrencyQuote: struct CurrencyQuote
+CurrencyQuoteObservation.converted: let converted: Double?
+CurrencyQuoteObservation.date: let date: String
+CurrencyQuoteObservation.dates: let dates: CurrencyRateDates?
+CurrencyQuoteObservation.init(from:): init(from decoder: any Decoder) throws
+CurrencyQuoteObservation.quote: let quote: String
+CurrencyQuoteObservation.rate: let rate: Double
+CurrencyQuoteObservation.requestedDate: let requestedDate: String
+CurrencyQuoteObservation.stale: let stale: Bool?
+CurrencyQuoteObservation.units: let units: CurrencyRateUnits?
+CurrencyQuoteObservation: conformsTo Swift.Decodable
+CurrencyQuoteObservation: conformsTo Swift.Encodable
+CurrencyQuoteObservation: conformsTo Swift.Sendable
+CurrencyQuoteObservation: conformsTo Swift.SendableMetatype
+CurrencyQuoteObservation: struct CurrencyQuoteObservation
 CurrencyRate.amount: let amount: Double?
 CurrencyRate.base: let base: String
 CurrencyRate.converted: let converted: Double?
 CurrencyRate.date: let date: String
+CurrencyRate.dates: let dates: CurrencyRateDates?
 CurrencyRate.init(from:): init(from decoder: any Decoder) throws
 CurrencyRate.quote: let quote: String
 CurrencyRate.rate: let rate: Double
 CurrencyRate.source: let source: String?
+CurrencyRate.stale: let stale: Bool?
+CurrencyRate.units: let units: CurrencyRateUnits?
 CurrencyRate: conformsTo Swift.Decodable
 CurrencyRate: conformsTo Swift.Encodable
 CurrencyRate: conformsTo Swift.Sendable
 CurrencyRate: conformsTo Swift.SendableMetatype
 CurrencyRate: struct CurrencyRate
+CurrencyRateDates.base: let base: [String]?
+CurrencyRateDates.init(from:): init(from decoder: any Decoder) throws
+CurrencyRateDates.quote: let quote: [String]?
+CurrencyRateDates: conformsTo Swift.Decodable
+CurrencyRateDates: conformsTo Swift.Encodable
+CurrencyRateDates: conformsTo Swift.Sendable
+CurrencyRateDates: conformsTo Swift.SendableMetatype
+CurrencyRateDates: struct CurrencyRateDates
+CurrencyRateUnits.base: let base: String?
+CurrencyRateUnits.init(from:): init(from decoder: any Decoder) throws
+CurrencyRateUnits.quote: let quote: String?
+CurrencyRateUnits: conformsTo Swift.Decodable
+CurrencyRateUnits: conformsTo Swift.Encodable
+CurrencyRateUnits: conformsTo Swift.Sendable
+CurrencyRateUnits: conformsTo Swift.SendableMetatype
+CurrencyRateUnits: struct CurrencyRateUnits
+CurrencyRates.amount: let amount: Double?
+CurrencyRates.base: let base: String
+CurrencyRates.init(from:): init(from decoder: any Decoder) throws
+CurrencyRates.missing: let missing: [CurrencyMissingQuote]
+CurrencyRates.rates: let rates: [String : CurrencyQuote]
+CurrencyRates.requestedDate: let requestedDate: String?
+CurrencyRates: conformsTo Swift.Decodable
+CurrencyRates: conformsTo Swift.Encodable
+CurrencyRates: conformsTo Swift.Sendable
+CurrencyRates: conformsTo Swift.SendableMetatype
+CurrencyRates: struct CurrencyRates
+CurrencyRatesHistory.amount: let amount: Double?
+CurrencyRatesHistory.base: let base: String
+CurrencyRatesHistory.data: let data: [CurrencyQuoteObservation]
+CurrencyRatesHistory.from: let from: String
+CurrencyRatesHistory.init(from:): init(from decoder: any Decoder) throws
+CurrencyRatesHistory.interval: let interval: String?
+CurrencyRatesHistory.missing: let missing: [CurrencyHistoryMissing]
+CurrencyRatesHistory.quotes: let quotes: [String]
+CurrencyRatesHistory.to: let to: String
+CurrencyRatesHistory: conformsTo Swift.Decodable
+CurrencyRatesHistory: conformsTo Swift.Encodable
+CurrencyRatesHistory: conformsTo Swift.Sendable
+CurrencyRatesHistory: conformsTo Swift.SendableMetatype
+CurrencyRatesHistory: struct CurrencyRatesHistory
+CurrencyRatesSummary.base: let base: String
+CurrencyRatesSummary.data: let data: [CurrencySummaryRow]
+CurrencyRatesSummary.from: let from: String
+CurrencyRatesSummary.init(from:): init(from decoder: any Decoder) throws
+CurrencyRatesSummary.interval: let interval: String
+CurrencyRatesSummary.missing: let missing: [CurrencySummaryMissing]
+CurrencyRatesSummary.quotes: let quotes: [String]
+CurrencyRatesSummary.to: let to: String
+CurrencyRatesSummary: conformsTo Swift.Decodable
+CurrencyRatesSummary: conformsTo Swift.Encodable
+CurrencyRatesSummary: conformsTo Swift.Sendable
+CurrencyRatesSummary: conformsTo Swift.SendableMetatype
+CurrencyRatesSummary: struct CurrencyRatesSummary
+CurrencyResource.currency: let currency: String
+CurrencyResource.deep: let deep: CurrencyDeep?
+CurrencyResource.digits: let digits: Int?
+CurrencyResource.init(from:): init(from decoder: any Decoder) throws
+CurrencyResource.name: let name: String?
+CurrencyResource.symbol: let symbol: String?
+CurrencyResource.symbolNative: let symbolNative: String?
+CurrencyResource.unit: let unit: String?
+CurrencyResource: conformsTo Swift.Decodable
+CurrencyResource: conformsTo Swift.Encodable
+CurrencyResource: conformsTo Swift.Sendable
+CurrencyResource: conformsTo Swift.SendableMetatype
+CurrencyResource: struct CurrencyResource
+CurrencySummaryMissing.from: let from: String
+CurrencySummaryMissing.init(from:): init(from decoder: any Decoder) throws
+CurrencySummaryMissing.missingDayCount: let missingDayCount: Int
+CurrencySummaryMissing.quote: let quote: String
+CurrencySummaryMissing.reason: let reason: String
+CurrencySummaryMissing.to: let to: String
+CurrencySummaryMissing: conformsTo Swift.Decodable
+CurrencySummaryMissing: conformsTo Swift.Encodable
+CurrencySummaryMissing: conformsTo Swift.Sendable
+CurrencySummaryMissing: conformsTo Swift.SendableMetatype
+CurrencySummaryMissing: struct CurrencySummaryMissing
+CurrencySummaryRow.average: let average: Double
+CurrencySummaryRow.firstDate: let firstDate: String
+CurrencySummaryRow.from: let from: String
+CurrencySummaryRow.init(from:): init(from decoder: any Decoder) throws
+CurrencySummaryRow.lastDate: let lastDate: String
+CurrencySummaryRow.max: let max: Double
+CurrencySummaryRow.min: let min: Double
+CurrencySummaryRow.missingDayCount: let missingDayCount: Int
+CurrencySummaryRow.observationCount: let observationCount: Int
+CurrencySummaryRow.quote: let quote: String
+CurrencySummaryRow.stale: let stale: Bool?
+CurrencySummaryRow.to: let to: String
+CurrencySummaryRow.units: let units: CurrencyRateUnits?
+CurrencySummaryRow: conformsTo Swift.Decodable
+CurrencySummaryRow: conformsTo Swift.Encodable
+CurrencySummaryRow: conformsTo Swift.Sendable
+CurrencySummaryRow: conformsTo Swift.SendableMetatype
+CurrencySummaryRow: struct CurrencySummaryRow
+ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
+ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
+ParseAPI.currencyHistory(_:_:from:to:amount:): func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil) async throws -> CurrencyHistory
+ParseAPI.currencyHistory(_:_:from:to:amount:interval:): func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyHistory
+ParseAPI.currencyList(q:country:deep:lang:): func currencyList(q: String? = nil, country: String? = nil, deep: Bool = false, lang: String? = nil) async throws -> CurrencyList
+ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
+ParseAPI.currencyRates(_:date:amount:): func currencyRates(_ base: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates
+ParseAPI.currencyRates(_:quotes:date:amount:): func currencyRates(_ base: String, quotes: [String], date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates
+ParseAPI.currencyRatesHistory(_:quotes:from:to:amount:): func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil) async throws -> CurrencyRatesHistory
+ParseAPI.currencyRatesHistory(_:quotes:from:to:amount:interval:): func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyRatesHistory
+ParseAPI.currencyRatesSummary(_:quotes:from:to:interval:): func currencyRatesSummary(_ base: String, quotes: [String], from: String, to: String, interval: String = "month") async throws -> CurrencyRatesSummary
 DNS.domain: let domain: String
 DNS.init(from:): init(from decoder: any Decoder) throws
 DNS.records: let records: [DNSRecord]
@@ -1391,9 +1578,6 @@ ParseAPI.country(_:deep:): func country(_ code: String, deep: Bool = false) asyn
 ParseAPI.country(_:deep:lang:): func country(_ code: String, deep: Bool = false, lang: String?) async throws -> Country
 ParseAPI.countryStates(_:): func countryStates(_ code: String) async throws -> CountryStates
 ParseAPI.countryStates(_:lang:): func countryStates(_ code: String, lang: String?) async throws -> CountryStates
-ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
-ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
-ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
 ParseAPI.date(_:format:to:deep:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false) async throws -> DateInfo
 ParseAPI.date(_:format:to:deep:lang:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> DateInfo
 ParseAPI.dateToday(to:deep:): func dateToday(to: String? = nil, deep: Bool = false) async throws -> DateInfo

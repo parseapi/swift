@@ -1,0 +1,50 @@
+{
+  "data": [
+    {
+      "currency": "USD",
+      "name": "United States Dollar",
+      "symbol": "$",
+      "symbol_native": "$",
+      "digits": 2,
+      "deep": {
+        "numeric": 840,
+        "name_plural": "United States Dollars",
+        "countries": [
+          "AS",
+          "BQ",
+          "EC",
+          "FM",
+          "GU",
+          "HT",
+          "IO",
+          "MH",
+          "MP",
+          "PA",
+          "PR",
+          "PW",
+          "SV",
+          "TC",
+          "TL",
+          "UM",
+          "US",
+          "VG",
+          "VI"
+        ]
+      }
+    },
+    {
+      "currency": "USN",
+      "name": "US Dollar (Next day)",
+      "symbol": null,
+      "symbol_native": null,
+      "digits": 2,
+      "deep": {
+        "numeric": 997,
+        "name_plural": "US dollars (next day)",
+        "countries": [
+          "US"
+        ]
+      }
+    }
+  ]
+}

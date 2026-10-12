@@ -604,9 +604,50 @@ public final class ParseAPI: Sendable {
 		try await get("/currency/\(enc(code))", query: [("lang", lang)] + deepQuery(deep))
 	}
 
-	/// Daily official reference cross rate. Pass date for a past day, amount to convert.
+	/// Held reference cross rate. Pass date for a past day, amount to convert.
 	public func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate {
 		try await get("/currency/\(enc(base))/\(enc(quote))", query: [("date", date), ("amount", amount.map(num))])
+	}
+	/// Currency names, symbols and decimal precision.
+	public func currencyList(q: String? = nil, country: String? = nil, deep: Bool = false, lang: String? = nil) async throws -> CurrencyList {
+		try await get("/currency", query: [("q", q), ("country", country)] + deepQuery(deep) + [("lang", lang)])
+	}
+	/// Omitted quotes selects every held quote in the maintained references.
+	public func currencyRates(_ base: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates {
+		try await get("/currency/\(enc(base))/rates", query: currencyQuery(date: date, amount: amount))
+	}
+
+
+	/// Up to 50 quote currencies, with explicit missing quotes.
+	public func currencyRates(_ base: String, quotes: [String], date: String? = nil, amount: Double? = nil) async throws -> CurrencyRates {
+		try await get("/currency/\(enc(base))/rates", query: [("quotes", quotes.joined(separator: ","))] + currencyQuery(date: date, amount: amount))
+	}
+	/// Up to 366 requested calendar days, retaining explicit gaps.
+	public func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil) async throws -> CurrencyHistory {
+		try await get("/currency/\(enc(base))/\(enc(quote))/history", query: [("from", from), ("to", to)] + currencyQuery(amount: amount))
+	}
+
+	/// Sample original history at day, week or month intervals.
+	public func currencyHistory(_ base: String, _ quote: String, from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyHistory {
+		try await get("/currency/\(enc(base))/\(enc(quote))/history", query: [("from", from), ("to", to)] + currencyQuery(amount: amount) + [("interval", interval)])
+	}
+	/// Up to 50 quotes, 366 days and 5,000 requested pair-days, including gaps.
+	public func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil) async throws -> CurrencyRatesHistory {
+		try await get("/currency/\(enc(base))/rates/history", query: [("quotes", quotes.joined(separator: ",")), ("from", from), ("to", to)] + currencyQuery(amount: amount))
+	}
+
+	/// Sample original history at day, week or month intervals.
+	public func currencyRatesHistory(_ base: String, quotes: [String], from: String, to: String, amount: Double? = nil, interval: String?) async throws -> CurrencyRatesHistory {
+		try await get("/currency/\(enc(base))/rates/history", query: [("quotes", quotes.joined(separator: ",")), ("from", from), ("to", to)] + currencyQuery(amount: amount) + [("interval", interval)])
+	}
+
+
+	/// Average, minimum and maximum from original observation days, with explicit missing periods.
+	public func currencyRatesSummary(_ base: String, quotes: [String], from: String, to: String, interval: String = "month") async throws -> CurrencyRatesSummary {
+		try await get("/currency/\(enc(base))/rates/summary", query: [("quotes", quotes.joined(separator: ",")), ("from", from), ("to", to), ("interval", interval)])
+	}
+	private func currencyQuery(date: String? = nil, amount: Double?) -> [(String, String?)] {
+		[("date", date), ("amount", amount.map(num))]
 	}
 
 	/// Current local time, UTC by default. With to, offsetless at is source wall time.
@@ -858,6 +899,13 @@ public final class ParseAPI: Sendable {
 	}
 
 	private func get<T: Decodable>(_ path: String, query: [(String, String?)] = [], userAgent: String? = nil, body: Data? = nil) async throws -> T {
+		let (data, _) = try await send(path, query: query, userAgent: userAgent, body: body)
+		let decoder = JSONDecoder()
+		decoder.keyDecodingStrategy = .convertFromSnakeCase
+		return try decoder.decode(T.self, from: data)
+	}
+
+	private func send(_ path: String, query: [(String, String?)] = [], userAgent: String? = nil, body: Data? = nil) async throws -> (Data, HTTPURLResponse) {
 		var url = baseURL + path
 		let pairs = query.compactMap { name, value in
 			value.map { "\(name)=\(enc($0))" }
@@ -909,9 +957,7 @@ public final class ParseAPI: Sendable {
 			try Task.checkCancellation()
 
 			if (200..<300).contains(response.statusCode) {
-				let decoder = JSONDecoder()
-				decoder.keyDecodingStrategy = .convertFromSnakeCase
-				return try decoder.decode(T.self, from: data)
+				return (data, response)
 			}
 
 			let retryAfter = response.value(forHTTPHeaderField: "Retry-After")

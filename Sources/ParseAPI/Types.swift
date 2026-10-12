@@ -838,6 +838,9 @@ public struct CurrencyRate: Codable, Sendable {
 	public let amount: Double?
 	public let converted: Double?
 	public let source: String?
+	public let stale: Bool?
+	public let dates: CurrencyRateDates?
+	public let units: CurrencyRateUnits?
 }
 
 public struct TimezoneNextDST: Codable, Sendable {

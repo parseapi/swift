@@ -96,6 +96,10 @@ try await parse.bloc("EU")
 try await parse.blocCountries("EU")
 try await parse.currency("USD")
 try await parse.currencyRate("USD", "EUR")
+try await parse.currencySources()
+try await parse.currencyRates("USD", quotes: ["EUR", "JPY"], source: "ecb", evidence: true)
+try await parse.currencyHistory("USD", "EUR", from: "2026-10-01", to: "2026-10-09", source: "ecb")
+try await parse.currencyRatesHistory("USD", quotes: ["EUR", "JPY"], from: "2026-10-01", to: "2026-10-09")
 try await parse.language("en")
 try await parse.name("BILLY OSHALL")
 try await parse.name("Andrea", country: "IT")
@@ -139,6 +143,23 @@ Reuse a client across calls. Each method performs its own lookup and returns dat
 `carrier`, `caller`, and `hlr` are metered lookups for secret keys on a server. App keys answer them with a 403.
 
 DNS uses pooled requests on every plan. Omit `type` to check A, AAAA, CNAME, MX, NS, TXT, SOA, CAA, SRV and PTR. Records contain `name`, `type`, `ttl` in seconds and a DNS presentation `value`. TXT values retain quoting and chunk boundaries. A selected question can include its CNAME chain. Empty records mean no records. Lookup failures remain errors.
+
+## Currency references and history
+
+Batch rates use a currency-keyed `rates` object. Read `batch.rates["USD"]?.rate` directly. Each quote retains its source observation date and optional conversion, while `missing` retains unavailable quotes and their reasons. History, catalogs and summaries keep ordered `data` arrays with their context. The catalog uses `/currency`. Its optional `lang` translates available currency names and Deep plural names using the same policy as individual metadata lookups; identifiers, symbols and numeric facts stay unchanged. History keeps shared base, pair and requested amount on the envelope. Its ordered rows retain requested days, source observation dates and necessary qualifications. `currencyList` supplies the current ISO picker catalog. Optional Core `units` identifies indexed units and troy ounces; precious-metal quotes have no currency minor-unit rounding. The API omits empty missing arrays. Lists and all-quotes batches exclude metals and test/no-currency codes.
+
+Keep the common rate call, or select an independent provider with source observation dates:
+
+```swift
+let rate = try await parse.currencyRate("USD", "EUR", amount: 100)
+let history = try await parse.currencyHistory("USD", "JPY", from: "1971-01-04", to: "2026-10-02" interval: "month")
+let summary = try await parse.currencyRatesSummary("USD", quotes: ["EUR", "JPY"], from: "2024-01-01", to: "2024-12-31" interval: "month")
+```
+
+Currency metadata, conversions, batches and history use the same pooled requests. Dated requests automatically use the maintained archives. A pair uses one native reference vector at a time. Coverage varies by currency and date, and unavailable results stay explicit. These are daily or weekly reference observations, not executable or intraday prices. The API omits empty missing arrays. Lists and all-quotes batches exclude metals and test/no-currency codes.
+
+Currency metadata, conversions, batches and history use the same pooled requests. Dated requests automatically use the maintained archives. A pair uses one native reference vector at a time. Coverage varies by currency and date, and unavailable results stay explicit. These are daily or weekly reference observations, not executable or intraday prices. The API omits empty missing arrays. Lists and all-quotes batches exclude metals and test/no-currency codes.
+
 
 ## Company directory
 

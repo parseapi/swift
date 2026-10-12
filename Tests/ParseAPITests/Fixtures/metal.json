@@ -1,0 +1,11 @@
+{
+  "base": "USD",
+  "quote": "XAU",
+  "rate": 0.0002423659554849532,
+  "date": "2026-10-10",
+  "amount": 100,
+  "converted": null,
+  "units": {
+    "quote": "troy_ounce"
+  }
+}

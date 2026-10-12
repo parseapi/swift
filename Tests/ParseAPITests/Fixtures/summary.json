@@ -1,0 +1,173 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "object": "currency_rate_summary",
+      "base": "USD",
+      "quote": "EUR",
+      "from": "2026-01-01",
+      "to": "2026-01-31",
+      "days": 31,
+      "missing_days": 0,
+      "observations": 21,
+      "first_date": "2026-01-02",
+      "last_date": "2026-01-30",
+      "average": 0.8519945224014113,
+      "min": 0.8351428094204109,
+      "max": 0.860807437376259,
+      "open": 0.8531695247845748,
+      "close": 0.8389965601141035,
+      "change": -0.014172964670471244,
+      "change_percent": -1.661213189025934,
+      "stale": false,
+      "deep": {
+        "first": {
+          "base": {
+            "reference_rate": 1.1721,
+            "reference_date": "2026-01-02",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-02"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          },
+          "quote": {
+            "reference_rate": 1,
+            "reference_date": "2026-01-02",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-02"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          }
+        },
+        "last": {
+          "base": {
+            "reference_rate": 1.1919,
+            "reference_date": "2026-01-30",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-30"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          },
+          "quote": {
+            "reference_rate": 1,
+            "reference_date": "2026-01-30",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-30"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          }
+        }
+      }
+    },
+    {
+      "object": "currency_rate_summary",
+      "base": "USD",
+      "quote": "JPY",
+      "from": "2026-01-01",
+      "to": "2026-01-31",
+      "days": 31,
+      "missing_days": 0,
+      "observations": 21,
+      "first_date": "2026-01-02",
+      "last_date": "2026-01-30",
+      "average": 156.71727799195614,
+      "min": 152.63069984967427,
+      "max": 158.84674789771753,
+      "open": 156.93200238887468,
+      "close": 154.03137847134826,
+      "change": -2.900623917526417,
+      "change_percent": -1.8483316808376227,
+      "stale": false,
+      "deep": {
+        "first": {
+          "base": {
+            "reference_rate": 1.1721,
+            "reference_date": "2026-01-02",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-02"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          },
+          "quote": {
+            "reference_rate": 183.94,
+            "reference_date": "2026-01-02",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-02"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          }
+        },
+        "last": {
+          "base": {
+            "reference_rate": 1.1919,
+            "reference_date": "2026-01-30",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-30"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          },
+          "quote": {
+            "reference_rate": 183.59,
+            "reference_date": "2026-01-30",
+            "source": "ecb",
+            "source_dates": [
+              "2026-01-30"
+            ],
+            "fetched_at": "2026-10-10T15:50:23.782Z",
+            "rate_kind": "official_reference",
+            "status": "fresh",
+            "unit": "currency_unit",
+            "reference_base": "EUR"
+          }
+        }
+      }
+    }
+  ],
+  "has_more": false,
+  "url": "/currency/USD/rates/summary",
+  "base": "USD",
+  "quotes": [
+    "EUR",
+    "JPY"
+  ],
+  "from": "2026-01-01",
+  "to": "2026-03-31",
+  "interval": "month",
+  "weighting": "publication",
+  "missing": []
+}
