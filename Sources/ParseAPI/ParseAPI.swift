@@ -778,6 +778,10 @@ public final class ParseAPI: Sendable {
 		try await get("/emoji/\(enc(emoji))", query: [("lang", lang)] + deepQuery(deep))
 	}
 
+	public func emoji(_ emoji: String, deep: Bool = false, lang: String? = nil, shortcodeSource: String) async throws -> Emoji {
+		try await get("/emoji/\(enc(emoji))", query: [("lang", lang), ("shortcode_source", shortcodeSource)] + deepQuery(deep))
+	}
+
 	public func emojiSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> EmojiSearch {
 		try await get("/emoji", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
@@ -786,6 +790,39 @@ public final class ParseAPI: Sendable {
 		try await get("/emoji", query: [("lang", lang)] + [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
 
+
+	public func emojiSearch(_ query: String, options: EmojiSearchOptions) async throws -> EmojiSearch {
+		try await get("/emoji", query: [("q", query)] + emojiQuery(options))
+	}
+
+	public func emojiBrowse(_ options: EmojiBrowseOptions = .init()) async throws -> EmojiBrowse {
+		try await get("/emoji", query: emojiQuery(options))
+	}
+
+	/// Complete filtered JSON export. Deep defaults true.
+	public func emojiCatalog(_ options: EmojiCatalogOptions = .init()) async throws -> EmojiCatalog {
+		try await get("/emoji/catalog", query: [("profile", options.profile), ("deep", options.deep ? "true" : "false"), ("lang", options.lang), ("category", options.category), ("subcategory", options.subcategory), ("version", options.version), ("max_version", options.maxVersion), ("include_skin_tones", options.includeSkinTones.map { $0 ? "true" : "false" })])
+	}
+	public func emojiConvert(_ text: String, direction: String, shortcodeSource: String) async throws -> EmojiConversion {
+		try await get("/emoji/convert", query: [("direction",direction),("shortcode_source",shortcodeSource)], body: JSONSerialization.data(withJSONObject:["text":text]))
+	}
+
+	public func emojiMetadata() async throws -> EmojiMetadata {
+		try await get("/emoji/metadata")
+	}
+
+	public func emojiCategories() async throws -> EmojiCategories {
+		try await get("/emoji/categories")
+	}
+
+	/// Positions use UTF-16 code units; end is exclusive.
+	public func emojiParse(_ text: String, deep: Bool = false, lang: String? = nil) async throws -> EmojiParse {
+		try await get("/emoji/parse", query: [("lang", lang)] + deepQuery(deep), body: JSONSerialization.data(withJSONObject: ["text": text]))
+	}
+
+	private func emojiQuery(_ options: EmojiSearchOptions) -> [(String, String?)] {
+		[("lang", options.lang), ("limit", options.limit.map(String.init)), ("category", options.category), ("subcategory", options.subcategory), ("version", options.version), ("max_version", options.maxVersion), ("include_skin_tones", options.includeSkinTones.map { $0 ? "true" : "false" }), ("offset", options.offset.map(String.init))] + deepQuery(options.deep)
+	}
 
 	public func address(_ address: String, country: String? = nil, deep: Bool = false) async throws -> Address {
 		try await get("/address/\(enc(address))", query: [("country", country)] + deepQuery(deep))

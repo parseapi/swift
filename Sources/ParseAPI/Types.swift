@@ -1060,6 +1060,8 @@ public struct Emoji: Codable, Sendable {
 }
 
 public struct EmojiSearch: Codable, Sendable {
+	public let total: Int?
+	public let nextOffset: Int?
 	public let q: String
 	public let emojis: [Emoji]
 }
@@ -1509,6 +1511,10 @@ public struct WeatherCurrentDetails: Codable, Sendable {
 
 
 public struct EmojiDeep: Codable, Sendable {
+	public let artwork: [String: EmojiArtwork]?
+	public let subcategory: String?
+	public let base: String?
+	public let variants: [EmojiVariant]?
 	public let codepoints: [String]?
 	public let hex: String?
 	public let status: String?
@@ -1686,4 +1692,174 @@ public struct IbanDeep: Codable, Sendable {
 	public let checksum: String?
 	public let branch: String?
 	public let account: String?
+}
+
+public struct EmojiSearchOptions: Sendable {
+	public var limit: Int?
+	public var deep: Bool
+	public var lang: String?
+	public var category: String?
+	public var subcategory: String?
+	public var version: String?
+	public var maxVersion: String?
+	public var includeSkinTones: Bool?
+	public var offset: Int?
+	public init(limit: Int? = nil, deep: Bool = false, lang: String? = nil, category: String? = nil, subcategory: String? = nil, version: String? = nil, maxVersion: String? = nil, includeSkinTones: Bool? = nil, offset: Int? = nil) {
+		self.limit = limit; self.deep = deep; self.lang = lang; self.category = category; self.subcategory = subcategory; self.version = version; self.maxVersion = maxVersion; self.includeSkinTones = includeSkinTones; self.offset = offset
+	}
+}
+public typealias EmojiBrowseOptions = EmojiSearchOptions
+public struct EmojiBrowse: Codable, Sendable {
+	public let emojis: [Emoji]
+	public let total: Int
+	public let nextOffset: Int?
+}
+public struct EmojiVariant: Codable, Sendable { public let emoji: String; public let tones: [String] }
+public struct EmojiCategory: Codable, Sendable { public let category: String; public let subcategories: [String] }
+public struct EmojiCategories: Codable, Sendable { public let categories: [EmojiCategory] }
+/// UTF-16 code-unit positions. End is exclusive.
+public struct EmojiPosition: Codable, Sendable { public let start: Int; public let end: Int }
+public struct EmojiParseItem: Codable, Sendable {
+	public let emoji: String
+	public let name: String
+	public let shortcodes: [String]
+	public let category: String?
+	public let deep: EmojiDeep?
+	public let positions: [EmojiPosition]
+}
+public struct EmojiParse: Codable, Sendable { public let emojis: [EmojiParseItem] }
+
+public struct EmojiArtwork: Codable, Sendable {
+	public let license: String?
+	public let licenseUrl: String?
+	public let attribution: String?
+	public let svg: String?
+	public let png: [String: String]?
+}
+
+public struct EmojiCompleteness: Codable, Sendable {
+	public let missingCount: Int
+	public let unexpectedCount: Int
+}
+
+public struct EmojiSource: Codable, Sendable {
+	public let id: String
+	public let version: String?
+	public let sourceUrl: String
+	public let license: String
+	public let licenseUrl: String
+}
+
+public struct EmojiNotice: Codable, Sendable {
+	public let id: String
+	public let license: String
+	public let notice: String
+}
+
+public struct EmojiArtworkCoverage: Codable, Sendable {
+	public let svg: Int
+	public let png: Int
+}
+
+public struct EmojiFlagLicense: Codable, Sendable {
+	public let license: String
+	public let licenseUrl: String
+	public let description: String
+}
+
+public struct EmojiArtworkSource: Codable, Sendable {
+	public let style: String
+	public let version: String?
+	public let unicodeVersion: String?
+	public let sourceUrl: String
+	public let license: String
+	public let licenseUrl: String
+	public let attribution: String
+	public let loadedCoverage: EmojiArtworkCoverage?
+	public let flagLicense: EmojiFlagLicense?
+	public let notices: [String]
+}
+
+public struct EmojiMetadata: Codable, Sendable {
+ public let shortcodeSources: [String:EmojiShortcodeSourceMetadata]?
+	public let edition: String
+	public let maxVersion: String?
+	public let sourceVersion: String
+	public let total: Int
+	public let completeness: EmojiCompleteness
+	public let sources: [EmojiSource]
+	public let artworkSources: [EmojiArtworkSource]
+	public let notices: [EmojiNotice]
+}
+
+public struct EmojiCatalog: Codable, Sendable {
+ public let localization: EmojiCatalogLocalization?
+	public let profile: String?
+	public let scope: EmojiCatalogScope?
+	public let search: EmojiCatalogSearchFacts?
+	public let metadata: EmojiMetadata
+	public let total: Int
+	public let emojis: [Emoji]
+	public let forms: [String: String]
+	public let shortcodes: [String: [String: [String]]]
+	public let legacy: [String: String]
+}
+
+public struct EmojiCatalogOptions: Sendable {
+	public var profile: String?
+	public var deep: Bool
+	public var lang: String?
+	public var category: String?
+	public var subcategory: String?
+	public var version: String?
+	public var maxVersion: String?
+	public var includeSkinTones: Bool?
+	public init(deep: Bool = true, lang: String? = nil, category: String? = nil, subcategory: String? = nil, version: String? = nil, maxVersion: String? = nil, includeSkinTones: Bool? = nil, profile: String? = nil) {
+		self.profile = profile
+		self.deep = deep; self.lang = lang; self.category = category; self.subcategory = subcategory; self.version = version; self.maxVersion = maxVersion; self.includeSkinTones = includeSkinTones
+	}
+}
+
+public struct EmojiCatalogScope: Codable, Sendable {
+	public let filters: [String:String]
+	public let completeInventory: Bool
+}
+
+public struct EmojiNativeSearchFacts: Codable, Sendable {
+ public let order: Int?
+	public let name: String?
+	public let keywords: [String]
+}
+
+public struct EmojiCatalogSearchFacts: Codable, Sendable {
+ public let localizedKeywords: [String]?
+	public let native: [String:EmojiNativeSearchFacts]
+}
+
+public struct EmojiUnresolved: Codable, Sendable {
+	public let emoji: String?
+	public let shortcode: String?
+	public let start: Int
+	public let end: Int
+	public let reason: String
+}
+
+public struct EmojiConversion: Codable, Sendable {
+	public let text: String
+	public let unresolved: [EmojiUnresolved]
+}
+
+public struct EmojiCatalogLocalization: Codable, Sendable {
+ public let requestedLocale: String?
+ public let resolvedLocale: String?
+ public let translatedNames: Int
+ public let translatedKeywords: Int
+ public let fallbackNames: Int
+ public let fallbackKeywords: Int
+}
+
+public struct EmojiShortcodeSourceMetadata: Codable, Sendable {
+ public let records: Int
+ public let missingRecords: Int
+ public let ambiguousAliases: Int
 }

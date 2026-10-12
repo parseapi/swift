@@ -976,26 +976,255 @@ Emoji: conformsTo Swift.Encodable
 Emoji: conformsTo Swift.Sendable
 Emoji: conformsTo Swift.SendableMetatype
 Emoji: struct Emoji
+EmojiArtwork.attribution: let attribution: String?
+EmojiArtwork.init(from:): init(from decoder: any Decoder) throws
+EmojiArtwork.license: let license: String?
+EmojiArtwork.licenseUrl: let licenseUrl: String?
+EmojiArtwork.png: let png: [String : String]?
+EmojiArtwork.svg: let svg: String?
+EmojiArtwork: conformsTo Swift.Decodable
+EmojiArtwork: conformsTo Swift.Encodable
+EmojiArtwork: conformsTo Swift.Sendable
+EmojiArtwork: conformsTo Swift.SendableMetatype
+EmojiArtwork: struct EmojiArtwork
+EmojiArtworkCoverage.init(from:): init(from decoder: any Decoder) throws
+EmojiArtworkCoverage.png: let png: Int
+EmojiArtworkCoverage.svg: let svg: Int
+EmojiArtworkCoverage: conformsTo Swift.Decodable
+EmojiArtworkCoverage: conformsTo Swift.Encodable
+EmojiArtworkCoverage: conformsTo Swift.Sendable
+EmojiArtworkCoverage: conformsTo Swift.SendableMetatype
+EmojiArtworkCoverage: struct EmojiArtworkCoverage
+EmojiArtworkSource.attribution: let attribution: String
+EmojiArtworkSource.flagLicense: let flagLicense: EmojiFlagLicense?
+EmojiArtworkSource.init(from:): init(from decoder: any Decoder) throws
+EmojiArtworkSource.license: let license: String
+EmojiArtworkSource.licenseUrl: let licenseUrl: String
+EmojiArtworkSource.loadedCoverage: let loadedCoverage: EmojiArtworkCoverage?
+EmojiArtworkSource.notices: let notices: [String]
+EmojiArtworkSource.sourceUrl: let sourceUrl: String
+EmojiArtworkSource.style: let style: String
+EmojiArtworkSource.unicodeVersion: let unicodeVersion: String?
+EmojiArtworkSource.version: let version: String?
+EmojiArtworkSource: conformsTo Swift.Decodable
+EmojiArtworkSource: conformsTo Swift.Encodable
+EmojiArtworkSource: conformsTo Swift.Sendable
+EmojiArtworkSource: conformsTo Swift.SendableMetatype
+EmojiArtworkSource: struct EmojiArtworkSource
+EmojiBrowse.emojis: let emojis: [Emoji]
+EmojiBrowse.init(from:): init(from decoder: any Decoder) throws
+EmojiBrowse.nextOffset: let nextOffset: Int?
+EmojiBrowse.total: let total: Int
+EmojiBrowse: conformsTo Swift.Decodable
+EmojiBrowse: conformsTo Swift.Encodable
+EmojiBrowse: conformsTo Swift.Sendable
+EmojiBrowse: conformsTo Swift.SendableMetatype
+EmojiBrowse: struct EmojiBrowse
+EmojiBrowseOptions: typealias EmojiBrowseOptions = EmojiSearchOptions
+EmojiCatalog.emojis: let emojis: [Emoji]
+EmojiCatalog.forms: let forms: [String : String]
+EmojiCatalog.init(from:): init(from decoder: any Decoder) throws
+EmojiCatalog.legacy: let legacy: [String : String]
+EmojiCatalog.localization: let localization: EmojiCatalogLocalization?
+EmojiCatalog.metadata: let metadata: EmojiMetadata
+EmojiCatalog.profile: let profile: String?
+EmojiCatalog.scope: let scope: EmojiCatalogScope?
+EmojiCatalog.search: let search: EmojiCatalogSearchFacts?
+EmojiCatalog.shortcodes: let shortcodes: [String : [String : [String]]]
+EmojiCatalog.total: let total: Int
+EmojiCatalog: conformsTo Swift.Decodable
+EmojiCatalog: conformsTo Swift.Encodable
+EmojiCatalog: conformsTo Swift.Sendable
+EmojiCatalog: conformsTo Swift.SendableMetatype
+EmojiCatalog: struct EmojiCatalog
+EmojiCatalogLocalization.fallbackKeywords: let fallbackKeywords: Int
+EmojiCatalogLocalization.fallbackNames: let fallbackNames: Int
+EmojiCatalogLocalization.init(from:): init(from decoder: any Decoder) throws
+EmojiCatalogLocalization.requestedLocale: let requestedLocale: String?
+EmojiCatalogLocalization.resolvedLocale: let resolvedLocale: String?
+EmojiCatalogLocalization.translatedKeywords: let translatedKeywords: Int
+EmojiCatalogLocalization.translatedNames: let translatedNames: Int
+EmojiCatalogLocalization: conformsTo Swift.Decodable
+EmojiCatalogLocalization: conformsTo Swift.Encodable
+EmojiCatalogLocalization: conformsTo Swift.Sendable
+EmojiCatalogLocalization: conformsTo Swift.SendableMetatype
+EmojiCatalogLocalization: struct EmojiCatalogLocalization
+EmojiCatalogOptions.category: var category: String?
+EmojiCatalogOptions.deep: var deep: Bool
+EmojiCatalogOptions.includeSkinTones: var includeSkinTones: Bool?
+EmojiCatalogOptions.init(deep:lang:category:subcategory:version:maxVersion:includeSkinTones:profile:): init(deep: Bool = true, lang: String? = nil, category: String? = nil, subcategory: String? = nil, version: String? = nil, maxVersion: String? = nil, includeSkinTones: Bool? = nil, profile: String? = nil)
+EmojiCatalogOptions.lang: var lang: String?
+EmojiCatalogOptions.maxVersion: var maxVersion: String?
+EmojiCatalogOptions.profile: var profile: String?
+EmojiCatalogOptions.subcategory: var subcategory: String?
+EmojiCatalogOptions.version: var version: String?
+EmojiCatalogOptions: conformsTo Swift.Sendable
+EmojiCatalogOptions: conformsTo Swift.SendableMetatype
+EmojiCatalogOptions: struct EmojiCatalogOptions
+EmojiCatalogScope.completeInventory: let completeInventory: Bool
+EmojiCatalogScope.filters: let filters: [String : String]
+EmojiCatalogScope.init(from:): init(from decoder: any Decoder) throws
+EmojiCatalogScope: conformsTo Swift.Decodable
+EmojiCatalogScope: conformsTo Swift.Encodable
+EmojiCatalogScope: conformsTo Swift.Sendable
+EmojiCatalogScope: conformsTo Swift.SendableMetatype
+EmojiCatalogScope: struct EmojiCatalogScope
+EmojiCatalogSearchFacts.init(from:): init(from decoder: any Decoder) throws
+EmojiCatalogSearchFacts.localizedKeywords: let localizedKeywords: [String]?
+EmojiCatalogSearchFacts.native: let native: [String : EmojiNativeSearchFacts]
+EmojiCatalogSearchFacts: conformsTo Swift.Decodable
+EmojiCatalogSearchFacts: conformsTo Swift.Encodable
+EmojiCatalogSearchFacts: conformsTo Swift.Sendable
+EmojiCatalogSearchFacts: conformsTo Swift.SendableMetatype
+EmojiCatalogSearchFacts: struct EmojiCatalogSearchFacts
+EmojiCategories.categories: let categories: [EmojiCategory]
+EmojiCategories.init(from:): init(from decoder: any Decoder) throws
+EmojiCategories: conformsTo Swift.Decodable
+EmojiCategories: conformsTo Swift.Encodable
+EmojiCategories: conformsTo Swift.Sendable
+EmojiCategories: conformsTo Swift.SendableMetatype
+EmojiCategories: struct EmojiCategories
+EmojiCategory.category: let category: String
+EmojiCategory.init(from:): init(from decoder: any Decoder) throws
+EmojiCategory.subcategories: let subcategories: [String]
+EmojiCategory: conformsTo Swift.Decodable
+EmojiCategory: conformsTo Swift.Encodable
+EmojiCategory: conformsTo Swift.Sendable
+EmojiCategory: conformsTo Swift.SendableMetatype
+EmojiCategory: struct EmojiCategory
+EmojiCompleteness.init(from:): init(from decoder: any Decoder) throws
+EmojiCompleteness.missingCount: let missingCount: Int
+EmojiCompleteness.unexpectedCount: let unexpectedCount: Int
+EmojiCompleteness: conformsTo Swift.Decodable
+EmojiCompleteness: conformsTo Swift.Encodable
+EmojiCompleteness: conformsTo Swift.Sendable
+EmojiCompleteness: conformsTo Swift.SendableMetatype
+EmojiCompleteness: struct EmojiCompleteness
+EmojiConversion.init(from:): init(from decoder: any Decoder) throws
+EmojiConversion.text: let text: String
+EmojiConversion.unresolved: let unresolved: [EmojiUnresolved]
+EmojiConversion: conformsTo Swift.Decodable
+EmojiConversion: conformsTo Swift.Encodable
+EmojiConversion: conformsTo Swift.Sendable
+EmojiConversion: conformsTo Swift.SendableMetatype
+EmojiConversion: struct EmojiConversion
+EmojiDeep.artwork: let artwork: [String : EmojiArtwork]?
+EmojiDeep.base: let base: String?
 EmojiDeep.codepoints: let codepoints: [String]?
 EmojiDeep.hex: let hex: String?
 EmojiDeep.init(from:): init(from decoder: any Decoder) throws
 EmojiDeep.keywords: let keywords: [String]?
 EmojiDeep.skins: let skins: [EmojiSkin]?
 EmojiDeep.status: let status: String?
+EmojiDeep.subcategory: let subcategory: String?
+EmojiDeep.variants: let variants: [EmojiVariant]?
 EmojiDeep.version: let version: String?
 EmojiDeep: conformsTo Swift.Decodable
 EmojiDeep: conformsTo Swift.Encodable
 EmojiDeep: conformsTo Swift.Sendable
 EmojiDeep: conformsTo Swift.SendableMetatype
 EmojiDeep: struct EmojiDeep
+EmojiFlagLicense.description: let description: String
+EmojiFlagLicense.init(from:): init(from decoder: any Decoder) throws
+EmojiFlagLicense.license: let license: String
+EmojiFlagLicense.licenseUrl: let licenseUrl: String
+EmojiFlagLicense: conformsTo Swift.Decodable
+EmojiFlagLicense: conformsTo Swift.Encodable
+EmojiFlagLicense: conformsTo Swift.Sendable
+EmojiFlagLicense: conformsTo Swift.SendableMetatype
+EmojiFlagLicense: struct EmojiFlagLicense
+EmojiMetadata.artworkSources: let artworkSources: [EmojiArtworkSource]
+EmojiMetadata.completeness: let completeness: EmojiCompleteness
+EmojiMetadata.edition: let edition: String
+EmojiMetadata.init(from:): init(from decoder: any Decoder) throws
+EmojiMetadata.maxVersion: let maxVersion: String?
+EmojiMetadata.notices: let notices: [EmojiNotice]
+EmojiMetadata.shortcodeSources: let shortcodeSources: [String : EmojiShortcodeSourceMetadata]?
+EmojiMetadata.sourceVersion: let sourceVersion: String
+EmojiMetadata.sources: let sources: [EmojiSource]
+EmojiMetadata.total: let total: Int
+EmojiMetadata: conformsTo Swift.Decodable
+EmojiMetadata: conformsTo Swift.Encodable
+EmojiMetadata: conformsTo Swift.Sendable
+EmojiMetadata: conformsTo Swift.SendableMetatype
+EmojiMetadata: struct EmojiMetadata
+EmojiNativeSearchFacts.init(from:): init(from decoder: any Decoder) throws
+EmojiNativeSearchFacts.keywords: let keywords: [String]
+EmojiNativeSearchFacts.name: let name: String?
+EmojiNativeSearchFacts.order: let order: Int?
+EmojiNativeSearchFacts: conformsTo Swift.Decodable
+EmojiNativeSearchFacts: conformsTo Swift.Encodable
+EmojiNativeSearchFacts: conformsTo Swift.Sendable
+EmojiNativeSearchFacts: conformsTo Swift.SendableMetatype
+EmojiNativeSearchFacts: struct EmojiNativeSearchFacts
+EmojiNotice.id: let id: String
+EmojiNotice.init(from:): init(from decoder: any Decoder) throws
+EmojiNotice.license: let license: String
+EmojiNotice.notice: let notice: String
+EmojiNotice: conformsTo Swift.Decodable
+EmojiNotice: conformsTo Swift.Encodable
+EmojiNotice: conformsTo Swift.Sendable
+EmojiNotice: conformsTo Swift.SendableMetatype
+EmojiNotice: struct EmojiNotice
+EmojiParse.emojis: let emojis: [EmojiParseItem]
+EmojiParse.init(from:): init(from decoder: any Decoder) throws
+EmojiParse: conformsTo Swift.Decodable
+EmojiParse: conformsTo Swift.Encodable
+EmojiParse: conformsTo Swift.Sendable
+EmojiParse: conformsTo Swift.SendableMetatype
+EmojiParse: struct EmojiParse
+EmojiParseItem.category: let category: String?
+EmojiParseItem.deep: let deep: EmojiDeep?
+EmojiParseItem.emoji: let emoji: String
+EmojiParseItem.init(from:): init(from decoder: any Decoder) throws
+EmojiParseItem.name: let name: String
+EmojiParseItem.positions: let positions: [EmojiPosition]
+EmojiParseItem.shortcodes: let shortcodes: [String]
+EmojiParseItem: conformsTo Swift.Decodable
+EmojiParseItem: conformsTo Swift.Encodable
+EmojiParseItem: conformsTo Swift.Sendable
+EmojiParseItem: conformsTo Swift.SendableMetatype
+EmojiParseItem: struct EmojiParseItem
+EmojiPosition.end: let end: Int
+EmojiPosition.init(from:): init(from decoder: any Decoder) throws
+EmojiPosition.start: let start: Int
+EmojiPosition: conformsTo Swift.Decodable
+EmojiPosition: conformsTo Swift.Encodable
+EmojiPosition: conformsTo Swift.Sendable
+EmojiPosition: conformsTo Swift.SendableMetatype
+EmojiPosition: struct EmojiPosition
 EmojiSearch.emojis: let emojis: [Emoji]
 EmojiSearch.init(from:): init(from decoder: any Decoder) throws
+EmojiSearch.nextOffset: let nextOffset: Int?
 EmojiSearch.q: let q: String
+EmojiSearch.total: let total: Int?
 EmojiSearch: conformsTo Swift.Decodable
 EmojiSearch: conformsTo Swift.Encodable
 EmojiSearch: conformsTo Swift.Sendable
 EmojiSearch: conformsTo Swift.SendableMetatype
 EmojiSearch: struct EmojiSearch
+EmojiSearchOptions.category: var category: String?
+EmojiSearchOptions.deep: var deep: Bool
+EmojiSearchOptions.includeSkinTones: var includeSkinTones: Bool?
+EmojiSearchOptions.init(limit:deep:lang:category:subcategory:version:maxVersion:includeSkinTones:offset:): init(limit: Int? = nil, deep: Bool = false, lang: String? = nil, category: String? = nil, subcategory: String? = nil, version: String? = nil, maxVersion: String? = nil, includeSkinTones: Bool? = nil, offset: Int? = nil)
+EmojiSearchOptions.lang: var lang: String?
+EmojiSearchOptions.limit: var limit: Int?
+EmojiSearchOptions.maxVersion: var maxVersion: String?
+EmojiSearchOptions.offset: var offset: Int?
+EmojiSearchOptions.subcategory: var subcategory: String?
+EmojiSearchOptions.version: var version: String?
+EmojiSearchOptions: conformsTo Swift.Sendable
+EmojiSearchOptions: conformsTo Swift.SendableMetatype
+EmojiSearchOptions: struct EmojiSearchOptions
+EmojiShortcodeSourceMetadata.ambiguousAliases: let ambiguousAliases: Int
+EmojiShortcodeSourceMetadata.init(from:): init(from decoder: any Decoder) throws
+EmojiShortcodeSourceMetadata.missingRecords: let missingRecords: Int
+EmojiShortcodeSourceMetadata.records: let records: Int
+EmojiShortcodeSourceMetadata: conformsTo Swift.Decodable
+EmojiShortcodeSourceMetadata: conformsTo Swift.Encodable
+EmojiShortcodeSourceMetadata: conformsTo Swift.Sendable
+EmojiShortcodeSourceMetadata: conformsTo Swift.SendableMetatype
+EmojiShortcodeSourceMetadata: struct EmojiShortcodeSourceMetadata
 EmojiSkin.emoji: let emoji: String
 EmojiSkin.hex: let hex: String?
 EmojiSkin.init(from:): init(from decoder: any Decoder) throws
@@ -1006,6 +1235,36 @@ EmojiSkin: conformsTo Swift.Encodable
 EmojiSkin: conformsTo Swift.Sendable
 EmojiSkin: conformsTo Swift.SendableMetatype
 EmojiSkin: struct EmojiSkin
+EmojiSource.id: let id: String
+EmojiSource.init(from:): init(from decoder: any Decoder) throws
+EmojiSource.license: let license: String
+EmojiSource.licenseUrl: let licenseUrl: String
+EmojiSource.sourceUrl: let sourceUrl: String
+EmojiSource.version: let version: String?
+EmojiSource: conformsTo Swift.Decodable
+EmojiSource: conformsTo Swift.Encodable
+EmojiSource: conformsTo Swift.Sendable
+EmojiSource: conformsTo Swift.SendableMetatype
+EmojiSource: struct EmojiSource
+EmojiUnresolved.emoji: let emoji: String?
+EmojiUnresolved.end: let end: Int
+EmojiUnresolved.init(from:): init(from decoder: any Decoder) throws
+EmojiUnresolved.reason: let reason: String
+EmojiUnresolved.shortcode: let shortcode: String?
+EmojiUnresolved.start: let start: Int
+EmojiUnresolved: conformsTo Swift.Decodable
+EmojiUnresolved: conformsTo Swift.Encodable
+EmojiUnresolved: conformsTo Swift.Sendable
+EmojiUnresolved: conformsTo Swift.SendableMetatype
+EmojiUnresolved: struct EmojiUnresolved
+EmojiVariant.emoji: let emoji: String
+EmojiVariant.init(from:): init(from decoder: any Decoder) throws
+EmojiVariant.tones: let tones: [String]
+EmojiVariant: conformsTo Swift.Decodable
+EmojiVariant: conformsTo Swift.Encodable
+EmojiVariant: conformsTo Swift.Sendable
+EmojiVariant: conformsTo Swift.SendableMetatype
+EmojiVariant: struct EmojiVariant
 HLR.connected: let connected: Bool?
 HLR.country: let country: String?
 HLR.deep: let deep: HLRDeep?
@@ -1406,8 +1665,16 @@ ParseAPI.elevation(_:_:): func elevation(_ lat: Double, _ lon: Double) async thr
 ParseAPI.email(_:deep:): func email(_ email: String, deep: Bool = false) async throws -> Email
 ParseAPI.emoji(_:deep:): func emoji(_ emoji: String, deep: Bool = false) async throws -> Emoji
 ParseAPI.emoji(_:deep:lang:): func emoji(_ emoji: String, deep: Bool = false, lang: String?) async throws -> Emoji
+ParseAPI.emoji(_:deep:lang:shortcodeSource:): func emoji(_ emoji: String, deep: Bool = false, lang: String? = nil, shortcodeSource: String) async throws -> Emoji
+ParseAPI.emojiBrowse(_:): func emojiBrowse(_ options: EmojiBrowseOptions = .init()) async throws -> EmojiBrowse
+ParseAPI.emojiCatalog(_:): func emojiCatalog(_ options: EmojiCatalogOptions = .init()) async throws -> EmojiCatalog
+ParseAPI.emojiCategories(): func emojiCategories() async throws -> EmojiCategories
+ParseAPI.emojiConvert(_:direction:shortcodeSource:): func emojiConvert(_ text: String, direction: String, shortcodeSource: String) async throws -> EmojiConversion
+ParseAPI.emojiMetadata(): func emojiMetadata() async throws -> EmojiMetadata
+ParseAPI.emojiParse(_:deep:lang:): func emojiParse(_ text: String, deep: Bool = false, lang: String? = nil) async throws -> EmojiParse
 ParseAPI.emojiSearch(_:limit:deep:): func emojiSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> EmojiSearch
 ParseAPI.emojiSearch(_:limit:deep:lang:): func emojiSearch(_ query: String, limit: Int? = nil, deep: Bool = false, lang: String?) async throws -> EmojiSearch
+ParseAPI.emojiSearch(_:options:): func emojiSearch(_ query: String, options: EmojiSearchOptions) async throws -> EmojiSearch
 ParseAPI.hlr(_:country:deep:): func hlr(_ number: String, country: String? = nil, deep: Bool = false) async throws -> HLR
 ParseAPI.holiday(_:year:): func holiday(_ country: String, year: Int? = nil) async throws -> HolidayYear
 ParseAPI.holidayDate(_:_:): func holidayDate(_ country: String, _ date: String) async throws -> HolidayDate
