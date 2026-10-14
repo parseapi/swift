@@ -1426,6 +1426,7 @@ MXRecord: conformsTo Swift.SendableMetatype
 MXRecord: struct MXRecord
 Measure.amount: let amount: String?
 Measure.choices: let choices: [MeasureChoice]
+Measure.encode(to:): func encode(to encoder: any Encoder) throws
 Measure.init(from:): init(from decoder: any Decoder) throws
 Measure.measure: let measure: String
 Measure.reason: let reason: String?

@@ -1191,6 +1191,30 @@ public struct Measure: Codable, Sendable {
 	public let unit: String?
 	public let reason: String?
 	public let choices: [MeasureChoice]
+
+	private enum CodingKeys: String, CodingKey { case measure, valid, type, amount, unit, reason, choices }
+
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		measure = try values.decode(String.self, forKey: .measure)
+		valid = try values.decode(Bool.self, forKey: .valid)
+		type = try values.decodeIfPresent(String.self, forKey: .type)
+		amount = try values.decodeIfPresent(String.self, forKey: .amount)
+		unit = try values.decodeIfPresent(String.self, forKey: .unit)
+		reason = try values.decodeIfPresent(String.self, forKey: .reason)
+		choices = try values.decodeIfPresent([MeasureChoice].self, forKey: .choices) ?? []
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encode(measure, forKey: .measure)
+		try values.encode(valid, forKey: .valid)
+		try values.encode(type, forKey: .type)
+		try values.encode(amount, forKey: .amount)
+		try values.encode(unit, forKey: .unit)
+		try values.encodeIfPresent(reason, forKey: .reason)
+		if !choices.isEmpty { try values.encode(choices, forKey: .choices) }
+	}
 }
 
 public struct MeasureUnit: Codable, Sendable {
