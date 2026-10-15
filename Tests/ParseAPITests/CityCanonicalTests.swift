@@ -8,13 +8,13 @@ import Testing
 
     @Test func sparseListsFiltersAndNativeResources() async throws {
         let stub=StubTransport(body:#"{"object":"list","data":[{"id":"city_7aj899nvwyku","object":"city","name":"Vienna"}],"has_more":true,"url":"/city","next_cursor":"opaque+/="}"#)
-        let result=try await makeClient(stub).cityList(options:CityCollectionOptions(minPopulation:0,sort:"-population,+name",cursor:"opaque+/=",countries:["AT","CH"],excludeCountries:["JP"],timezones:["Europe/Vienna"],minElevation:-10,maxElevation:0,))
+        let result=try await makeClient(stub).cityList(options:CityCollectionOptions(minPopulation:0,sort:"-population,+name",cursor:"opaque+/=",countries:["AT","CH"],excludeCountries:["JP"],timezones:["Europe/Vienna"],minElevation:-10,maxElevation:0))
         #expect(result.object=="list" && result.hasMore == true && result.data[0].country==nil && result.data[0].name=="Vienna")
         for(k,v) in ["format":"list","countries":"AT,CH","exclude_countries":"JP","timezones":"Europe/Vienna","min_elevation":"-10","max_elevation":"0","min_population":"0","sort":"-population,+name","cursor":"opaque+/="] { #expect(query(stub)[k]==v) }
         let resource=StubTransport(body:#"{"id":"city_7aj899nvwyku","object":"city","name_local":"Wien"}"#)
         #expect(try await makeClient(resource).cityResource("Vienna",options:CityOptions(country:"AT")).nameLocal=="Wien")
         #expect(query(resource)==["country":"AT","format":"resource",])
-        _ = try await makeClient(stub).citySearchList("Vi",); #expect(query(stub)["format"]=="list")
+        _ = try await makeClient(stub).citySearchList("Vi"); #expect(query(stub)["format"]=="list")
         _ = try await makeClient(stub).cityNearbyList("Vienna"); #expect(stub.requests.last?.url?.path=="/city/Vienna/nearby")
     }
 
@@ -27,7 +27,7 @@ import Testing
 
     @Test func partialRelationsAndZeroUnknownDistance() async throws {
         let stub=StubTransport(body:#"{"object":"list","data":[],"has_more":false,"url":"/city","next_cursor":null,"city_id":"city_7aj899nvwyku","relationship":"children","coverage":"partial"}"#)
-        #expect(try await makeClient(stub).cityChildren(id,options:CityRelationsOptions(limit:2,cursor:"opaque+/=",)).coverage=="partial")
+        #expect(try await makeClient(stub).cityChildren(id,options:CityRelationsOptions(limit:2,cursor:"opaque+/=")).coverage=="partial")
         #expect(stub.requests.last?.url?.path=="/city/id/\(id)/children")
         _ = try await makeClient(stub).cityAncestors(id); #expect(stub.requests.last?.url?.path=="/city/id/\(id)/ancestors")
         _ = try await makeClient(stub).citySiblings(id); #expect(stub.requests.last?.url?.path=="/city/id/\(id)/siblings")
