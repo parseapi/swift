@@ -45,6 +45,9 @@ public struct ParseAPIError: Error, LocalizedError, Sendable {
 	/// Raw Retry-After response header, when supplied.
 	public let retryAfter: String?
 
+	/// Structured HTTP409 ambiguity identities only.
+	public internal(set) var candidates: [CityAmbiguityCandidate]? = nil
+
 	init(status: Int, code: String, message: String, docs: String?, requestId: String?, retryAfter: String? = nil) {
 		self.status = status; self.code = code; self.message = message
 		self.docs = docs; self.requestId = requestId; self.retryAfter = retryAfter
@@ -72,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.9.2"
+	static let version = "1.10.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -318,6 +321,119 @@ public final class ParseAPI: Sendable {
 			("state", state),
 			("limit", limit.map(String.init)),
 		] + deepQuery(deep))
+	}
+
+	/// Opt into type/grain filters, reviewed aliases/hierarchy, or strict name ambiguity.
+	public func city(_ name: String, options: CityOptions) async throws -> City {
+		try await get("/city/\(enc(name))", query: cityQuery(options, nameMatching: true))
+	}
+
+	public func cityId(_ id: String, options: CityOptions) async throws -> City {
+		try await get("/city/id/\(enc(id))", query: [("hierarchy", options.hierarchy ? "true" : nil), ("lang", options.lang)] + deepQuery(options.deep))
+	}
+
+	public func citySearch(_ query: String, limit: Int? = nil, options: CityOptions) async throws -> CitySearch {
+		try await get("/city", query: [("q", query), ("limit", limit.map(String.init))] + cityQuery(options, nameMatching: true, strict: false))
+	}
+
+	/// Nearest eligible stored center within 2,000 km, without containment inference.
+	public func cityNearest(_ lat: Double, _ lon: Double, options: CityOptions) async throws -> CityNearest {
+		try await get("/city", query: [("lat", num(lat)), ("lon", num(lon))] + cityQuery(options, nameMatching: false))
+	}
+
+	public func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityOptions) async throws -> CityNearby {
+		try await get("/city/\(enc(name))/nearby", query: [("radius", radius.map(num)), ("unit", unit), ("limit", limit.map(String.init))] + cityQuery(options, nameMatching: true))
+	}
+
+	/// Browse stored cities. Reuse nextCursor with the same filters, limit and display options.
+	public func cityList(limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList {
+		try await get("/city", query: [("browse", "true"), ("format", "list"), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: false, paging: false))
+	}
+
+	/// Optional collection filters preserve the old search envelope unless paging is requested.
+	public func citySearch(_ query: String, limit: Int? = nil, options: CityCollectionOptions) async throws -> CitySearch {
+		let parameters = [("q", query), ("match", options.match), ("max_distance", options.maxDistance.map(String.init)), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: true)
+		if options.match != nil || options.maxDistance != nil { return try await citySpellingSearch(parameters) }
+		return try await get("/city", query: parameters)
+	}
+
+	/// Country/state select the anchor; collection filters constrain the returned neighbors.
+	public func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions) async throws -> CityNearby {
+		try await get("/city/\(enc(name))/nearby", query: [("radius", radius.map(num)), ("unit", unit), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: true, strict: true))
+	}
+
+	/// List stored city centers around a coordinate. Distances describe centers, not boundaries.
+	public func cityNearbyCoordinates(_ lat: Double, _ lon: Double, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityNearbyCoordinates {
+		try await get("/city", query: [("lat", num(lat)), ("lon", num(lon)), ("nearby", "true"), ("format", "list"), ("radius", radius.map(num)), ("unit", unit), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: false, paging: false))
+	}
+
+    public func cityResource(_ name: String, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource {
+        try await get("/city/\(enc(name))", query: [("format", "resource"), ("romanized", romanized ? "true" : nil), ] + cityQuery(options, nameMatching: true))
+    }
+
+    public func cityIdResource(_ id: String, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource {
+        try await get("/city/id/\(enc(id))", query: [("format", "resource"), ("romanized", romanized ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil), ("lang", options.lang)] + deepQuery(options.deep))
+    }
+
+    public func cityNearestResource(_ lat: Double, _ lon: Double, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource {
+        try await get("/city", query: [("lat", num(lat)), ("lon", num(lon)), ("format", "resource"), ("romanized", romanized ? "true" : nil), ] + cityQuery(options, nameMatching: false))
+    }
+
+    public func citySearchList(_ query: String, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList {
+        try await get(options.match != nil || options.maxDistance != nil ? "/city/search" : "/city", query: [("q", query), ("match", options.match), ("max_distance", options.maxDistance.map(String.init)), ("limit", limit.map(String.init)), ("format", "list"), ] + cityCollectionQuery(options, nameMatching: true))
+    }
+
+    public func cityNearbyList(_ name: String, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList {
+        try await get("/city/\(enc(name))/nearby", query: [("radius", radius.map(num)), ("unit", unit), ("limit", limit.map(String.init)), ("format", "list"), ] + cityCollectionQuery(options, nameMatching: true, strict: true))
+    }
+
+    public func cityChildren(_ id: String, options: CityRelationsOptions = CityRelationsOptions()) async throws -> CityRelations {
+        try await get("/city/id/\(enc(id))/children", query: cityRelationsQuery(options))
+    }
+
+    public func cityAncestors(_ id: String, options: CityAncestorsOptions = CityAncestorsOptions()) async throws -> CityRelations {
+        try await get("/city/id/\(enc(id))/ancestors", query: [("romanized", options.romanized ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil), ("lang", options.lang)] + deepQuery(options.deep))
+    }
+
+    public func citySiblings(_ id: String, options: CityRelationsOptions = CityRelationsOptions()) async throws -> CityRelations {
+        try await get("/city/id/\(enc(id))/siblings", query: cityRelationsQuery(options))
+    }
+
+
+    /// Great-circle km/miles between stored centers; unknown coordinates remain nil.
+    public func cityDistance(_ from: String, _ to: String) async throws -> CityDistance {
+        try await get("/city/id/\(enc(from))/distance/\(enc(to))")
+    }
+
+    private func cityRelationsQuery(_ options: CityRelationsOptions) -> [(String, String?)] {
+        [("romanized", options.romanized ? "true" : nil), ("limit", options.limit.map(String.init)), ("cursor", options.cursor), ("hierarchy", options.hierarchy ? "true" : nil), ("lang", options.lang)] + deepQuery(options.deep)
+    }
+
+	private func cityCollectionQuery(_ options: CityCollectionOptions, nameMatching: Bool, strict: Bool = false, paging: Bool = true) -> [(String, String?)] {
+		[("country", options.country), ("state", options.state), ("type", options.type), ("grain", options.grain),
+		 ("aliases", nameMatching && options.aliases ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil),
+		 ("ambiguity", nameMatching && strict ? options.ambiguity : nil), ("romanized", options.romanized ? "true" : nil),
+		 ("min_population", options.minPopulation.map(String.init)), ("max_population", options.maxPopulation.map(String.init)),
+		 ("timezone", options.timezone), ("bbox", options.bbox), ("sort", options.sort), ("order", options.order),
+		 ("countries", options.countries?.joined(separator: ",")), ("exclude_countries", options.excludeCountries?.joined(separator: ",")), ("timezones", options.timezones?.joined(separator: ",")),
+		 ("min_elevation", options.minElevation.map(num)), ("max_elevation", options.maxElevation.map(num)),
+		 ("page", paging && options.page ? "true" : nil), ("cursor", options.cursor), ("lang", options.lang)] + deepQuery(options.deep)
+	}
+
+	private func cityQuery(_ options: CityOptions, nameMatching: Bool, strict: Bool = true) -> [(String, String?)] {
+		[("country", options.country), ("state", options.state), ("type", options.type), ("grain", options.grain),
+		 ("aliases", nameMatching && options.aliases ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil),
+		 ("ambiguity", nameMatching && strict ? options.ambiguity : nil), ("lang", options.lang)] + deepQuery(options.deep)
+	}
+
+	private struct CitySpellingEnvelope: Decodable {
+		let q: String
+		let data: [City]
+		let nextCursor: String?
+	}
+	private func citySpellingSearch(_ query: [(String, String?)]) async throws -> CitySearch {
+		let result: CitySpellingEnvelope = try await get("/city/search", query: query)
+		return CitySearch(q: result.q, country: nil, state: nil, cities: result.data, type: nil, grain: nil, aliases: nil, nextCursor: result.nextCursor)
 	}
 
 	/// One language by BCP 47 shortest code (en) or ISO 639-3 (eng).
@@ -960,7 +1076,7 @@ public final class ParseAPI: Sendable {
 			}
 
 			let body = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
-			throw ParseAPIError(
+			var error = ParseAPIError(
 				status: response.statusCode,
 				code: body["code"] as? String ?? "unknown_error",
 				message: body["message"] as? String ?? "Request failed with status \(response.statusCode)",
@@ -968,6 +1084,20 @@ public final class ParseAPI: Sendable {
 				requestId: body["request_id"] as? String,
 				retryAfter: retryAfter
 			)
+            if response.statusCode == 409 && error.code == "ambiguous_city", let rows = body["candidates"] as? [Any] {
+                error.candidates = rows.prefix(2).compactMap { value in
+                    guard let row = value as? [String: Any], let id = row["id"] as? String, id.utf8.count == 17, id.range(of: "^city_[a-z0-9]{12}$", options: .regularExpression) != nil, row["object"] as? String == "city" else { return nil }
+                    var safe: [String: Any] = ["id": id, "object": "city"]
+                    for key in ["name", "name_local", "country", "country_name", "state", "state_name", "type"] {
+                        if row[key] is NSNull { safe[key] = NSNull() }
+                        else if let value = row[key] as? String, value.unicodeScalars.count <= 255 { safe[key] = value }
+                    }
+                    guard let data = try? JSONSerialization.data(withJSONObject: safe) else { return nil }
+                    let decoder = JSONDecoder(); decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    return try? decoder.decode(CityAmbiguityCandidate.self, from: data)
+                }
+            }
+            throw error
 		}
 	}
 

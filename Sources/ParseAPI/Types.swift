@@ -42,10 +42,14 @@ public struct Continent: Codable, Sendable {
 	public let region: String
 	public let subregion: String
 	public let population: Int?
-	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
-	public let populationPeriod: String?
+	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
+	public let populationPeriod: String? = nil
 	public let area: Double?
 	public let emoji: String
+
+	private enum CodingKeys: String, CodingKey {
+		case continent, name, region, subregion, population, area, emoji
+	}
 }
 
 public struct ContinentCountryItem: Codable, Sendable {
@@ -150,6 +154,9 @@ public struct District: Codable, Sendable {
 }
 
 public struct City: Codable, Sendable {
+    public let nameRomanized: String?
+    public let romanizationLanguage: String?
+	public let match: CityMatch?
 	public let name: String
 	public let nameLocal: String?
 	public let type: String?
@@ -164,10 +171,15 @@ public struct City: Codable, Sendable {
 	public let timezone: String?
 	public let id: String?
 	public let deep: CityDeep?
+	/// Present only when hierarchy was requested; nil also represents unreviewed grain.
+	public let grain: String?
+	public let parent: CityParent?
 }
 
 /// Nearest-city lookups add the distance from the query point.
 public struct CityNearest: Codable, Sendable {
+    public let nameRomanized: String?
+    public let romanizationLanguage: String?
 	public let name: String
 	public let nameLocal: String?
 	public let type: String?
@@ -184,6 +196,8 @@ public struct CityNearest: Codable, Sendable {
 	public let distance: Double
 	public let distanceMi: Double
 	public let deep: CityDeep?
+	public let grain: String?
+	public let parent: CityParent?
 }
 
 public struct CitySearch: Codable, Sendable {
@@ -191,6 +205,11 @@ public struct CitySearch: Codable, Sendable {
 	public let country: String?
 	public let state: String?
 	public let cities: [City]
+	public let type: String?
+	public let grain: String?
+	public let aliases: Bool?
+	/// Returned only when cursor paging was requested.
+	public let nextCursor: String?
 }
 
 public struct CityNearby: Codable, Sendable {
@@ -200,6 +219,8 @@ public struct CityNearby: Codable, Sendable {
 	public let radius: Double
 	public let unit: String
 	public let nearby: [CityNearest]
+	/// Returned only when cursor paging was requested.
+	public let nextCursor: String?
 }
 
 /// An area's share of ZIP addresses, with category shares measured independently.
@@ -1284,8 +1305,8 @@ public struct CountryDeep: Codable, Sendable {
 	public let region: String?
 	public let subregion: String?
 	public let population: Int?
-	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
-	public let populationPeriod: String?
+	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
+	public let populationPeriod: String? = nil
 	public let area: Double?
 	/// Land area in km2.
 	public let landArea: Double?
@@ -1316,6 +1337,10 @@ public struct CountryDeep: Codable, Sendable {
 	public let ioc: String?
 	public let fifa: String?
 	public let plate: String?
+
+	private enum CodingKeys: String, CodingKey {
+		case iso3, numeric, fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, taxRate, taxIdFormat, taxIdRegex, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
+	}
 }
 
 public struct CountryElevationPoint: Codable, Sendable {
@@ -1334,35 +1359,47 @@ public struct CountryEmergency: Codable, Sendable {
 
 public struct StateDeep: Codable, Sendable {
 	public let population: Int?
-	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
-	public let populationPeriod: String?
+	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
+	public let populationPeriod: String? = nil
 	public let area: Double?
 	public let fips: String?
 	public let capital: String?
 	public let areaCodes: [String]?
 	public let tax: String?
 	public let taxRate: Double?
+
+	private enum CodingKeys: String, CodingKey {
+		case population, area, fips, capital, areaCodes, tax, taxRate
+	}
 }
 
 
 public struct StateDistrictDeep: Codable, Sendable {
 	public let population: Int?
-	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
-	public let populationPeriod: String?
+	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
+	public let populationPeriod: String? = nil
 
+
+	private enum CodingKeys: String, CodingKey {
+		case population
+	}
 }
 
 
 public struct DistrictDeep: Codable, Sendable {
 	public let population: Int?
-	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
-	public let populationPeriod: String?
+	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
+	public let populationPeriod: String? = nil
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
 	public let seat: String?
 	/// Median annual property tax payable on owner-occupied homes in this statistical area. Null when unsupported, missing or censored.
 	public let propertyTax: PropertyTax?
+
+	private enum CodingKeys: String, CodingKey {
+		case population, area, landArea, waterArea, seat, propertyTax
+	}
 }
 
 
@@ -1371,11 +1408,18 @@ public struct CityDeep: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
-	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
-	public let populationPeriod: String?
+	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
+	public let populationPeriod: String? = nil
+	/// Exact date and published counting basis, only for an admitted dated observation.
+	public let populationObservedOn: String?
+	public let populationBasis: String?
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
+
+	private enum CodingKeys: String, CodingKey {
+		case capitalOf, elevation, elevationFt, population, populationObservedOn, populationBasis, area, landArea, waterArea
+	}
 }
 
 
@@ -1383,8 +1427,8 @@ public struct PostalDeep: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let population: Int?
-	/// Reporting year or period for population (YYYY or YYYY-YYYY). Null when unknown or unverifiable.
-	public let populationPeriod: String?
+	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
+	public let populationPeriod: String? = nil
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
@@ -1399,6 +1443,10 @@ public struct PostalDeep: Codable, Sendable {
 	public let taxRateSpecial: Double?
 	/// Median annual property tax payable on owner-occupied homes in this statistical area. Null when unsupported, missing or censored.
 	public let propertyTax: PropertyTax?
+
+	private enum CodingKeys: String, CodingKey {
+		case elevation, elevationFt, population, area, landArea, waterArea, currency, neighbors, metros, tax, taxRate, taxRateState, taxRateCounty, taxRateCity, taxRateSpecial, propertyTax
+	}
 }
 
 
@@ -1886,4 +1934,96 @@ public struct EmojiShortcodeSourceMetadata: Codable, Sendable {
  public let records: Int
  public let missingRecords: Int
  public let ambiguousAliases: Int
+}
+
+
+public struct CityOptions: Sendable {
+	public let country: String?
+	public let state: String?
+	public let type: String?
+	public let grain: String?
+	public let aliases: Bool
+	public let hierarchy: Bool
+	public let ambiguity: String?
+	public let deep: Bool
+	public let lang: String?
+	public init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, deep: Bool = false, lang: String? = nil) {
+		self.country = country; self.state = state; self.type = type; self.grain = grain
+		self.aliases = aliases; self.hierarchy = hierarchy; self.ambiguity = ambiguity
+		self.deep = deep; self.lang = lang
+	}
+}
+
+public struct CityCollectionOptions: Sendable {
+	public let country: String?
+	public let state: String?
+	public let type: String?
+	public let grain: String?
+	public let aliases: Bool
+	public let hierarchy: Bool
+	public let ambiguity: String?
+	public let minPopulation: Int64?
+	public let maxPopulation: Int64?
+	public let timezone: String?
+	/// west,south,east,north; west greater than east crosses the date line.
+	public let bbox: String?
+	public let sort: String?
+	public let order: String?
+	public let page: Bool
+	public let cursor: String?
+	public let deep: Bool
+	public let lang: String?
+	public let countries: [String]?
+	public let excludeCountries: [String]?
+	public let timezones: [String]?
+	public let minElevation: Double?
+	public let maxElevation: Double?
+	public let romanized: Bool
+	public let match: String?
+	public let maxDistance: Int?
+
+	public init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, minPopulation: Int64? = nil, maxPopulation: Int64? = nil, timezone: String? = nil, bbox: String? = nil, sort: String? = nil, order: String? = nil, page: Bool = false, cursor: String? = nil, deep: Bool = false, lang: String? = nil, countries: [String]? = nil, excludeCountries: [String]? = nil, timezones: [String]? = nil, minElevation: Double? = nil, maxElevation: Double? = nil, match: String? = nil, maxDistance: Int? = nil, romanized: Bool = false) {
+		self.country = country; self.state = state; self.type = type; self.grain = grain
+		self.aliases = aliases; self.hierarchy = hierarchy; self.ambiguity = ambiguity
+		self.minPopulation = minPopulation; self.maxPopulation = maxPopulation; self.timezone = timezone
+		self.bbox = bbox; self.sort = sort; self.order = order; self.page = page; self.cursor = cursor
+		self.deep = deep; self.lang = lang
+		self.countries = countries; self.excludeCountries = excludeCountries; self.timezones = timezones
+		self.minElevation = minElevation; self.maxElevation = maxElevation; self.match = match; self.maxDistance = maxDistance; self.romanized = romanized
+	}
+}
+
+public struct CityParent: Codable, Sendable {
+	public let id: String
+	public let name: String?
+	public let nameLocal: String?
+	public let country: String
+	public let state: String?
+	public let type: String?
+	public let grain: String?
+}
+
+public struct CityList: Codable, Sendable {
+    public let object: String
+    public let data: [CityResource]
+    public let hasMore: Bool?
+    public let url: String?
+    public let nextCursor: String?
+    public let q: String?
+    public let country: String?
+    public let state: String?
+    public let type: String?
+    public let grain: String?
+}
+
+public struct CityNearbyCoordinates: Codable, Sendable {
+    public let object: String
+    public let data: [CityResource]
+    public let hasMore: Bool?
+    public let url: String?
+    public let nextCursor: String?
+    public let latitude: Double
+    public let longitude: Double
+    public let radius: Double
+    public let unit: String
 }

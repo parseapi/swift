@@ -12,7 +12,7 @@ import Testing
   }
   let body = Data(#"{"population":0,"population_period":"2020-2024","property_tax":{"annual_median":0,"currency":"USD","period":"2020-2024"}}"#.utf8)
   let place = try decoder.decode(PostalDeep.self, from: body)
-  #expect(place.population == 0 && place.populationPeriod == "2020-2024")
+  #expect(place.population == 0 && place.populationPeriod == nil)
   #expect(place.propertyTax?.annualMedian == 0 && place.propertyTax?.currency == "USD" && place.propertyTax?.period == "2020-2024")
   let district = try decoder.decode(DistrictDeep.self, from: body)
   #expect(district.propertyTax?.period == "2020-2024")

@@ -287,12 +287,17 @@ City.countryName: let countryName: String?
 City.deep: let deep: CityDeep?
 City.district: let district: String?
 City.districtName: let districtName: String?
+City.grain: let grain: String?
 City.id: let id: String?
 City.init(from:): init(from decoder: any Decoder) throws
 City.latitude: let latitude: Double?
 City.longitude: let longitude: Double?
+City.match: let match: CityMatch?
 City.name: let name: String
 City.nameLocal: let nameLocal: String?
+City.nameRomanized: let nameRomanized: String?
+City.parent: let parent: CityParent?
+City.romanizationLanguage: let romanizationLanguage: String?
 City.state: let state: String?
 City.stateName: let stateName: String?
 City.timezone: let timezone: String?
@@ -302,6 +307,58 @@ City: conformsTo Swift.Encodable
 City: conformsTo Swift.Sendable
 City: conformsTo Swift.SendableMetatype
 City: struct City
+CityAmbiguityCandidate.country: let country: String?
+CityAmbiguityCandidate.countryName: let countryName: String?
+CityAmbiguityCandidate.id: let id: String
+CityAmbiguityCandidate.init(from:): init(from decoder: any Decoder) throws
+CityAmbiguityCandidate.name: let name: String?
+CityAmbiguityCandidate.nameLocal: let nameLocal: String?
+CityAmbiguityCandidate.object: let object: String
+CityAmbiguityCandidate.state: let state: String?
+CityAmbiguityCandidate.stateName: let stateName: String?
+CityAmbiguityCandidate.type: let type: String?
+CityAmbiguityCandidate: conformsTo Swift.Decodable
+CityAmbiguityCandidate: conformsTo Swift.Encodable
+CityAmbiguityCandidate: conformsTo Swift.Sendable
+CityAmbiguityCandidate: conformsTo Swift.SendableMetatype
+CityAmbiguityCandidate: struct CityAmbiguityCandidate
+CityAncestorsOptions.deep: let deep: Bool
+CityAncestorsOptions.hierarchy: let hierarchy: Bool
+CityAncestorsOptions.init(hierarchy:deep:lang:romanized:): init(hierarchy: Bool = false, deep: Bool = false, lang: String? = nil, romanized: Bool = false)
+CityAncestorsOptions.lang: let lang: String?
+CityAncestorsOptions.romanized: let romanized: Bool
+CityAncestorsOptions: conformsTo Swift.Sendable
+CityAncestorsOptions: conformsTo Swift.SendableMetatype
+CityAncestorsOptions: struct CityAncestorsOptions
+CityCollectionOptions.aliases: let aliases: Bool
+CityCollectionOptions.ambiguity: let ambiguity: String?
+CityCollectionOptions.bbox: let bbox: String?
+CityCollectionOptions.countries: let countries: [String]?
+CityCollectionOptions.country: let country: String?
+CityCollectionOptions.cursor: let cursor: String?
+CityCollectionOptions.deep: let deep: Bool
+CityCollectionOptions.excludeCountries: let excludeCountries: [String]?
+CityCollectionOptions.grain: let grain: String?
+CityCollectionOptions.hierarchy: let hierarchy: Bool
+CityCollectionOptions.init(country:state:type:grain:aliases:hierarchy:ambiguity:minPopulation:maxPopulation:timezone:bbox:sort:order:page:cursor:deep:lang:countries:excludeCountries:timezones:minElevation:maxElevation:match:maxDistance:romanized:): init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, minPopulation: Int64? = nil, maxPopulation: Int64? = nil, timezone: String? = nil, bbox: String? = nil, sort: String? = nil, order: String? = nil, page: Bool = false, cursor: String? = nil, deep: Bool = false, lang: String? = nil, countries: [String]? = nil, excludeCountries: [String]? = nil, timezones: [String]? = nil, minElevation: Double? = nil, maxElevation: Double? = nil, match: String? = nil, maxDistance: Int? = nil, romanized: Bool = false)
+CityCollectionOptions.lang: let lang: String?
+CityCollectionOptions.match: let match: String?
+CityCollectionOptions.maxDistance: let maxDistance: Int?
+CityCollectionOptions.maxElevation: let maxElevation: Double?
+CityCollectionOptions.maxPopulation: let maxPopulation: Int64?
+CityCollectionOptions.minElevation: let minElevation: Double?
+CityCollectionOptions.minPopulation: let minPopulation: Int64?
+CityCollectionOptions.order: let order: String?
+CityCollectionOptions.page: let page: Bool
+CityCollectionOptions.romanized: let romanized: Bool
+CityCollectionOptions.sort: let sort: String?
+CityCollectionOptions.state: let state: String?
+CityCollectionOptions.timezone: let timezone: String?
+CityCollectionOptions.timezones: let timezones: [String]?
+CityCollectionOptions.type: let type: String?
+CityCollectionOptions: conformsTo Swift.Sendable
+CityCollectionOptions: conformsTo Swift.SendableMetatype
+CityCollectionOptions: struct CityCollectionOptions
 CityDeep.area: let area: Double?
 CityDeep.capitalOf: let capitalOf: String?
 CityDeep.elevation: let elevation: Double?
@@ -309,6 +366,8 @@ CityDeep.elevationFt: let elevationFt: Double?
 CityDeep.init(from:): init(from decoder: any Decoder) throws
 CityDeep.landArea: let landArea: Double?
 CityDeep.population: let population: Int?
+CityDeep.populationBasis: let populationBasis: String?
+CityDeep.populationObservedOn: let populationObservedOn: String?
 CityDeep.populationPeriod: let populationPeriod: String?
 CityDeep.waterArea: let waterArea: Double?
 CityDeep: conformsTo Swift.Decodable
@@ -316,10 +375,50 @@ CityDeep: conformsTo Swift.Encodable
 CityDeep: conformsTo Swift.Sendable
 CityDeep: conformsTo Swift.SendableMetatype
 CityDeep: struct CityDeep
+CityDistance.distance: let distance: Double?
+CityDistance.distanceMi: let distanceMi: Double?
+CityDistance.from: let from: String
+CityDistance.init(from:): init(from decoder: any Decoder) throws
+CityDistance.method: let method: String
+CityDistance.object: let object: String
+CityDistance.to: let to: String
+CityDistance: conformsTo Swift.Decodable
+CityDistance: conformsTo Swift.Encodable
+CityDistance: conformsTo Swift.Sendable
+CityDistance: conformsTo Swift.SendableMetatype
+CityDistance: struct CityDistance
+CityList.country: let country: String?
+CityList.data: let data: [CityResource]
+CityList.grain: let grain: String?
+CityList.hasMore: let hasMore: Bool?
+CityList.init(from:): init(from decoder: any Decoder) throws
+CityList.nextCursor: let nextCursor: String?
+CityList.object: let object: String
+CityList.q: let q: String?
+CityList.state: let state: String?
+CityList.type: let type: String?
+CityList.url: let url: String?
+CityList: conformsTo Swift.Decodable
+CityList: conformsTo Swift.Encodable
+CityList: conformsTo Swift.Sendable
+CityList: conformsTo Swift.SendableMetatype
+CityList: struct CityList
+CityMatch.editDistance: let editDistance: Int?
+CityMatch.init(from:): init(from decoder: any Decoder) throws
+CityMatch.language: let language: String?
+CityMatch.source: let source: String
+CityMatch.type: let type: String
+CityMatch.value: let value: String
+CityMatch: conformsTo Swift.Decodable
+CityMatch: conformsTo Swift.Encodable
+CityMatch: conformsTo Swift.Sendable
+CityMatch: conformsTo Swift.SendableMetatype
+CityMatch: struct CityMatch
 CityNearby.city: let city: String
 CityNearby.country: let country: String
 CityNearby.init(from:): init(from decoder: any Decoder) throws
 CityNearby.nearby: let nearby: [CityNearest]
+CityNearby.nextCursor: let nextCursor: String?
 CityNearby.radius: let radius: Double
 CityNearby.state: let state: String?
 CityNearby.unit: let unit: String
@@ -328,6 +427,21 @@ CityNearby: conformsTo Swift.Encodable
 CityNearby: conformsTo Swift.Sendable
 CityNearby: conformsTo Swift.SendableMetatype
 CityNearby: struct CityNearby
+CityNearbyCoordinates.data: let data: [CityResource]
+CityNearbyCoordinates.hasMore: let hasMore: Bool?
+CityNearbyCoordinates.init(from:): init(from decoder: any Decoder) throws
+CityNearbyCoordinates.latitude: let latitude: Double
+CityNearbyCoordinates.longitude: let longitude: Double
+CityNearbyCoordinates.nextCursor: let nextCursor: String?
+CityNearbyCoordinates.object: let object: String
+CityNearbyCoordinates.radius: let radius: Double
+CityNearbyCoordinates.unit: let unit: String
+CityNearbyCoordinates.url: let url: String?
+CityNearbyCoordinates: conformsTo Swift.Decodable
+CityNearbyCoordinates: conformsTo Swift.Encodable
+CityNearbyCoordinates: conformsTo Swift.Sendable
+CityNearbyCoordinates: conformsTo Swift.SendableMetatype
+CityNearbyCoordinates: struct CityNearbyCoordinates
 CityNearest.country: let country: String
 CityNearest.countryName: let countryName: String?
 CityNearest.deep: let deep: CityDeep?
@@ -335,12 +449,16 @@ CityNearest.distance: let distance: Double
 CityNearest.distanceMi: let distanceMi: Double
 CityNearest.district: let district: String?
 CityNearest.districtName: let districtName: String?
+CityNearest.grain: let grain: String?
 CityNearest.id: let id: String?
 CityNearest.init(from:): init(from decoder: any Decoder) throws
 CityNearest.latitude: let latitude: Double?
 CityNearest.longitude: let longitude: Double?
 CityNearest.name: let name: String
 CityNearest.nameLocal: let nameLocal: String?
+CityNearest.nameRomanized: let nameRomanized: String?
+CityNearest.parent: let parent: CityParent?
+CityNearest.romanizationLanguage: let romanizationLanguage: String?
 CityNearest.state: let state: String?
 CityNearest.stateName: let stateName: String?
 CityNearest.timezone: let timezone: String?
@@ -350,11 +468,94 @@ CityNearest: conformsTo Swift.Encodable
 CityNearest: conformsTo Swift.Sendable
 CityNearest: conformsTo Swift.SendableMetatype
 CityNearest: struct CityNearest
+CityOptions.aliases: let aliases: Bool
+CityOptions.ambiguity: let ambiguity: String?
+CityOptions.country: let country: String?
+CityOptions.deep: let deep: Bool
+CityOptions.grain: let grain: String?
+CityOptions.hierarchy: let hierarchy: Bool
+CityOptions.init(country:state:type:grain:aliases:hierarchy:ambiguity:deep:lang:): init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, deep: Bool = false, lang: String? = nil)
+CityOptions.lang: let lang: String?
+CityOptions.state: let state: String?
+CityOptions.type: let type: String?
+CityOptions: conformsTo Swift.Sendable
+CityOptions: conformsTo Swift.SendableMetatype
+CityOptions: struct CityOptions
+CityParent.country: let country: String
+CityParent.grain: let grain: String?
+CityParent.id: let id: String
+CityParent.init(from:): init(from decoder: any Decoder) throws
+CityParent.name: let name: String?
+CityParent.nameLocal: let nameLocal: String?
+CityParent.state: let state: String?
+CityParent.type: let type: String?
+CityParent: conformsTo Swift.Decodable
+CityParent: conformsTo Swift.Encodable
+CityParent: conformsTo Swift.Sendable
+CityParent: conformsTo Swift.SendableMetatype
+CityParent: struct CityParent
+CityRelations.cityId: let cityId: String
+CityRelations.coverage: let coverage: String
+CityRelations.data: let data: [CityResource]
+CityRelations.hasMore: let hasMore: Bool?
+CityRelations.init(from:): init(from decoder: any Decoder) throws
+CityRelations.nextCursor: let nextCursor: String?
+CityRelations.object: let object: String
+CityRelations.parentId: let parentId: String?
+CityRelations.relationship: let relationship: String
+CityRelations.url: let url: String?
+CityRelations: conformsTo Swift.Decodable
+CityRelations: conformsTo Swift.Encodable
+CityRelations: conformsTo Swift.Sendable
+CityRelations: conformsTo Swift.SendableMetatype
+CityRelations: struct CityRelations
+CityRelationsOptions.cursor: let cursor: String?
+CityRelationsOptions.deep: let deep: Bool
+CityRelationsOptions.hierarchy: let hierarchy: Bool
+CityRelationsOptions.init(limit:cursor:hierarchy:deep:lang:romanized:): init(limit: Int? = nil, cursor: String? = nil, hierarchy: Bool = false, deep: Bool = false, lang: String? = nil, romanized: Bool = false)
+CityRelationsOptions.lang: let lang: String?
+CityRelationsOptions.limit: let limit: Int?
+CityRelationsOptions.romanized: let romanized: Bool
+CityRelationsOptions: conformsTo Swift.Sendable
+CityRelationsOptions: conformsTo Swift.SendableMetatype
+CityRelationsOptions: struct CityRelationsOptions
+CityResource.country: let country: String?
+CityResource.countryName: let countryName: String?
+CityResource.deep: let deep: CityDeep?
+CityResource.distance: let distance: Double?
+CityResource.distanceMi: let distanceMi: Double?
+CityResource.district: let district: String?
+CityResource.districtName: let districtName: String?
+CityResource.grain: let grain: String?
+CityResource.id: let id: String
+CityResource.init(from:): init(from decoder: any Decoder) throws
+CityResource.latitude: let latitude: Double?
+CityResource.longitude: let longitude: Double?
+CityResource.match: let match: CityMatch?
+CityResource.name: let name: String?
+CityResource.nameLocal: let nameLocal: String?
+CityResource.nameRomanized: let nameRomanized: String?
+CityResource.object: let object: String
+CityResource.parent: let parent: CityParent?
+CityResource.romanizationLanguage: let romanizationLanguage: String?
+CityResource.state: let state: String?
+CityResource.stateName: let stateName: String?
+CityResource.timezone: let timezone: String?
+CityResource.type: let type: String?
+CityResource: conformsTo Swift.Decodable
+CityResource: conformsTo Swift.Encodable
+CityResource: conformsTo Swift.Sendable
+CityResource: conformsTo Swift.SendableMetatype
+CityResource: struct CityResource
+CitySearch.aliases: let aliases: Bool?
 CitySearch.cities: let cities: [City]
 CitySearch.country: let country: String?
+CitySearch.grain: let grain: String?
 CitySearch.init(from:): init(from decoder: any Decoder) throws
+CitySearch.nextCursor: let nextCursor: String?
 CitySearch.q: let q: String
 CitySearch.state: let state: String?
+CitySearch.type: let type: String?
 CitySearch: conformsTo Swift.Decodable
 CitySearch: conformsTo Swift.Encodable
 CitySearch: conformsTo Swift.Sendable
@@ -1629,14 +1830,32 @@ ParseAPI.card(_:deep:): func card(_ bin: String, deep: Bool) async throws -> Car
 ParseAPI.carrier(_:country:deep:): func carrier(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Carrier
 ParseAPI.city(_:country:state:deep:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> City
 ParseAPI.city(_:country:state:deep:lang:): func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> City
+ParseAPI.city(_:options:): func city(_ name: String, options: CityOptions) async throws -> City
+ParseAPI.cityAncestors(_:options:): func cityAncestors(_ id: String, options: CityAncestorsOptions = CityAncestorsOptions()) async throws -> CityRelations
+ParseAPI.cityChildren(_:options:): func cityChildren(_ id: String, options: CityRelationsOptions = CityRelationsOptions()) async throws -> CityRelations
+ParseAPI.cityDistance(_:_:): func cityDistance(_ from: String, _ to: String) async throws -> CityDistance
 ParseAPI.cityId(_:deep:): func cityId(_ id: String, deep: Bool = false) async throws -> City
 ParseAPI.cityId(_:deep:lang:): func cityId(_ id: String, deep: Bool = false, lang: String?) async throws -> City
+ParseAPI.cityId(_:options:): func cityId(_ id: String, options: CityOptions) async throws -> City
+ParseAPI.cityIdResource(_:options:romanized:): func cityIdResource(_ id: String, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource
+ParseAPI.cityList(limit:options:): func cityList(limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList
 ParseAPI.cityNearby(_:radius:unit:country:state:limit:deep:): func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false) async throws -> CityNearby
 ParseAPI.cityNearby(_:radius:unit:country:state:limit:deep:lang:): func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false, lang: String?) async throws -> CityNearby
+ParseAPI.cityNearby(_:radius:unit:limit:options:): func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions) async throws -> CityNearby
+ParseAPI.cityNearby(_:radius:unit:limit:options:): func cityNearby(_ name: String, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityOptions) async throws -> CityNearby
+ParseAPI.cityNearbyCoordinates(_:_:radius:unit:limit:options:): func cityNearbyCoordinates(_ lat: Double, _ lon: Double, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityNearbyCoordinates
+ParseAPI.cityNearbyList(_:radius:unit:limit:options:): func cityNearbyList(_ name: String, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList
 ParseAPI.cityNearest(_:_:deep:): func cityNearest(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> CityNearest
 ParseAPI.cityNearest(_:_:deep:lang:): func cityNearest(_ lat: Double, _ lon: Double, deep: Bool = false, lang: String?) async throws -> CityNearest
+ParseAPI.cityNearest(_:_:options:): func cityNearest(_ lat: Double, _ lon: Double, options: CityOptions) async throws -> CityNearest
+ParseAPI.cityNearestResource(_:_:options:romanized:): func cityNearestResource(_ lat: Double, _ lon: Double, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource
+ParseAPI.cityResource(_:options:romanized:): func cityResource(_ name: String, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource
 ParseAPI.citySearch(_:country:state:limit:deep:): func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false) async throws -> CitySearch
 ParseAPI.citySearch(_:country:state:limit:deep:lang:): func citySearch(_ query: String, country: String? = nil, state: String? = nil, limit: Int? = nil, deep: Bool = false, lang: String?) async throws -> CitySearch
+ParseAPI.citySearch(_:limit:options:): func citySearch(_ query: String, limit: Int? = nil, options: CityCollectionOptions) async throws -> CitySearch
+ParseAPI.citySearch(_:limit:options:): func citySearch(_ query: String, limit: Int? = nil, options: CityOptions) async throws -> CitySearch
+ParseAPI.citySearchList(_:limit:options:): func citySearchList(_ query: String, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList
+ParseAPI.citySiblings(_:options:): func citySiblings(_ id: String, options: CityRelationsOptions = CityRelationsOptions()) async throws -> CityRelations
 ParseAPI.company(_:country:deep:): func company(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Company
 ParseAPI.company(_:country:deep:lang:): func company(_ number: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> Company
 ParseAPI.companyCoverage(): func companyCoverage() async throws -> CompanyCoverage
@@ -1746,6 +1965,7 @@ ParseAPI.weather(_:_:deep:date:): func weather(_ lat: Double, _ lon: Double, dee
 ParseAPI: conformsTo Swift.Sendable
 ParseAPI: conformsTo Swift.SendableMetatype
 ParseAPI: final class ParseAPI
+ParseAPIError.candidates: var candidates: [CityAmbiguityCandidate]? { get }
 ParseAPIError.code: let code: String
 ParseAPIError.docs: let docs: String?
 ParseAPIError.errorDescription: var errorDescription: String? { get }
