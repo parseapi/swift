@@ -685,8 +685,14 @@ public final class ParseAPI: Sendable {
 		return result
 	}
 
+	private func tariffExactEdition(_ value: String) -> Bool {
+        if value.utf8.count == 64 && value.utf8.allSatisfy({ (48...57).contains($0) || (97...102).contains($0) }) { return true }
+        guard value.hasPrefix("ted_") else { return false }; let digits = String(value.dropFirst(4))
+        return (1...20).contains(digits.utf8.count) && digits.first != "0" && digits.utf8.allSatisfy { (48...57).contains($0) } && (digits.utf8.count < 20 || digits <= "18446744073709551615")
+    }
+
 	private func tariffSelection(_ edition: String?, _ date: String?, _ gotEdition: String?, _ gotDate: String?) throws {
-		let confirmedEdition = gotEdition.map { $0.utf8.count == 64 && $0.utf8.allSatisfy { (48...57).contains($0) || (97...102).contains($0) } } ?? false
+		let confirmedEdition = gotEdition.map { tariffExactEdition($0) } ?? false
 		if (edition != nil || date != nil) && (!confirmedEdition || (edition != nil && gotEdition != edition) || gotDate != date) {
 			throw ParseAPIError(status: 0, code: "tariff_selection_mismatch", message: "Tariff response did not confirm the requested edition/date. The server may not support this selection.", docs: nil, requestId: nil)
 		}
