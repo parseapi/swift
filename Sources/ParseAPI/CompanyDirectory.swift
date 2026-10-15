@@ -60,6 +60,18 @@ public struct CompanyProfileEmployees: Codable, Sendable {
 	/// Open string, currently reported.
 	public let method: String
 	public let approximate: Bool
+
+	private enum CodingKeys: String, CodingKey { case count, asOf, basis, scope, method, approximate }
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		count = try values.decode(Int.self, forKey: .count)
+		asOf = try values.decode(String.self, forKey: .asOf)
+		basis = try values.decodeIfPresent(String.self, forKey: .basis)
+		scope = try values.decode(String.self, forKey: .scope)
+		// Retain the published getter, with an empty value when metadata is omitted.
+		method = values.contains(.method) ? try values.decode(String.self, forKey: .method) : ""
+		approximate = try values.decode(Bool.self, forKey: .approximate)
+	}
 }
 
 /// Legal form recorded by a register; codes remain open strings.
@@ -212,4 +224,30 @@ public struct CompanyCoverage: Codable, Sendable {
 	public let withWebsite: Int
 	public let withListings: Int
 	public let withAddress: Int
+
+	private enum CodingKeys: String, CodingKey { case scope, label, description, snapshotAt, companies, countries, withWebsite, withListings, withAddress }
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		scope = try values.decode(String.self, forKey: .scope)
+		label = try values.decode(String.self, forKey: .label)
+		description = try values.decode(String.self, forKey: .description)
+		snapshotAt = values.contains(.snapshotAt) ? try values.decode(String.self, forKey: .snapshotAt) : ""
+		companies = try values.decode(Int.self, forKey: .companies)
+		countries = try values.decode([String].self, forKey: .countries)
+		withWebsite = try values.decode(Int.self, forKey: .withWebsite)
+		withListings = try values.decode(Int.self, forKey: .withListings)
+		withAddress = try values.decode(Int.self, forKey: .withAddress)
+	}
+	public func encode(to encoder: Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encode(scope, forKey: .scope)
+		try values.encode(label, forKey: .label)
+		try values.encode(description, forKey: .description)
+		if !snapshotAt.isEmpty { try values.encode(snapshotAt, forKey: .snapshotAt) }
+		try values.encode(companies, forKey: .companies)
+		try values.encode(countries, forKey: .countries)
+		try values.encode(withWebsite, forKey: .withWebsite)
+		try values.encode(withListings, forKey: .withListings)
+		try values.encode(withAddress, forKey: .withAddress)
+	}
 }

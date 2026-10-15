@@ -605,6 +605,7 @@ CompanyCountry: struct CompanyCountry
 CompanyCoverage.companies: let companies: Int
 CompanyCoverage.countries: let countries: [String]
 CompanyCoverage.description: let description: String
+CompanyCoverage.encode(to:): func encode(to encoder: any Encoder) throws
 CompanyCoverage.init(from:): init(from decoder: any Decoder) throws
 CompanyCoverage.label: let label: String
 CompanyCoverage.scope: let scope: String
@@ -1337,6 +1338,7 @@ EmojiFlagLicense: struct EmojiFlagLicense
 EmojiMetadata.artworkSources: let artworkSources: [EmojiArtworkSource]
 EmojiMetadata.completeness: let completeness: EmojiCompleteness
 EmojiMetadata.edition: let edition: String
+EmojiMetadata.encode(to:): func encode(to encoder: any Encoder) throws
 EmojiMetadata.init(from:): init(from decoder: any Decoder) throws
 EmojiMetadata.maxVersion: let maxVersion: String?
 EmojiMetadata.notices: let notices: [EmojiNotice]
@@ -2355,6 +2357,7 @@ Tariff.date: let date: String?
 Tariff.deep: let deep: TariffDeep?
 Tariff.description: let description: String
 Tariff.edition: let edition: String?
+Tariff.encode(to:): func encode(to encoder: any Encoder) throws
 Tariff.general: let general: String?
 Tariff.hts: let hts: String
 Tariff.init(from:): init(from decoder: any Decoder) throws
@@ -2392,6 +2395,7 @@ TariffMeasure: conformsTo Swift.SendableMetatype
 TariffMeasure: struct TariffMeasure
 TariffSearch.date: let date: String?
 TariffSearch.edition: let edition: String?
+TariffSearch.encode(to:): func encode(to encoder: any Encoder) throws
 TariffSearch.init(from:): init(from decoder: any Decoder) throws
 TariffSearch.lines: let lines: [TariffSearchHit]
 TariffSearch.q: let q: String
@@ -2413,6 +2417,7 @@ TariffSearchHit: conformsTo Swift.SendableMetatype
 TariffSearchHit: struct TariffSearchHit
 Time: typealias Time = Timezone
 TimeLocation.candidates: let candidates: [TimeLocationCandidate]
+TimeLocation.encode(to:): func encode(to encoder: any Encoder) throws
 TimeLocation.init(from:): init(from decoder: any Decoder) throws
 TimeLocation.input: let input: TimeLocationInput
 TimeLocation.source: let source: String
@@ -2517,6 +2522,7 @@ TimeZoneEntry: conformsTo Swift.Sendable
 TimeZoneEntry: conformsTo Swift.SendableMetatype
 TimeZoneEntry: struct TimeZoneEntry
 TimeZones.at: let at: String?
+TimeZones.encode(to:): func encode(to encoder: any Encoder) throws
 TimeZones.init(from:): init(from decoder: any Decoder) throws
 TimeZones.timezoneDatabaseVersion: let timezoneDatabaseVersion: String
 TimeZones.timezones: let timezones: [String]

@@ -6,6 +6,11 @@
 - Keep existing City calls and response defaults compatible; expose ambiguity candidates when requested.
 - Remove population observation periods from public examples; retain published typed members only for source compatibility.
 
+## 1.9.3 — 2026-10-15
+
+- Decode ordinary API responses when retired source metadata is omitted, retaining existing getters and call signatures.
+- Preserve factual values, nulls, dates, approximation and required attribution.
+
 ## 1.9.1 — 2026-10-12
 
 - Add Emoji search/browse, categories, catalog, metadata, parsing and conversion; keep existing lookup calls and response decoding compatible.

@@ -553,6 +553,30 @@ public struct Tariff: Codable, Sendable {
 	public let general: String?
 	public let revision: String
 	public let deep: TariffDeep?
+
+	private enum CodingKeys: String, CodingKey { case edition, date, hts, description, lineage, general, revision, deep }
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		edition = try values.decodeIfPresent(String.self, forKey: .edition)
+		date = try values.decodeIfPresent(String.self, forKey: .date)
+		hts = try values.decode(String.self, forKey: .hts)
+		description = try values.decode(String.self, forKey: .description)
+		lineage = try values.decode([String].self, forKey: .lineage)
+		general = try values.decodeIfPresent(String.self, forKey: .general)
+		revision = values.contains(.revision) ? try values.decode(String.self, forKey: .revision) : ""
+		deep = try values.decodeIfPresent(TariffDeep.self, forKey: .deep)
+	}
+	public func encode(to encoder: Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encodeIfPresent(edition, forKey: .edition)
+		try values.encodeIfPresent(date, forKey: .date)
+		try values.encode(hts, forKey: .hts)
+		try values.encode(description, forKey: .description)
+		try values.encode(lineage, forKey: .lineage)
+		try values.encodeIfPresent(general, forKey: .general)
+		if !revision.isEmpty { try values.encode(revision, forKey: .revision) }
+		try values.encodeIfPresent(deep, forKey: .deep)
+	}
 }
 
 public struct TariffSearchHit: Codable, Sendable {
@@ -571,6 +595,24 @@ public struct TariffSearch: Codable, Sendable {
 	public let revision: String
 	/// Up to 20 tariff lines, best match first.
 	public let lines: [TariffSearchHit]
+
+	private enum CodingKeys: String, CodingKey { case edition, date, q, revision, lines }
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		edition = try values.decodeIfPresent(String.self, forKey: .edition)
+		date = try values.decodeIfPresent(String.self, forKey: .date)
+		q = try values.decode(String.self, forKey: .q)
+		revision = values.contains(.revision) ? try values.decode(String.self, forKey: .revision) : ""
+		lines = try values.decode([TariffSearchHit].self, forKey: .lines)
+	}
+	public func encode(to encoder: Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encodeIfPresent(edition, forKey: .edition)
+		try values.encodeIfPresent(date, forKey: .date)
+		try values.encode(q, forKey: .q)
+		if !revision.isEmpty { try values.encode(revision, forKey: .revision) }
+		try values.encode(lines, forKey: .lines)
+	}
 }
 
 public struct VinRecall: Codable, Sendable {
@@ -876,6 +918,22 @@ public struct TimeZones: Codable, Sendable {
 	public let timezones: [String]
 	public let at: String?
 	public let zones: [TimeZoneEntry]?
+
+	private enum CodingKeys: String, CodingKey { case timezoneDatabaseVersion, timezones, at, zones }
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		timezoneDatabaseVersion = values.contains(.timezoneDatabaseVersion) ? try values.decode(String.self, forKey: .timezoneDatabaseVersion) : ""
+		timezones = try values.decode([String].self, forKey: .timezones)
+		at = try values.decodeIfPresent(String.self, forKey: .at)
+		zones = try values.decodeIfPresent([TimeZoneEntry].self, forKey: .zones)
+	}
+	public func encode(to encoder: Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		if !timezoneDatabaseVersion.isEmpty { try values.encode(timezoneDatabaseVersion, forKey: .timezoneDatabaseVersion) }
+		try values.encode(timezones, forKey: .timezones)
+		try values.encodeIfPresent(at, forKey: .at)
+		try values.encodeIfPresent(zones, forKey: .zones)
+	}
 }
 
 public struct Timezone: Codable, Sendable {
@@ -1670,6 +1728,24 @@ public struct TimeLocation: Codable, Sendable {
 	public let candidates: [TimeLocationCandidate]
 	public let truncated: Bool
 	public let source: String
+
+	private enum CodingKeys: String, CodingKey { case input, status, candidates, truncated, source }
+	public init(from decoder: any Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		input = try values.decode(TimeLocationInput.self, forKey: .input)
+		status = try values.decode(String.self, forKey: .status)
+		candidates = try values.decode([TimeLocationCandidate].self, forKey: .candidates)
+		truncated = try values.decode(Bool.self, forKey: .truncated)
+		source = values.contains(.source) ? try values.decode(String.self, forKey: .source) : ""
+	}
+	public func encode(to encoder: any Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encode(input, forKey: .input)
+		try values.encode(status, forKey: .status)
+		try values.encode(candidates, forKey: .candidates)
+		try values.encode(truncated, forKey: .truncated)
+		if !source.isEmpty { try values.encode(source, forKey: .source) }
+	}
 }
 
 // Industry names for the existing US NAICS response contract.
@@ -1862,6 +1938,32 @@ public struct EmojiMetadata: Codable, Sendable {
 	public let sources: [EmojiSource]
 	public let artworkSources: [EmojiArtworkSource]
 	public let notices: [EmojiNotice]
+
+	private enum CodingKeys: String, CodingKey { case shortcodeSources, edition, maxVersion, sourceVersion, total, completeness, sources, artworkSources, notices }
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		shortcodeSources = try values.decodeIfPresent([String:EmojiShortcodeSourceMetadata].self, forKey: .shortcodeSources)
+		edition = try values.decode(String.self, forKey: .edition)
+		maxVersion = try values.decodeIfPresent(String.self, forKey: .maxVersion)
+		sourceVersion = values.contains(.sourceVersion) ? try values.decode(String.self, forKey: .sourceVersion) : ""
+		total = try values.decode(Int.self, forKey: .total)
+		completeness = try values.decode(EmojiCompleteness.self, forKey: .completeness)
+		sources = try values.decode([EmojiSource].self, forKey: .sources)
+		artworkSources = try values.decode([EmojiArtworkSource].self, forKey: .artworkSources)
+		notices = try values.decode([EmojiNotice].self, forKey: .notices)
+	}
+	public func encode(to encoder: Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encodeIfPresent(shortcodeSources, forKey: .shortcodeSources)
+		try values.encode(edition, forKey: .edition)
+		try values.encodeIfPresent(maxVersion, forKey: .maxVersion)
+		if !sourceVersion.isEmpty { try values.encode(sourceVersion, forKey: .sourceVersion) }
+		try values.encode(total, forKey: .total)
+		try values.encode(completeness, forKey: .completeness)
+		try values.encode(sources, forKey: .sources)
+		try values.encode(artworkSources, forKey: .artworkSources)
+		try values.encode(notices, forKey: .notices)
+	}
 }
 
 public struct EmojiCatalog: Codable, Sendable {
