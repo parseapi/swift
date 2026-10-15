@@ -410,14 +410,23 @@ public final class ParseAPI: Sendable {
     }
 
 	private func cityCollectionQuery(_ options: CityCollectionOptions, nameMatching: Bool, strict: Bool = false, paging: Bool = true) -> [(String, String?)] {
-		[("country", options.country), ("state", options.state), ("type", options.type), ("grain", options.grain),
-		 ("aliases", nameMatching && options.aliases ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil),
-		 ("ambiguity", nameMatching && strict ? options.ambiguity : nil), ("romanized", options.romanized ? "true" : nil),
-		 ("min_population", options.minPopulation.map(String.init)), ("max_population", options.maxPopulation.map(String.init)),
-		 ("timezone", options.timezone), ("bbox", options.bbox), ("sort", options.sort), ("order", options.order),
-		 ("countries", options.countries?.joined(separator: ",")), ("exclude_countries", options.excludeCountries?.joined(separator: ",")), ("timezones", options.timezones?.joined(separator: ",")),
-		 ("min_elevation", options.minElevation.map(num)), ("max_elevation", options.maxElevation.map(num)),
-		 ("page", paging && options.page ? "true" : nil), ("cursor", options.cursor), ("lang", options.lang)] + deepQuery(options.deep)
+		var query: [(String, String?)] = [
+			("country", options.country), ("state", options.state), ("type", options.type), ("grain", options.grain),
+			("aliases", nameMatching && options.aliases ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil),
+			("ambiguity", nameMatching && strict ? options.ambiguity : nil), ("romanized", options.romanized ? "true" : nil),
+		]
+		query.append(contentsOf: [
+			("min_population", options.minPopulation.map(String.init)), ("max_population", options.maxPopulation.map(String.init)),
+			("timezone", options.timezone), ("bbox", options.bbox), ("sort", options.sort), ("order", options.order),
+		])
+		query.append(contentsOf: [
+			("countries", options.countries?.joined(separator: ",")), ("exclude_countries", options.excludeCountries?.joined(separator: ",")),
+			("timezones", options.timezones?.joined(separator: ",")), ("min_elevation", options.minElevation.map(num)),
+			("max_elevation", options.maxElevation.map(num)),
+		])
+		query.append(contentsOf: [("page", paging && options.page ? "true" : nil), ("cursor", options.cursor), ("lang", options.lang)])
+		query.append(contentsOf: deepQuery(options.deep))
+		return query
 	}
 
 	private func cityQuery(_ options: CityOptions, nameMatching: Bool, strict: Bool = true) -> [(String, String?)] {
