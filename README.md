@@ -456,9 +456,9 @@ These additions are a local release candidate until the matching SDK and
 backend are published. Existing lookup and search contracts are preserved.
 
 
-## Canonical City operations (local source candidate)
+## Canonical City operations
 
-These compatible additions are local and unpublished. Classic lookup, search, nearest and named-nearby methods retain their default envelopes and required-field models. Browse and coordinate-nearby use canonical lists: `object`, `data` and nullable `next_cursor` (camelCase properties in Swift/Kotlin). Keep all query options unchanged when continuing a page; no client fetches pages automatically.
+Classic lookup, search, nearest and named-nearby methods retain their default envelopes and required-field models. Browse and coordinate-nearby use canonical lists: `object`, `data` and nullable `next_cursor` (camelCase properties in Swift/Kotlin). Keep all query options unchanged when continuing a page; no client fetches pages automatically.
 
 ```swift
 let page = try await parse.citySearchList("Viena", options: CityCollectionOptions(match: "fuzzy", maxDistance: 1))
