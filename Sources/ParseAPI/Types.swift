@@ -615,44 +615,8 @@ public struct TariffSearch: Codable, Sendable {
 	}
 }
 
-public struct VinRecall: Codable, Sendable {
-	/// Government campaign number.
-	public let campaign: String
-	/// Report date, ISO YYYY-MM-DD.
-	public let date: String?
-	public let component: String?
-	/// The filed summary verbatim.
-	public let summary: String?
-}
 
-public struct VinDeep: Codable, Sendable {
-	public let recalls: [VinRecall]?
-	public let series: String?
-	public let doors: Int?
-	public let cylinders: Int?
-	public let displacement: Double?
-	public let fuel: String?
-	public let horsepower: Double?
-	public let drive: String?
-	public let transmission: String?
-	public let manufacturer: String?
-	public let plantCity: String?
-	public let plantState: String?
-	public let plantCountry: String?
-	public let gvwr: String?
-}
 
-public struct Vin: Codable, Sendable {
-	public let vin: String?
-	public let valid: Bool
-	public let year: Int?
-	public let make: String?
-	public let model: String?
-	public let trim: String?
-	public let body: String?
-	public let type: String?
-	public let deep: VinDeep?
-}
 
 /// Optional numbering-plan location context, pooled on every plan.
 public struct PhoneDeep: Codable, Sendable {
@@ -1757,9 +1721,6 @@ public typealias IndustryExclusion = NAICSExclusion
 public typealias IndustryMatch = NAICSMatch
 public typealias IndustrySearch = NAICSSearch
 
-public typealias Vehicle = Vin
-public typealias VehicleDeep = VinDeep
-public typealias VehicleRecall = VinRecall
 
 // Published compatibility declarations.
 public struct Iban: Codable, Sendable {

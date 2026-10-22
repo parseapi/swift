@@ -118,7 +118,6 @@ try await parse.mx("example.com")
 try await parse.dns("example.com")
 try await parse.dns("_dmarc.example.com", type: "TXT")
 try await parse.useragent(uaString)
-try await parse.vehicle("1HGCM82633A004352")
 try await parse.industry("541511")
 try await parse.industrySearch("coffee shop", limit: 5)
 try await parse.tariff("8471.30.01.00")
@@ -297,7 +296,7 @@ Choose enrichment for the question you need answered.
 | VAT | A metered registry check where supported, using included VAT checks or enabled on-demand usage. |
 | Phone | Numbering-plan state and timezone, pooled on every plan. |
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
-| Company (national number), VIN, Industry, Name, Weather | Richer reference/profile facts on paid plans. |
+| Company (national number), Industry, Name, Weather | Richer reference/profile facts on paid plans. |
 | Time, Date, Currency, Language, Emoji, Bank | Optional same-question facts, pooled on every plan. |
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |
@@ -420,8 +419,6 @@ Pass a public hostname without a scheme, path, port or IP address. Stack returns
 The complete technology result is included in the core response. The generic `deep=true` option adds only an empty object and is unnecessary for Stack. Successful checks may be reused for up to 24 hours. `pretty` optionally formats the wire JSON. Each lookup uses one request and API version 2.0.0 selected by this client.
 
 Stack defaults to 35 seconds per attempt so a first scan has time to finish. Other lookups retain their 10-second default. An explicit client timeout takes precedence.
-
-Vehicle lookups use `vin` as the input and response field. Existing VIN methods remain available for compatibility.
 
 ## Emoji catalog additions
 

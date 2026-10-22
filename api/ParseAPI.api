@@ -1961,8 +1961,6 @@ ParseAPI.timezoneAt(_:_:at:deep:): func timezoneAt(_ lat: Double, _ lon: Double,
 ParseAPI.timezoneAt(_:_:at:deep:lang:): func timezoneAt(_ lat: Double, _ lon: Double, at: String? = nil, deep: Bool = false, lang: String?) async throws -> Timezone
 ParseAPI.useragent(_:deep:): func useragent(_ ua: String, deep: Bool = false) async throws -> Useragent
 ParseAPI.vat(_:country:from:deep:): func vat(_ number: String, country: String? = nil, from: String? = nil, deep: Bool = false) async throws -> Vat
-ParseAPI.vehicle(_:deep:): func vehicle(_ vin: String, deep: Bool = false) async throws -> Vehicle
-ParseAPI.vin(_:deep:): func vin(_ vin: String, deep: Bool = false) async throws -> Vin
 ParseAPI.weather(_:_:deep:date:): func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather
 ParseAPI: conformsTo Swift.Sendable
 ParseAPI: conformsTo Swift.SendableMetatype
@@ -2725,54 +2723,6 @@ VatDeep: conformsTo Swift.Encodable
 VatDeep: conformsTo Swift.Sendable
 VatDeep: conformsTo Swift.SendableMetatype
 VatDeep: struct VatDeep
-Vehicle: typealias Vehicle = Vin
-VehicleDeep: typealias VehicleDeep = VinDeep
-VehicleRecall: typealias VehicleRecall = VinRecall
-Vin.body: let body: String?
-Vin.deep: let deep: VinDeep?
-Vin.init(from:): init(from decoder: any Decoder) throws
-Vin.make: let make: String?
-Vin.model: let model: String?
-Vin.trim: let trim: String?
-Vin.type: let type: String?
-Vin.valid: let valid: Bool
-Vin.vin: let vin: String?
-Vin.year: let year: Int?
-Vin: conformsTo Swift.Decodable
-Vin: conformsTo Swift.Encodable
-Vin: conformsTo Swift.Sendable
-Vin: conformsTo Swift.SendableMetatype
-Vin: struct Vin
-VinDeep.cylinders: let cylinders: Int?
-VinDeep.displacement: let displacement: Double?
-VinDeep.doors: let doors: Int?
-VinDeep.drive: let drive: String?
-VinDeep.fuel: let fuel: String?
-VinDeep.gvwr: let gvwr: String?
-VinDeep.horsepower: let horsepower: Double?
-VinDeep.init(from:): init(from decoder: any Decoder) throws
-VinDeep.manufacturer: let manufacturer: String?
-VinDeep.plantCity: let plantCity: String?
-VinDeep.plantCountry: let plantCountry: String?
-VinDeep.plantState: let plantState: String?
-VinDeep.recalls: let recalls: [VinRecall]?
-VinDeep.series: let series: String?
-VinDeep.transmission: let transmission: String?
-VinDeep: conformsTo Swift.Decodable
-VinDeep: conformsTo Swift.Encodable
-VinDeep: conformsTo Swift.Sendable
-VinDeep: conformsTo Swift.SendableMetatype
-VinDeep: struct VinDeep
-VinRecall.campaign: let campaign: String
-VinRecall.component: let component: String?
-VinRecall.date: let date: String?
-VinRecall.init(from:): init(from decoder: any Decoder) throws
-VinRecall.summary: let summary: String?
-VinRecall: conformsTo Swift.Decodable
-VinRecall: conformsTo Swift.Encodable
-VinRecall: conformsTo Swift.Sendable
-VinRecall: conformsTo Swift.SendableMetatype
-VinRecall: struct VinRecall
 Weather.current: let current: WeatherCurrent
 Weather.deep: let deep: WeatherDeep?
 Weather.init(from:): init(from decoder: any Decoder) throws

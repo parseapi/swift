@@ -75,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.10.0"
+	static let version = "1.10.1"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -660,15 +660,7 @@ public final class ParseAPI: Sendable {
 		try await get("/useragent", query: deepQuery(deep), userAgent: ua)
 	}
 
-	/// Decodes a 17-character VIN. Deep adds specifications and recalls on paid plans.
-	public func vehicle(_ vin: String, deep: Bool = false) async throws -> Vehicle {
-		try await get("/vehicle/\(enc(vin))", query: deepQuery(deep))
-	}
 
-	/// Compatibility entry for VIN callers.
-	public func vin(_ vin: String, deep: Bool = false) async throws -> Vin {
-		try await get("/vin/\(enc(vin))", query: deepQuery(deep))
-	}
 
 	/// Look up the general US duty schedule line. Paid deep adds units and the special and other
 	/// schedule columns. Add origin with deep to resolve country-specific measures. Without origin,

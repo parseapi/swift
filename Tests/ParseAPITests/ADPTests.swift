@@ -219,23 +219,6 @@ import Testing
 		}
 	}
 
-	@Test func vinDepth() async throws {
-		let decoder = JSONDecoder()
-		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		let core = try decoder.decode(Vin.self, from: Data(#"{"vin":"123","valid":true,"year":2020}"#.utf8))
-		let locked = try decoder.decode(Vin.self, from: Data(#"{"vin":"123","valid":true,"year":2020,"deep":{}}"#.utf8))
-		let rich = try decoder.decode(Vin.self, from: Data(#"{"vin":"123","valid":true,"year":2020,"deep":{"doors":0,"recalls":[]}}"#.utf8))
-		#expect(core.deep == nil)
-		#expect(locked.deep != nil && locked.deep?.doors == nil)
-		#expect(rich.deep?.doors == 0)
-		for depth in [false, true] {
-			let stub = StubTransport(body: #"{"vin":"123","valid":true,"year":2020,"deep":{"doors":0,"recalls":[]}}"#)
-			_ = try await makeClient(stub).vin("123", deep: depth)
-			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
-			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
-			#expect(stub.requests.count == 1)
-		}
-	}
 
 	@Test func currencyDepth() async throws {
 		let decoder = JSONDecoder()
