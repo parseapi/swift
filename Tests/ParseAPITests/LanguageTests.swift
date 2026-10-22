@@ -7,7 +7,6 @@ import Testing
 		let cases: [(String, (ParseAPI) async throws -> Void, (ParseAPI) async throws -> Void)] = [
 			("continent", { _ = try await $0.continent("AF", lang: "fr-CA") }, { _ = try await $0.continent("AF") }),
 			("continentCountries", { _ = try await $0.continentCountries("AF", lang: "fr-CA") }, { _ = try await $0.continentCountries("AF") }),
-			("blocCountries", { _ = try await $0.blocCountries("EU", lang: "fr-CA") }, { _ = try await $0.blocCountries("EU") }),
 			("country", { _ = try await $0.country("DE", lang: "fr-CA") }, { _ = try await $0.country("DE") }),
 			("countryStates", { _ = try await $0.countryStates("US", lang: "fr-CA") }, { _ = try await $0.countryStates("US") }),
 			("state", { _ = try await $0.state("CO", lang: "fr-CA") }, { _ = try await $0.state("CO") }),
@@ -37,7 +36,6 @@ import Testing
 			("ipSelf", { _ = try await $0.ipSelf(lang: "fr-CA") }, { _ = try await $0.ipSelf() }),
 			("asn", { _ = try await $0.asn("15169", lang: "fr-CA") }, { _ = try await $0.asn("15169") }),
 			("company", { _ = try await $0.company("01234567", lang: "fr-CA") }, { _ = try await $0.company("01234567") }),
-			("npi", { _ = try await $0.provider("1881018208", lang: "fr-CA") }, { _ = try await $0.provider("1881018208") }),
 		]
 		for (name, localized, plain) in cases {
 			// A normal API miss exercises request construction without inventing

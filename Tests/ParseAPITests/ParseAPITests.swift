@@ -80,11 +80,7 @@ func makeClient(
 		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/email/a%40b.com")
 	}
 
-	@Test func vatFromDeep() async throws {
-		let stub = StubTransport(body: #"{"vat":"DE136695976","valid":true,"country":"DE"}"#)
-		_ = try await makeClient(stub).vat("DE136695976", from: "IE6388047V", deep: true)
-		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/vat/DE136695976?from=IE6388047V&deep=true")
-	}
+
 
 	@Test func ibanCountry() async throws {
 		let stub = StubTransport(body: #"{"iban":"DE89370400440532013000","valid":true,"country":"DE","checksum":"89","bank":"37040044","branch":null,"account":"0532013000"}"#)
@@ -94,12 +90,7 @@ func makeClient(
 
 
 
-	@Test func provider() async throws {
-		let stub = StubTransport(body: #"{"npi":"1881018208","valid":true,"registered":true,"type":"organization","name":"Mayo Clinic"}"#)
-		let record = try await makeClient(stub).provider("1881018208")
-		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/provider/1881018208")
-		#expect(record.registered == true)
-	}
+
 
 	@Test func phoneEncodesPlus() async throws {
 		let stub = StubTransport(body: #"{"phone":"+14155552671","valid":true,"country":"US"}"#)

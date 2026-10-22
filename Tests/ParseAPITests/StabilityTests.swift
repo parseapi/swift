@@ -32,16 +32,6 @@ private actor CallCount {
 		#expect(today.requests[0].url?.absoluteString == "https://api.parseapi.com/date?to=2026-12-25")
 	}
 
-	@Test func blocAndMembers() async throws {
-		let bloc = StubTransport(body: #"{"bloc":"EU","name":"European Union","members":27}"#)
-		#expect(try await makeClient(bloc).bloc("EU").members == 27)
-		#expect(bloc.requests[0].url?.path == "/bloc/EU")
-		let members = StubTransport(body: #"{"bloc":"EU","countries":[{"country":"FR","name":"France","calling_code":"33"}]}"#)
-		let result = try await makeClient(members).blocCountries("EU")
-		#expect(members.requests[0].url?.path == "/bloc/EU/countries")
-		#expect(result.countries[0].callingCode == "33")
-	}
-
 	@Test func countryStatesIsOneRequest() async throws {
 		let stub = StubTransport(body: #"{"country":"US","states":[]}"#)
 		_ = try await makeClient(stub).countryStates("US")

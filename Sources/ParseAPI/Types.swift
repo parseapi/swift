@@ -79,23 +79,11 @@ public struct Country: Codable, Sendable {
 	public let timezones: [String]?
 }
 
-public struct Bloc: Codable, Sendable {
-	public let bloc: String
-	public let name: String
-	public let members: Int
-}
 
-public struct BlocCountryItem: Codable, Sendable {
-	public let country: String
-	public let name: String
-	public let emoji: String?
-	public let callingCode: String?
-}
 
-public struct BlocCountries: Codable, Sendable {
-	public let bloc: String
-	public let countries: [BlocCountryItem]
-}
+
+
+
 
 public struct CountryStateItem: Codable, Sendable {
 	public let state: String
@@ -337,29 +325,11 @@ public struct Email: Codable, Sendable {
 	}
 }
 
-public struct VatAddress: Codable, Sendable {
-	public let street: String?
-	public let city: String?
-	public let postal: String?
-	public let country: String?
-}
 
-public struct VatDeep: Codable, Sendable {
-	public let registered: Bool?
-	public let name: String?
-	public let address: VatAddress?
-	public let consultation: String?
-	/// Registry-provided check time, or nil when unavailable.
-	public let consultedAt: String?
-}
 
-public struct Vat: Codable, Sendable {
-	public let vat: String?
-	public let valid: Bool
-	public let country: String?
-	public let from: String?
-	public let deep: VatDeep?
-}
+
+
+
 
 public struct Bank: Codable, Sendable {
 	public let iban: String?
@@ -448,172 +418,27 @@ public struct BankRequirementField: Codable, Sendable {
 	public let normalization: String?
 }
 
-public struct ProviderTaxonomy: Codable, Sendable {
-	public let taxonomy: String?
-	public let specialty: String?
-	public let primary: Bool?
-	public let license: String?
-	public let state: String?
-}
 
-public struct ProviderSource: Codable, Sendable {
-	public let edition: String?
-	public let publishedAt: String?
-	public let through: String?
-	public let importedAt: String?
-}
 
-public struct ProviderSources: Codable, Sendable {
-	public let nppes: ProviderSource?
-	public let leie: ProviderSource?
-	public let pecos: ProviderSource?
-	public let optout: ProviderSource?
-}
 
-public struct Provider: Codable, Sendable {
-	public let sources: ProviderSources?
-	/// Input with accepted separators removed; nil when empty. Invalid values remain visible.
-	public let npi: String?
-	/// Format and NPI checksum only; does not verify a provider or credentials.
-	public let valid: Bool
-	/// Found in the stored NPPES snapshot. Nil when input is invalid.
-	public let registered: Bool?
-	/// Recorded NPI activation status. Nil when unknown; not licensure or practice status.
-	public let active: Bool?
-	/// NPI-only match in the stored OIG LEIE file. False is not complete exclusion clearance.
-	public let excluded: Bool?
-	public let type: String?
-	public let name: String?
-	public let first: String?
-	public let last: String?
-	public let credential: String?
-	public let specialty: String?
-	public let taxonomy: String?
-	public let address: String?
-	public let city: String?
-	public let state: String?
-	public let stateName: String?
-	public let postal: String?
-	public let country: String?
-	public let phone: String?
-	public let deep: ProviderDeep?
-}
 
-public struct ProviderEnrollment: Codable, Sendable {
-	/// part_a, part_b, practitioner, dme, order_refer, mdpp. Nil when unknown.
-	public let type: String?
-	public let specialty: String?
-	public let state: String?
-}
 
-public struct ProviderDeep: Codable, Sendable {
-	public let enumeratedAt: String?
-	public let updatedAt: String?
-	public let reactivatedAt: String?
-	public let taxonomies: [ProviderTaxonomy]?
-	/// Present in the stored Medicare FFS enrollment extract; not payment eligibility.
-	public let medicare: Bool?
-	/// NPI-only match in the stored CMS opt-out affidavit list. Nil when unavailable.
-	public let optOut: Bool?
-	/// Stored enrollment rows. Nil when unavailable; empty when no rows are returned.
-	public let enrollments: [ProviderEnrollment]?
-	/// Recorded NPI deactivation date, YYYY-MM-DD. Nil when active or unavailable.
-	public let deactivatedAt: String?
-}
 
-public struct TariffMeasure: Codable, Sendable {
-	public let heading: String
-	public let description: String
-	public let rate: String?
-	public let from: String?
-	public let until: String?
-	public let conditional: Bool?
-}
 
-public struct TariffDeep: Codable, Sendable {
-	/// Open-string explanation when effectiveRate is nil.
-	public let reason: String?
-	public let origin: String?
-	/// Composed ad valorem percent for matched stored measures only, not complete duty or landed cost.
-	public let effectiveRate: Double?
-	/// Matching stored Chapter 99 schedule measures for this code and goods origin.
-	public let measures: [TariffMeasure]?
-	public let units: [String]?
-	public let special: String?
-	public let other: String?
-}
 
-public struct Tariff: Codable, Sendable {
-	/// Exact edition and answering date. Older servers may omit both.
-	public let edition: String?
-	public let date: String?
-	public let hts: String
-	public let description: String
-	public let lineage: [String]
-	public let general: String?
-	public let revision: String
-	public let deep: TariffDeep?
 
-	private enum CodingKeys: String, CodingKey { case edition, date, hts, description, lineage, general, revision, deep }
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		edition = try values.decodeIfPresent(String.self, forKey: .edition)
-		date = try values.decodeIfPresent(String.self, forKey: .date)
-		hts = try values.decode(String.self, forKey: .hts)
-		description = try values.decode(String.self, forKey: .description)
-		lineage = try values.decode([String].self, forKey: .lineage)
-		general = try values.decodeIfPresent(String.self, forKey: .general)
-		revision = values.contains(.revision) ? try values.decode(String.self, forKey: .revision) : ""
-		deep = try values.decodeIfPresent(TariffDeep.self, forKey: .deep)
-	}
-	public func encode(to encoder: Encoder) throws {
-		var values = encoder.container(keyedBy: CodingKeys.self)
-		try values.encodeIfPresent(edition, forKey: .edition)
-		try values.encodeIfPresent(date, forKey: .date)
-		try values.encode(hts, forKey: .hts)
-		try values.encode(description, forKey: .description)
-		try values.encode(lineage, forKey: .lineage)
-		try values.encodeIfPresent(general, forKey: .general)
-		if !revision.isEmpty { try values.encode(revision, forKey: .revision) }
-		try values.encodeIfPresent(deep, forKey: .deep)
-	}
-}
 
-public struct TariffSearchHit: Codable, Sendable {
-	public let hts: String
-	public let description: String
-	public let general: String?
-	/// Parent descriptions, outermost first. Older responses may omit this context.
-	public let lineage: [String]?
-}
 
-public struct TariffSearch: Codable, Sendable {
-	/// Exact edition and answering date. Older servers may omit both.
-	public let edition: String?
-	public let date: String?
-	public let q: String
-	public let revision: String
-	/// Up to 20 tariff lines, best match first.
-	public let lines: [TariffSearchHit]
 
-	private enum CodingKeys: String, CodingKey { case edition, date, q, revision, lines }
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		edition = try values.decodeIfPresent(String.self, forKey: .edition)
-		date = try values.decodeIfPresent(String.self, forKey: .date)
-		q = try values.decode(String.self, forKey: .q)
-		revision = values.contains(.revision) ? try values.decode(String.self, forKey: .revision) : ""
-		lines = try values.decode([TariffSearchHit].self, forKey: .lines)
-	}
-	public func encode(to encoder: Encoder) throws {
-		var values = encoder.container(keyedBy: CodingKeys.self)
-		try values.encodeIfPresent(edition, forKey: .edition)
-		try values.encodeIfPresent(date, forKey: .date)
-		try values.encode(q, forKey: .q)
-		if !revision.isEmpty { try values.encode(revision, forKey: .revision) }
-		try values.encode(lines, forKey: .lines)
-	}
-}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1735,44 +1560,13 @@ public struct Iban: Codable, Sendable {
 }
 
 
-public struct Npi: Codable, Sendable {
-	public let npi: String?
-	public let valid: Bool
-	public let registered: Bool?
-	public let active: Bool?
-	public let excluded: Bool?
-	public let type: String?
-	public let name: String?
-	public let first: String?
-	public let last: String?
-	public let credential: String?
-	public let specialty: String?
-	public let taxonomy: String?
-	public let address: String?
-	public let city: String?
-	public let state: String?
-	public let stateName: String?
-	public let postal: String?
-	public let country: String?
-	public let phone: String?
-	public let deep: NpiDeep?
-}
 
 
-public struct NpiEnrollment: Codable, Sendable {
-	/// part_a, part_b, practitioner, dme, order_refer, mdpp. Nil when unknown.
-	public let type: String?
-	public let specialty: String?
-	public let state: String?
-}
 
 
-public struct NpiDeep: Codable, Sendable {
-	public let medicare: Bool?
-	public let optOut: Bool?
-	public let enrollments: [NpiEnrollment]?
-	public let deactivatedAt: String?
-}
+
+
+
 
 
 public struct BinDeep: Codable, Sendable {}

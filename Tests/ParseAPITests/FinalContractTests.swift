@@ -12,7 +12,6 @@ import FoundationNetworking
             { _ = try await $0.caller("junk") },
             { _ = try await $0.hlr("junk") },
             { _ = try await $0.email("a@example.com", deep: true) },
-            { _ = try await $0.vat("DE136695976", deep: true) },
             { _ = try await $0.address("123 Main St", deep: true) },
         ]
         for operation in operations {
