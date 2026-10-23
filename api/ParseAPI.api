@@ -842,40 +842,6 @@ CountryStates: conformsTo Swift.Encodable
 CountryStates: conformsTo Swift.Sendable
 CountryStates: conformsTo Swift.SendableMetatype
 CountryStates: struct CountryStates
-Currency.currency: let currency: String
-Currency.deep: let deep: CurrencyDeep?
-Currency.digits: let digits: Int?
-Currency.init(from:): init(from decoder: any Decoder) throws
-Currency.name: let name: String
-Currency.symbol: let symbol: String?
-Currency.symbolNative: let symbolNative: String?
-Currency: conformsTo Swift.Decodable
-Currency: conformsTo Swift.Encodable
-Currency: conformsTo Swift.Sendable
-Currency: conformsTo Swift.SendableMetatype
-Currency: struct Currency
-CurrencyDeep.countries: let countries: [String]?
-CurrencyDeep.init(from:): init(from decoder: any Decoder) throws
-CurrencyDeep.namePlural: let namePlural: String?
-CurrencyDeep.numeric: let numeric: Int?
-CurrencyDeep: conformsTo Swift.Decodable
-CurrencyDeep: conformsTo Swift.Encodable
-CurrencyDeep: conformsTo Swift.Sendable
-CurrencyDeep: conformsTo Swift.SendableMetatype
-CurrencyDeep: struct CurrencyDeep
-CurrencyRate.amount: let amount: Double?
-CurrencyRate.base: let base: String
-CurrencyRate.converted: let converted: Double?
-CurrencyRate.date: let date: String
-CurrencyRate.init(from:): init(from decoder: any Decoder) throws
-CurrencyRate.quote: let quote: String
-CurrencyRate.rate: let rate: Double
-CurrencyRate.source: let source: String?
-CurrencyRate: conformsTo Swift.Decodable
-CurrencyRate: conformsTo Swift.Encodable
-CurrencyRate: conformsTo Swift.Sendable
-CurrencyRate: conformsTo Swift.SendableMetatype
-CurrencyRate: struct CurrencyRate
 DNS.domain: let domain: String
 DNS.init(from:): init(from decoder: any Decoder) throws
 DNS.records: let records: [DNSRecord]
@@ -1435,17 +1401,6 @@ LanguageDeep: conformsTo Swift.Encodable
 LanguageDeep: conformsTo Swift.Sendable
 LanguageDeep: conformsTo Swift.SendableMetatype
 LanguageDeep: struct LanguageDeep
-MAC.init(from:): init(from decoder: any Decoder) throws
-MAC.local: let local: Bool?
-MAC.mac: let mac: String
-MAC.multicast: let multicast: Bool?
-MAC.valid: let valid: Bool
-MAC.vendor: let vendor: String?
-MAC: conformsTo Swift.Decodable
-MAC: conformsTo Swift.Encodable
-MAC: conformsTo Swift.Sendable
-MAC: conformsTo Swift.SendableMetatype
-MAC: struct MAC
 MX.domain: let domain: String
 MX.init(from:): init(from decoder: any Decoder) throws
 MX.mx: let mx: [MXRecord]
@@ -1462,45 +1417,6 @@ MXRecord: conformsTo Swift.Encodable
 MXRecord: conformsTo Swift.Sendable
 MXRecord: conformsTo Swift.SendableMetatype
 MXRecord: struct MXRecord
-Measure.amount: let amount: String?
-Measure.choices: let choices: [MeasureChoice]
-Measure.encode(to:): func encode(to encoder: any Encoder) throws
-Measure.init(from:): init(from decoder: any Decoder) throws
-Measure.measure: let measure: String
-Measure.reason: let reason: String?
-Measure.type: let type: String?
-Measure.unit: let unit: String?
-Measure.valid: let valid: Bool
-Measure: conformsTo Swift.Decodable
-Measure: conformsTo Swift.Encodable
-Measure: conformsTo Swift.Sendable
-Measure: conformsTo Swift.SendableMetatype
-Measure: struct Measure
-MeasureChoice.init(from:): init(from decoder: any Decoder) throws
-MeasureChoice.name: let name: String
-MeasureChoice.unit: let unit: String
-MeasureChoice: conformsTo Swift.Decodable
-MeasureChoice: conformsTo Swift.Encodable
-MeasureChoice: conformsTo Swift.Sendable
-MeasureChoice: conformsTo Swift.SendableMetatype
-MeasureChoice: struct MeasureChoice
-MeasureUnit.aliases: let aliases: [String]
-MeasureUnit.init(from:): init(from decoder: any Decoder) throws
-MeasureUnit.name: let name: String
-MeasureUnit.type: let type: String
-MeasureUnit.unit: let unit: String
-MeasureUnit: conformsTo Swift.Decodable
-MeasureUnit: conformsTo Swift.Encodable
-MeasureUnit: conformsTo Swift.Sendable
-MeasureUnit: conformsTo Swift.SendableMetatype
-MeasureUnit: struct MeasureUnit
-MeasureUnits.init(from:): init(from decoder: any Decoder) throws
-MeasureUnits.units: let units: [MeasureUnit]
-MeasureUnits: conformsTo Swift.Decodable
-MeasureUnits: conformsTo Swift.Encodable
-MeasureUnits: conformsTo Swift.Sendable
-MeasureUnits: conformsTo Swift.SendableMetatype
-MeasureUnits: struct MeasureUnits
 NAICS.country: let country: String
 NAICS.deep: let deep: NAICSDeep?
 NAICS.init(from:): init(from decoder: any Decoder) throws
@@ -1656,9 +1572,6 @@ ParseAPI.country(_:deep:): func country(_ code: String, deep: Bool = false) asyn
 ParseAPI.country(_:deep:lang:): func country(_ code: String, deep: Bool = false, lang: String?) async throws -> Country
 ParseAPI.countryStates(_:): func countryStates(_ code: String) async throws -> CountryStates
 ParseAPI.countryStates(_:lang:): func countryStates(_ code: String, lang: String?) async throws -> CountryStates
-ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
-ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
-ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
 ParseAPI.date(_:format:to:deep:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false) async throws -> DateInfo
 ParseAPI.date(_:format:to:deep:lang:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> DateInfo
 ParseAPI.dateToday(to:deep:): func dateToday(to: String? = nil, deep: Bool = false) async throws -> DateInfo
@@ -1694,10 +1607,6 @@ ParseAPI.ipSelf(deep:): func ipSelf(deep: Bool = false) async throws -> IP
 ParseAPI.ipSelf(deep:lang:): func ipSelf(deep: Bool = false, lang: String?) async throws -> IP
 ParseAPI.language(_:deep:): func language(_ code: String, deep: Bool = false) async throws -> Language
 ParseAPI.language(_:deep:lang:): func language(_ code: String, deep: Bool = false, lang: String?) async throws -> Language
-ParseAPI.mac(_:): func mac(_ mac: String) async throws -> MAC
-ParseAPI.measure(_:to:locale:system:): func measure(_ measure: String, to: String? = nil, locale: String? = nil, system: String? = nil) async throws -> Measure
-ParseAPI.measureUnits(query:type:unit:): func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil) async throws -> MeasureUnits
-ParseAPI.measureUnits(query:type:unit:lang:): func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil, lang: String?) async throws -> MeasureUnits
 ParseAPI.mx(_:): func mx(_ domain: String) async throws -> MX
 ParseAPI.naics(_:deep:): func naics(_ code: String, deep: Bool = false) async throws -> NAICS
 ParseAPI.naicsSearch(_:limit:deep:): func naicsSearch(_ query: String, limit: Int? = nil, deep: Bool = false) async throws -> NAICSSearch

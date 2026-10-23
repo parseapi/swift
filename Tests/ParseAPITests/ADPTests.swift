@@ -166,30 +166,6 @@ import Testing
 	}
 
 
-
-
-
-
-
-
-	@Test func currencyDepth() async throws {
-		let decoder = JSONDecoder()
-		decoder.keyDecodingStrategy = .convertFromSnakeCase
-		let core = try decoder.decode(Currency.self, from: Data(#"{"currency":"USD","name":"Fixture"}"#.utf8))
-		let locked = try decoder.decode(Currency.self, from: Data(#"{"currency":"USD","name":"Fixture","deep":{}}"#.utf8))
-		let rich = try decoder.decode(Currency.self, from: Data(#"{"currency":"USD","name":"Fixture","deep":{"numeric":0,"countries":[]}}"#.utf8))
-		#expect(core.deep == nil)
-		#expect(locked.deep != nil && locked.deep?.numeric == nil)
-		#expect(rich.deep?.numeric == 0)
-		for depth in [false, true] {
-			let stub = StubTransport(body: #"{"currency":"USD","name":"Fixture","deep":{"numeric":0,"countries":[]}}"#)
-			_ = try await makeClient(stub).currency("USD", deep: depth)
-			let query = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)?.queryItems ?? []
-			#expect(query.contains { $0.name == "deep" && $0.value == "true" } == depth)
-			#expect(stub.requests.count == 1)
-		}
-	}
-
 	@Test func languageDepth() async throws {
 		let decoder = JSONDecoder()
 		decoder.keyDecodingStrategy = .convertFromSnakeCase

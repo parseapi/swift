@@ -90,14 +90,9 @@ await expectOk("caller junk free", { try await parse.caller("555-0100") }) { $0.
 await expectOk("hlr junk free", { try await parse.hlr("555-0100") }) { $0.valid == false ? nil : "expected invalid" }
 await expectOk("domain", { try await parse.domain("gmail.com") }) { $0.available == false ? nil : "gmail available?" }
 await expectOk("asn", { try await parse.asn("AS13335") }) { $0.asn == 13335 ? nil : "wrong ASN" }
-await expectOk("mac", { try await parse.mac("00:1B:63:84:45:E6") }) { $0.valid && $0.mac == "00:1B:63:84:45:E6" && $0.local == false && $0.multicast == false ? nil : "wrong MAC" }
-await expectOk("measure", { try await parse.measure("5 ft 11 in", to: "cm") }) { $0.valid && $0.amount == "180.34" && $0.unit == "cm" ? nil : "wrong conversion" }
-await expectOk("measureUnits", { try await parse.measureUnits(unit: "m") }) { $0.units.contains { $0.unit == "m" } ? nil : "missing metre" }
 await expectOk("dns", { try await parse.dns("example.com", type: "A") }) { $0.records.contains { $0.type == "A" } ? nil : "no A records" }
 await expectOk("mx", { try await parse.mx("gmail.com") }) { $0.mx.isEmpty ? "no mx" : nil }
 await expectOk("useragent", { try await parse.useragent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") }) { $0.browser == "Chrome" ? nil : "browser \($0.browser ?? "nil")" }
-await expectOk("currency", { try await parse.currency("USD") }) { $0.symbol == "$" ? nil : "wrong symbol" }
-await expectOk("currencyRate", { try await parse.currencyRate("USD", "EUR") }) { $0.rate > 0 && $0.rate < 10 ? nil : "rate \($0.rate)" }
 await expectOk("language", { try await parse.language("en") }) { $0.language == "en" && $0.name == "English" ? nil : "wrong language" }
 await expectOk("name", { try await parse.name("BILLY O'SHALL") }) { $0.name == "Billy O'Shall" && $0.valid ? nil : "wrong name" }
 await expectOk("timezone", { try await parse.timezone("America/New_York") }) { $0.offset == "-04:00" || $0.offset == "-05:00" ? nil : "wrong offset" }

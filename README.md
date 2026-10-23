@@ -1,6 +1,6 @@
 ```swift
 // Package.swift dependencies
-.package(url: "https://github.com/parseapi/swift", from: "1.10.3")
+.package(url: "https://github.com/parseapi/swift", from: "1.10.4")
 ```
 
 ```swift
@@ -59,8 +59,7 @@ print(country.name) // Allemagne
 `lang` applies to this request. The next call uses its usual default unless it
 also supplies a language. Codes, native names, numeric facts and response
 structure stay unchanged. Missing translations keep the API's documented
-fallback. Existing `deep` rules still apply; Date `format` and Measure input
-`locale` retain their parsing meanings.
+fallback. Existing `deep` rules still apply; Date `format` retains its parsing meaning.
 
 ## Calls
 
@@ -108,7 +107,6 @@ try await parse.weather(40.7128, -74.006)
 try await parse.domain("example.com")
 try await parse.stack("example.com")
 try await parse.asn("AS13335")
-try await parse.mac("00:1B:63:84:45:E6")
 try await parse.mx("example.com")
 try await parse.dns("example.com")
 try await parse.dns("_dmarc.example.com", type: "TXT")
@@ -209,19 +207,6 @@ Timezone discovery accepts country, IANA area, exact signed offset, abbreviation
 
 Source deep adds `standard_offset`, `standard_offset_seconds`, signed `dst_offset_seconds` and `season`. Seasonal adjustments can be negative. `season` describes the current DST-flag interval, or the next within 400 days, with actual before/after transition facts and signed `change_seconds`. Unknown boundaries remain null. These fields are optional and nullable, and destination deep stays compact.
 
-## Measurements
-
-```swift
-let result = try await parse.measure("5 ft 11 in", to: "cm")
-let units = try await parse.measureUnits(unit: "m")
-```
-
-`amount` is a decimal string, such as `"180.34"`. Without `to`, the API returns the canonical unit for the measurement type. Pass `locale` for number formatting and `system` (`us` or `imperial`) when a customary unit needs context. Ambiguous input returns `valid: false`, a `reason`, and available `choices`. Invalid or incompatible target units use the normal API error.
-
-Successful HTTP JSON contains `measure`, `valid`, `type`, `amount`, and `unit`. Invalid input adds `reason`. `choices` appears only when unit alternatives are available. Typed results use `null` or the language-native empty value for an omitted reason and an empty list for omitted choices.
-
-Unit discovery accepts optional `query`, `type`, and `unit` filters. `unit` selects compatible targets. Omit the filters for the reviewed catalog. Both operations use pooled requests.
-
 ## Place statistics and optional detail
 
 Australian postal lookups include core `localities` with suburb choices (`city`, `state`, `stateName`) on every plan. Null or an omitted field means unknown, while `[]` means the reviewed reference has no eligible choices. `city` stays null when the source is ambiguous, even if there is only one eligible choice. Let the user select their suburb and keep manual entry available. These are geographic choices, not mailing-address verification. [G-NAF source, adaptations and licence](https://parseapi.com/legal/attribution#postal-au).
@@ -260,7 +245,7 @@ Choose enrichment for the question you need answered.
 | Phone | Numbering-plan state and timezone, pooled on every plan. |
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
 | Company (national number), Industry, Name, Weather | Richer reference/profile facts on paid plans. |
-| Time, Date, Currency, Language, Emoji | Optional same-question facts, pooled on every plan. |
+| Time, Date, Language, Emoji | Optional same-question facts, pooled on every plan. |
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |
 

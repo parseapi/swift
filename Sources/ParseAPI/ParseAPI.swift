@@ -75,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.10.3"
+	static let version = "1.10.4"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -569,9 +569,6 @@ public final class ParseAPI: Sendable {
 		try await get("/asn/\(enc(asn))", query: [("lang", lang)])
 	}
 
-	public func mac(_ mac: String) async throws -> MAC {
-		try await get("/mac/\(enc(mac))")
-	}
 
 	/// Look up a 2-11 digit card prefix. Preserve leading zeros in the string.
 	public func card(_ bin: String) async throws -> Card {
@@ -590,21 +587,6 @@ public final class ParseAPI: Sendable {
 		return try await get("/card/\(enc(bin))", query: [("deep", deep ? "true" : nil)])
 	}
 
-
-	/// Parse or convert a measurement. Amount is a decimal string. Without to, use the
-	/// type's canonical unit. Locale and system (us or imperial) resolve explicit ambiguity.
-	public func measure(_ measure: String, to: String? = nil, locale: String? = nil, system: String? = nil) async throws -> Measure {
-		try await get("/measure/\(enc(measure))", query: [("to", to), ("locale", locale), ("system", system)])
-	}
-
-	/// Discover reviewed units. unit filters compatible conversion targets.
-	public func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil) async throws -> MeasureUnits {
-		try await get("/measure/units", query: [("q", query), ("type", type), ("unit", unit)])
-	}
-	/// Select translated display names for this request.
-	public func measureUnits(query: String? = nil, type: String? = nil, unit: String? = nil, lang: String?) async throws -> MeasureUnits {
-		try await get("/measure/units", query: [("lang", lang)] + [("q", query), ("type", type), ("unit", unit)])
-	}
 
 	/// Published DNS records with TTLs. Omit type to check all supported types.
 	/// Type selects the question, including its CNAME chain. Pooled on every plan.
@@ -661,18 +643,7 @@ public final class ParseAPI: Sendable {
 		try await get("/industry", query: [("q", query), ("limit", limit.map(String.init))] + deepQuery(deep))
 	}
 
-	public func currency(_ code: String, deep: Bool = false) async throws -> Currency {
-		try await get("/currency/\(enc(code))", query: deepQuery(deep))
-	}
-	/// Select translated display names for this request.
-	public func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency {
-		try await get("/currency/\(enc(code))", query: [("lang", lang)] + deepQuery(deep))
-	}
 
-	/// Daily official reference cross rate. Pass date for a past day, amount to convert.
-	public func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate {
-		try await get("/currency/\(enc(base))/\(enc(quote))", query: [("date", date), ("amount", amount.map(num))])
-	}
 
 	/// Current local time, UTC by default. With to, offsetless at is source wall time.
 	public func time(_ timezone: String? = nil, at: String? = nil, to: String? = nil, deep: Bool = false) async throws -> Time {

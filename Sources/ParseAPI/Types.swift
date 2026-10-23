@@ -490,13 +490,6 @@ public struct ASN: Codable, Sendable {
 	public let countryName: String?
 }
 
-public struct MAC: Codable, Sendable {
-	public let mac: String
-	public let valid: Bool
-	public let vendor: String?
-	public let local: Bool?
-	public let multicast: Bool?
-}
 
 /// Network identity. Nil brand means unknown or ambiguous.
 public struct Card: Codable, Sendable {
@@ -592,14 +585,6 @@ public struct Useragent: Codable, Sendable {
 	public let deep: UseragentDeep?
 }
 
-public struct Currency: Codable, Sendable {
-	public let currency: String
-	public let name: String
-	public let symbol: String?
-	public let symbolNative: String?
-	public let digits: Int?
-	public let deep: CurrencyDeep?
-}
 
 /// One language by BCP 47 shortest code (en) or ISO 639-3 (eng). Codes are lowercase.
 public struct Language: Codable, Sendable {
@@ -624,15 +609,6 @@ public struct Name: Codable, Sendable {
 	public let deep: NameDeep?
 }
 
-public struct CurrencyRate: Codable, Sendable {
-	public let base: String
-	public let quote: String
-	public let rate: Double
-	public let date: String
-	public let amount: Double?
-	public let converted: Double?
-	public let source: String?
-}
 
 public struct TimezoneNextDST: Codable, Sendable {
 	public let at: String
@@ -987,56 +963,6 @@ public struct Company: Codable, Sendable {
 
 public struct AddressDeep: Codable, Sendable {}
 
-public struct MeasureChoice: Codable, Sendable {
-	public let unit: String
-	public let name: String
-}
-
-public struct Measure: Codable, Sendable {
-	public let measure: String
-	public let valid: Bool
-	public let type: String?
-	/// Decimal string preserving the API's precision.
-	public let amount: String?
-	public let unit: String?
-	public let reason: String?
-	public let choices: [MeasureChoice]
-
-	private enum CodingKeys: String, CodingKey { case measure, valid, type, amount, unit, reason, choices }
-
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		measure = try values.decode(String.self, forKey: .measure)
-		valid = try values.decode(Bool.self, forKey: .valid)
-		type = try values.decodeIfPresent(String.self, forKey: .type)
-		amount = try values.decodeIfPresent(String.self, forKey: .amount)
-		unit = try values.decodeIfPresent(String.self, forKey: .unit)
-		reason = try values.decodeIfPresent(String.self, forKey: .reason)
-		choices = try values.decodeIfPresent([MeasureChoice].self, forKey: .choices) ?? []
-	}
-
-	public func encode(to encoder: Encoder) throws {
-		var values = encoder.container(keyedBy: CodingKeys.self)
-		try values.encode(measure, forKey: .measure)
-		try values.encode(valid, forKey: .valid)
-		try values.encode(type, forKey: .type)
-		try values.encode(amount, forKey: .amount)
-		try values.encode(unit, forKey: .unit)
-		try values.encodeIfPresent(reason, forKey: .reason)
-		if !choices.isEmpty { try values.encode(choices, forKey: .choices) }
-	}
-}
-
-public struct MeasureUnit: Codable, Sendable {
-	public let unit: String
-	public let name: String
-	public let type: String
-	public let aliases: [String]
-}
-
-public struct MeasureUnits: Codable, Sendable {
-	public let units: [MeasureUnit]
-}
 
 public struct NAICSChild: Codable, Sendable {
 	public let naics: String
@@ -1262,13 +1188,6 @@ public struct HLRDeep: Codable, Sendable {
 	public let originalNetwork: String?
 	public let mcc: String?
 	public let mnc: String?
-}
-
-
-public struct CurrencyDeep: Codable, Sendable {
-	public let numeric: Int?
-	public let namePlural: String?
-	public let countries: [String]?
 }
 
 
