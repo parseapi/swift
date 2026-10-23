@@ -75,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.10.2"
+	static let version = "1.10.3"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -502,10 +502,7 @@ public final class ParseAPI: Sendable {
 
 
 
-	/// Checksum and structure. bank and branch are codes inside the number, not names.
-	public func iban(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Iban {
-		try await get("/iban/\(enc(iban))", query: [("country", country)] + deepQuery(deep))
-	}
+
 
 
 
@@ -519,23 +516,11 @@ public final class ParseAPI: Sendable {
 
 
 
-	public func bank(_ iban: String, country: String? = nil, deep: Bool = false) async throws -> Bank {
-		var body: [String: Any] = ["iban": iban]
-		if let country { body["country"] = country }
-		if deep { body["deep"] = true }
-		return try await get("/bank", body: JSONSerialization.data(withJSONObject: body))
-	}
 
-	/// Check supported US ACH format, not account existence or ACH eligibility.
-	public func bankUsAch(_ input: BankUsAchInput) async throws -> BankUsAch {
-		let body: [String: Any] = ["format": "us_ach", "country": "US", "routing": input.routing, "account": input.account]
-		return try await get("/bank", body: JSONSerialization.data(withJSONObject: body))
-	}
 
-	/// Required collection fields; an omitted format selects IBAN.
-	public func bankRequirements(_ country: String, format: String? = nil) async throws -> BankRequirements {
-		try await get("/bank/requirements", query: [("country", country), ("format", format)])
-	}
+
+
+
 
 
 

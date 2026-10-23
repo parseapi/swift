@@ -83,10 +83,6 @@ await expectOk("email", { try await parse.email("hello@gmail.com") }) { $0.valid
 await expectOk("card", { try await parse.card("00 0000") }) {
 	$0.bin == "000000" ? nil : "BIN echo mismatch"
 }
-await expectOk("bank", { try await parse.bank("DE89370400440532013000") }) {
-	$0.valid && $0.country == "DE" && $0.bank == "37040044" ? nil : "not valid DE"
-}
-await expectOk("bank junk", { try await parse.bank("hello") }) { $0.valid ? "expected invalid" : nil }
 await expectOk("phone", { try await parse.phone("+14155552671") }) { $0.phone == "+14155552671" ? nil : "wrong phone" }
 // Metered core siblings: junk numbers answer 200 valid false, free, no vendor dip.
 await expectOk("carrier junk free", { try await parse.carrier("555-0100") }) { $0.valid == false ? nil : "expected invalid" }

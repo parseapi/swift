@@ -82,11 +82,7 @@ func makeClient(
 
 
 
-	@Test func ibanCountry() async throws {
-		let stub = StubTransport(body: #"{"iban":"DE89370400440532013000","valid":true,"country":"DE","checksum":"89","bank":"37040044","branch":null,"account":"0532013000"}"#)
-		_ = try await makeClient(stub).bank("89370400440532013000", country: "DE")
-		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/bank")
-	}
+
 
 
 
