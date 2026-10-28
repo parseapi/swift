@@ -779,8 +779,11 @@ CountryDeep.emergency: let emergency: CountryEmergency?
 CountryDeep.fifa: let fifa: String?
 CountryDeep.frequency: let frequency: Int?
 CountryDeep.fullName: let fullName: String?
+CountryDeep.gdp: let gdp: Double?
+CountryDeep.gdpPerCapita: let gdpPerCapita: Double?
 CountryDeep.highestPoint: let highestPoint: CountryElevationPoint?
 CountryDeep.init(from:): init(from decoder: any Decoder) throws
+CountryDeep.internetUsers: let internetUsers: Double?
 CountryDeep.ioc: let ioc: String?
 CountryDeep.iso3: let iso3: String?
 CountryDeep.landArea: let landArea: Double?
@@ -789,6 +792,7 @@ CountryDeep.numeric: let numeric: Int?
 CountryDeep.plate: let plate: String?
 CountryDeep.plugs: let plugs: [String]?
 CountryDeep.population: let population: Int?
+CountryDeep.populationGrowth: let populationGrowth: Double?
 CountryDeep.populationPeriod: let populationPeriod: String?
 CountryDeep.postalFormat: let postalFormat: String?
 CountryDeep.postalRegex: let postalRegex: String?
@@ -800,6 +804,7 @@ CountryDeep.taxIdRegex: let taxIdRegex: String?
 CountryDeep.taxRate: let taxRate: Double?
 CountryDeep.tld: let tld: String?
 CountryDeep.units: let units: String?
+CountryDeep.urbanPopulation: let urbanPopulation: Double?
 CountryDeep.voltage: let voltage: Int?
 CountryDeep.waterArea: let waterArea: Double?
 CountryDeep.weekStart: let weekStart: String?

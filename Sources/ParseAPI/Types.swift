@@ -1010,6 +1010,14 @@ public struct NAICSSearch: Codable, Sendable {
 
 
 public struct CountryDeep: Codable, Sendable {
+	/// Latest available GDP and GDP per person in current US dollars.
+	public let gdp: Double?
+	public let gdpPerCapita: Double?
+	/// Annual percent change; negative values indicate decline.
+	public let populationGrowth: Double?
+	/// Shares of population, from 0 to 100.
+	public let urbanPopulation: Double?
+	public let internetUsers: Double?
 	public let iso3: String?
 	public let numeric: Int?
 	public let fullName: String?
@@ -1054,7 +1062,7 @@ public struct CountryDeep: Codable, Sendable {
 	public let plate: String?
 
 	private enum CodingKeys: String, CodingKey {
-		case iso3, numeric, fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, taxRate, taxIdFormat, taxIdRegex, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
+		case gdp, gdpPerCapita, populationGrowth, urbanPopulation, internetUsers, iso3, numeric, fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, taxRate, taxIdFormat, taxIdRegex, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
 	}
 }
 
