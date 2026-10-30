@@ -1,6 +1,6 @@
 ```swift
 // Package.swift dependencies
-.package(url: "https://github.com/parseapi/swift", from: "1.10.6")
+.package(url: "https://github.com/parseapi/swift", from: "1.10.7")
 ```
 
 ```swift
@@ -105,6 +105,7 @@ try await parse.elevation(35.2271, -80.8431)
 try await parse.point(36.0726, -79.792)
 try await parse.weather(40.7128, -74.006)
 try await parse.domain("example.com")
+try await parse.domainResult("example.com", deep: true)
 try await parse.stack("example.com")
 try await parse.asn("AS13335")
 try await parse.mx("example.com")
@@ -249,6 +250,8 @@ Choose enrichment for the question you need answered.
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |
 
+Use `domainResult` when availability may be unknown: `available` is `true`, `false`, or `nil`. It makes the same single Domain request and preserves partial registration detail. The existing `domain` method keeps its `Bool` property and decoding behavior; an unknown availability result cannot decode into that model.
+
 Email deep includes mailbox status and the reason for the result, plus a suggested first name, no-reply flag, plus-address tag and mail service. The suggested name is not a verified identity. Unavailable details are null.
 
 Reasons include `accepted`, `invalid_format`, `invalid_domain`, `no_mail_server`, `mailbox_not_found`, `mailbox_disabled`, `mailbox_full`, `catchall`, `disposable`, `temporary_failure`, `rejected` and `unconfirmed`.
@@ -348,7 +351,7 @@ let result = try await parse.stack("example.com")
 
 Pass a public hostname without a scheme, path, port or IP address. Stack returns the homepage URL and `checked_at` time, then eight technology arrays: `cms`, `servers`, `frameworks`, `ecommerce`, `analytics`, `chat`, `payments` and `hosting`. Each entry contains a `technology` code, name and nullable version. Multiple CMSs or servers remain separate entries. Empty arrays mean no matches in the checked pages. An unsuccessful check returns null arrays and a null `checked_at`.
 
-`scope` identifies `homepage` or `site` coverage. `pages` counts successfully checked HTML pages. `partial` is true for a homepage-only or incomplete bounded site check, false when the known in-scope candidates finished, and null when no check succeeded. False does not guarantee that every page on the website was discovered.
+Current Stack responses omit `scope`, `pages` and `partial`. These properties remain available for existing applications: absent `scope` decodes as an empty string, absent `pages` as zero, and absent `partial` as `nil`. The defaults do not describe observed coverage. Older responses that supply these fields keep their values.
 
 The complete technology result is included in the core response. The generic `deep=true` option adds only an empty object and is unnecessary for Stack. Successful checks may be reused for up to 24 hours. `pretty` optionally formats the wire JSON. Each lookup uses one request and API version 2.0.0 selected by this client.
 

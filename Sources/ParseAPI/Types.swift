@@ -24,6 +24,11 @@ public struct IPDeep: Codable, Sendable {
 	public let tor: Bool?
 	public let vpn: Bool?
 	public let provider: String?
+	/// Present only when supported. District is qualified by the response country.
+	public let district: String?
+	public let districtName: String?
+	public let censusDivision: String?
+	public let censusRegion: String?
 }
 
 public struct IP: Codable, Sendable {
@@ -453,7 +458,9 @@ public struct Stack: Codable, Sendable {
 	public let domain: String
 	public let url: String
 	public let checkedAt: String?
+	/// No longer returned. Empty when absent. Retained for source compatibility.
 	public let scope: String
+	/// No longer returned. Zero when absent, not a measured page count.
 	public let pages: Int
 	public let partial: Bool?
 	public let cms: [StackTechnology]?
@@ -465,6 +472,51 @@ public struct Stack: Codable, Sendable {
 	public let payments: [StackTechnology]?
 	public let hosting: [StackTechnology]?
 	public let deep: StackDeep?
+}
+
+extension Stack {
+	private enum CodingKeys: String, CodingKey {
+		case domain, url, checkedAt, scope, pages, partial, cms, servers, frameworks, ecommerce, analytics, chat, payments, hosting, deep
+	}
+	public init(from decoder: any Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		domain = try values.decode(String.self, forKey: .domain)
+		url = try values.decode(String.self, forKey: .url)
+		checkedAt = try values.decodeIfPresent(String.self, forKey: .checkedAt)
+		scope = values.contains(.scope) ? try values.decode(String.self, forKey: .scope) : ""
+		pages = values.contains(.pages) ? try values.decode(Int.self, forKey: .pages) : 0
+		partial = try values.decodeIfPresent(Bool.self, forKey: .partial)
+		cms = try values.decodeIfPresent([StackTechnology].self, forKey: .cms)
+		servers = try values.decodeIfPresent([StackTechnology].self, forKey: .servers)
+		frameworks = try values.decodeIfPresent([StackTechnology].self, forKey: .frameworks)
+		ecommerce = try values.decodeIfPresent([StackTechnology].self, forKey: .ecommerce)
+		analytics = try values.decodeIfPresent([StackTechnology].self, forKey: .analytics)
+		chat = try values.decodeIfPresent([StackTechnology].self, forKey: .chat)
+		payments = try values.decodeIfPresent([StackTechnology].self, forKey: .payments)
+		hosting = try values.decodeIfPresent([StackTechnology].self, forKey: .hosting)
+		deep = try values.decodeIfPresent(StackDeep.self, forKey: .deep)
+	}
+	public func encode(to encoder: any Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encode(domain, forKey: .domain)
+		try values.encode(url, forKey: .url)
+		try values.encode(checkedAt, forKey: .checkedAt)
+		if !scope.isEmpty {
+			try values.encode(scope, forKey: .scope)
+			try values.encode(pages, forKey: .pages)
+			try values.encode(partial, forKey: .partial)
+		}
+		try values.encode(cms, forKey: .cms)
+		try values.encode(servers, forKey: .servers)
+		try values.encode(frameworks, forKey: .frameworks)
+		try values.encode(ecommerce, forKey: .ecommerce)
+		try values.encode(analytics, forKey: .analytics)
+		try values.encode(chat, forKey: .chat)
+		try values.encode(payments, forKey: .payments)
+		try values.encode(hosting, forKey: .hosting)
+		try values.encodeIfPresent(deep, forKey: .deep)
+	}
+
 }
 
 public struct DomainRegistration: Codable, Sendable {
@@ -484,6 +536,13 @@ public struct DomainDeep: Codable, Sendable {
 public struct Domain: Codable, Sendable {
 	public let domain: String
 	public let available: Bool
+	public let deep: DomainDeep?
+}
+
+/// Domain availability with nil for an unknown registration result.
+public struct DomainResult: Codable, Sendable {
+	public let domain: String
+	public let available: Bool?
 	public let deep: DomainDeep?
 }
 

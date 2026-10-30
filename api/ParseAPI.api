@@ -955,6 +955,15 @@ DomainRegistration: conformsTo Swift.Encodable
 DomainRegistration: conformsTo Swift.Sendable
 DomainRegistration: conformsTo Swift.SendableMetatype
 DomainRegistration: struct DomainRegistration
+DomainResult.available: let available: Bool?
+DomainResult.deep: let deep: DomainDeep?
+DomainResult.domain: let domain: String
+DomainResult.init(from:): init(from decoder: any Decoder) throws
+DomainResult: conformsTo Swift.Decodable
+DomainResult: conformsTo Swift.Encodable
+DomainResult: conformsTo Swift.Sendable
+DomainResult: conformsTo Swift.SendableMetatype
+DomainResult: struct DomainResult
 Elevation.elevation: let elevation: Double?
 Elevation.elevationFt: let elevationFt: Double?
 Elevation.init(from:): init(from decoder: any Decoder) throws
@@ -1365,8 +1374,12 @@ IP: conformsTo Swift.Encodable
 IP: conformsTo Swift.Sendable
 IP: conformsTo Swift.SendableMetatype
 IP: struct IP
+IPDeep.censusDivision: let censusDivision: String?
+IPDeep.censusRegion: let censusRegion: String?
 IPDeep.city: let city: String?
 IPDeep.datacenter: let datacenter: Bool?
+IPDeep.district: let district: String?
+IPDeep.districtName: let districtName: String?
 IPDeep.init(from:): init(from decoder: any Decoder) throws
 IPDeep.provider: let provider: String?
 IPDeep.registry: let registry: String?
@@ -1585,6 +1598,7 @@ ParseAPI.district(_:country:state:deep:): func district(_ code: String, country:
 ParseAPI.district(_:country:state:deep:lang:): func district(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> District
 ParseAPI.dns(_:type:): func dns(_ domain: String, type: String? = nil) async throws -> DNS
 ParseAPI.domain(_:deep:): func domain(_ domain: String, deep: Bool = false) async throws -> Domain
+ParseAPI.domainResult(_:deep:): func domainResult(_ domain: String, deep: Bool = false) async throws -> DomainResult
 ParseAPI.elevation(_:_:): func elevation(_ lat: Double, _ lon: Double) async throws -> Elevation
 ParseAPI.email(_:deep:): func email(_ email: String, deep: Bool = false) async throws -> Email
 ParseAPI.emoji(_:deep:): func emoji(_ emoji: String, deep: Bool = false) async throws -> Emoji
@@ -1870,6 +1884,7 @@ Stack.cms: let cms: [StackTechnology]?
 Stack.deep: let deep: StackDeep?
 Stack.domain: let domain: String
 Stack.ecommerce: let ecommerce: [StackTechnology]?
+Stack.encode(to:): func encode(to encoder: any Encoder) throws
 Stack.frameworks: let frameworks: [StackTechnology]?
 Stack.hosting: let hosting: [StackTechnology]?
 Stack.init(from:): init(from decoder: any Decoder) throws

@@ -75,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.10.6"
+	static let version = "1.10.7"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -558,6 +558,12 @@ public final class ParseAPI: Sendable {
 
 	/// Check whether a domain is registered. Deep adds registration dates, registrar, status and DNSSEC on paid plans.
 	public func domain(_ domain: String, deep: Bool = false) async throws -> Domain {
+		try await get("/domain/\(enc(domain))", query: deepQuery(deep))
+	}
+
+	/// Preserve unknown availability as nil in the same Domain lookup.
+	/// The existing domain method retains its nonoptional Bool result and decoding behavior.
+	public func domainResult(_ domain: String, deep: Bool = false) async throws -> DomainResult {
 		try await get("/domain/\(enc(domain))", query: deepQuery(deep))
 	}
 
