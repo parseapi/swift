@@ -44,5 +44,5 @@ import Testing
     #expect(districtStub.requests.count == 1)
     #expect(districtStub.requests[0].url!.absoluteString.hasSuffix("/district/36061?country=US&state=NY"))
     let domain = try read(Domain.self, "domain_unregistered")
-    #expect(domain.available && domain.deep?.registration?.registered == false && domain.deep?.registration?.dnssec == nil)
+    #expect(domain.available == true && domain.deep?.registration?.registered == false && domain.deep?.registration?.dnssec == nil)
 }
