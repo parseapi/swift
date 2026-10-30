@@ -16,7 +16,7 @@ import Testing
 			let result = try await client.stack("bücher.example", deep: true, pretty: true)
 			#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/stack/b%C3%BCcher.example?deep=true&pretty=true")
 			#expect(stub.requests[0].value(forHTTPHeaderField: "Parse-Version") == "2.0.0")
-			if i == 0 || i == 3 { #expect(result.cms == nil && result.servers == nil && result.pages == 0 && result.partial == nil) }
+			if i == 0 || i == 3 { #expect(result.cms == nil && result.servers == nil) }
 			else if i != 2 { #expect(result.cms?.isEmpty == true && result.servers?.isEmpty == true) }
 			for group in [result.ecommerce, result.analytics, result.chat, result.payments, result.hosting] {
 				if i == 0 || i == 3 { #expect(group == nil) }
@@ -25,18 +25,18 @@ import Testing
 			}
 			switch i {
 			case 0: #expect(result.frameworks == nil && result.checkedAt == nil && result.deep == nil)
-			case 1: #expect(result.scope == "site" && result.pages == 2 && result.partial == false && result.frameworks?.isEmpty == true && result.deep != nil)
+			case 1: #expect(result.frameworks?.isEmpty == true && result.deep != nil)
 			case 2:
 				#expect(result.checkedAt != nil)
-				#expect(result.scope == "site" && result.pages == 3 && result.partial == true)
+
 				#expect(result.cms?.count == 2 && result.servers?.count == 2 && result.frameworks?.count == 2 && result.deep == nil)
 				#expect(result.cms?.first?.technology == "wordpress" && result.cms?.first?.name == "WordPress" && result.cms?.first?.version == "6.8")
 				#expect(result.cms?.last?.technology == "ghost" && result.cms?.last?.version == nil)
 				#expect(result.servers?.first?.version == "1.26.2" && result.servers?.last?.technology == "apache")
 				#expect(result.frameworks?.first?.version == nil)
-			case 3: #expect(result.scope == "future-scope" && result.frameworks == nil && result.deep != nil)
+			case 3: #expect(result.frameworks == nil && result.deep != nil)
 			default:
-				#expect(result.scope == "homepage" && result.pages == 1 && result.partial == true)
+
 				#expect(result.deep != nil && result.frameworks?.first?.technology == "nextjs")
 				#expect(result.frameworks?.first?.version == nil)
 			}

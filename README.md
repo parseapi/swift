@@ -349,9 +349,9 @@ before dispatch, accepted input is forwarded unchanged. Never send a full card n
 let result = try await parse.stack("example.com")
 ```
 
-Pass a public hostname without a scheme, path, port or IP address. Stack returns the homepage URL and `checked_at` time, then eight technology arrays: `cms`, `servers`, `frameworks`, `ecommerce`, `analytics`, `chat`, `payments` and `hosting`. Each entry contains a `technology` code, name and nullable version. Multiple CMSs or servers remain separate entries. Empty arrays mean no matches in the checked pages. An unsuccessful check returns null arrays and a null `checked_at`.
+Pass a public hostname without a scheme, path, port or IP address. Stack returns the homepage URL and `checked_at` time, then eight technology arrays: `cms`, `servers`, `frameworks`, `ecommerce`, `analytics`, `chat`, `payments` and `hosting`. Each entry contains a `technology` code, name and nullable version. Multiple CMSs or servers remain separate entries. Empty arrays mean no matches on the checked homepage. An unsuccessful check returns null arrays and a null `checked_at`.
 
-Current Stack responses omit `scope`, `pages` and `partial`. These properties remain available for existing applications: absent `scope` decodes as an empty string, absent `pages` as zero, and absent `partial` as `nil`. The defaults do not describe observed coverage. Older responses that supply these fields keep their values.
+Stack checks static homepage HTML and response headers. Detections describe the checked homepage.
 
 The complete technology result is included in the core response. The generic `deep=true` option adds only an empty object and is unnecessary for Stack. Successful checks may be reused for up to 24 hours. `pretty` optionally formats the wire JSON. Each lookup uses one request and API version 2.0.0 selected by this client.
 

@@ -944,7 +944,6 @@ District.longitude: let longitude: Double?
 District.name: let name: String
 District.state: let state: String?
 District.stateName: let stateName: String?
-District.timezone: let timezone: String?
 District.timezones: let timezones: [String]
 District.type: let type: String?
 District: conformsTo Swift.Decodable
@@ -1927,10 +1926,7 @@ Stack.encode(to:): func encode(to encoder: any Encoder) throws
 Stack.frameworks: let frameworks: [StackTechnology]?
 Stack.hosting: let hosting: [StackTechnology]?
 Stack.init(from:): init(from decoder: any Decoder) throws
-Stack.pages: let pages: Int
-Stack.partial: let partial: Bool?
 Stack.payments: let payments: [StackTechnology]?
-Stack.scope: let scope: String
 Stack.servers: let servers: [StackTechnology]?
 Stack.url: let url: String
 Stack: conformsTo Swift.Decodable
@@ -1963,7 +1959,6 @@ State.longitude: let longitude: Double?
 State.name: let name: String
 State.nameLocal: let nameLocal: String?
 State.state: let state: String
-State.timezone: let timezone: String?
 State.timezones: let timezones: [String]
 State.type: let type: String?
 State: conformsTo Swift.Decodable

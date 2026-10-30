@@ -191,7 +191,6 @@ public struct State: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let timezone: String?
 	public let timezones: [String]
 	public let iso31662: String?
 	public let deep: StateDeep?
@@ -222,7 +221,6 @@ public struct District: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let timezone: String?
 	public let timezones: [String]
 	public let deep: DistrictDeep?
 }
@@ -539,11 +537,6 @@ public struct Stack: Codable, Sendable {
 	public let domain: String
 	public let url: String
 	public let checkedAt: String?
-	/// No longer returned. Empty when absent. Retained for source compatibility.
-	public let scope: String
-	/// No longer returned. Zero when absent, not a measured page count.
-	public let pages: Int
-	public let partial: Bool?
 	public let cms: [StackTechnology]?
 	public let servers: [StackTechnology]?
 	public let frameworks: [StackTechnology]?
@@ -557,16 +550,13 @@ public struct Stack: Codable, Sendable {
 
 extension Stack {
 	private enum CodingKeys: String, CodingKey {
-		case domain, url, checkedAt, scope, pages, partial, cms, servers, frameworks, ecommerce, analytics, chat, payments, hosting, deep
+		case domain, url, checkedAt, cms, servers, frameworks, ecommerce, analytics, chat, payments, hosting, deep
 	}
 	public init(from decoder: any Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		domain = try values.decode(String.self, forKey: .domain)
 		url = try values.decode(String.self, forKey: .url)
 		checkedAt = try values.decodeIfPresent(String.self, forKey: .checkedAt)
-		scope = values.contains(.scope) ? try values.decode(String.self, forKey: .scope) : ""
-		pages = values.contains(.pages) ? try values.decode(Int.self, forKey: .pages) : 0
-		partial = try values.decodeIfPresent(Bool.self, forKey: .partial)
 		cms = try values.decodeIfPresent([StackTechnology].self, forKey: .cms)
 		servers = try values.decodeIfPresent([StackTechnology].self, forKey: .servers)
 		frameworks = try values.decodeIfPresent([StackTechnology].self, forKey: .frameworks)
@@ -582,11 +572,6 @@ extension Stack {
 		try values.encode(domain, forKey: .domain)
 		try values.encode(url, forKey: .url)
 		try values.encode(checkedAt, forKey: .checkedAt)
-		if !scope.isEmpty {
-			try values.encode(scope, forKey: .scope)
-			try values.encode(pages, forKey: .pages)
-			try values.encode(partial, forKey: .partial)
-		}
 		try values.encode(cms, forKey: .cms)
 		try values.encode(servers, forKey: .servers)
 		try values.encode(frameworks, forKey: .frameworks)
