@@ -739,7 +739,8 @@ ContinentCountries: conformsTo Swift.SendableMetatype
 ContinentCountries: struct ContinentCountries
 ContinentCountryItem.callingCode: let callingCode: String?
 ContinentCountryItem.country: let country: String
-ContinentCountryItem.emoji: let emoji: String?
+ContinentCountryItem.emoji: var emoji: String? { get }
+ContinentCountryItem.flag: let flag: String?
 ContinentCountryItem.init(from:): init(from decoder: any Decoder) throws
 ContinentCountryItem.name: let name: String
 ContinentCountryItem: conformsTo Swift.Decodable
@@ -747,24 +748,47 @@ ContinentCountryItem: conformsTo Swift.Encodable
 ContinentCountryItem: conformsTo Swift.Sendable
 ContinentCountryItem: conformsTo Swift.SendableMetatype
 ContinentCountryItem: struct ContinentCountryItem
+Country.blocs: let blocs: [String]?
+Country.borders: let borders: [String]?
 Country.callingCode: let callingCode: String?
+Country.capital: let capital: CountryCapital?
+Country.capitalLat: var capitalLat: Double? { get }
+Country.capitalLon: var capitalLon: Double? { get }
 Country.continent: let continent: String?
 Country.country: let country: String
 Country.currency: let currency: String?
 Country.currencyName: let currencyName: String?
 Country.currencySymbol: let currencySymbol: String?
 Country.deep: let deep: CountryDeep?
-Country.emoji: let emoji: String?
+Country.demonym: let demonym: String?
+Country.emoji: var emoji: String? { get }
+Country.flag: let flag: String?
+Country.fullName: var fullName: String? { get }
 Country.init(from:): init(from decoder: any Decoder) throws
+Country.iso3: let iso3: String?
 Country.languages: let languages: [String]
 Country.name: let name: String
+Country.nameFull: let nameFull: String?
 Country.nameLocal: let nameLocal: String?
+Country.numeric: let numeric: Int?
+Country.region: let region: String?
+Country.subregion: let subregion: String?
 Country.timezones: let timezones: [String]?
 Country: conformsTo Swift.Decodable
 Country: conformsTo Swift.Encodable
 Country: conformsTo Swift.Sendable
 Country: conformsTo Swift.SendableMetatype
 Country: struct Country
+CountryCapital.encode(to:): func encode(to encoder: any Encoder) throws
+CountryCapital.init(from:): init(from decoder: any Decoder) throws
+CountryCapital.lat: let lat: Double?
+CountryCapital.lon: let lon: Double?
+CountryCapital.name: let name: String?
+CountryCapital: conformsTo Swift.Decodable
+CountryCapital: conformsTo Swift.Encodable
+CountryCapital: conformsTo Swift.Sendable
+CountryCapital: conformsTo Swift.SendableMetatype
+CountryCapital: struct CountryCapital
 CountryDeep.area: let area: Double?
 CountryDeep.blocs: let blocs: [String]?
 CountryDeep.borders: let borders: [String]?
@@ -775,15 +799,19 @@ CountryDeep.coastline: let coastline: Double?
 CountryDeep.demonym: let demonym: String?
 CountryDeep.drivingSide: let drivingSide: String?
 CountryDeep.elevation: let elevation: Double?
+CountryDeep.elevationAverage: let elevationAverage: Double?
 CountryDeep.emergency: let emergency: CountryEmergency?
 CountryDeep.fifa: let fifa: String?
 CountryDeep.frequency: let frequency: Int?
 CountryDeep.fullName: let fullName: String?
 CountryDeep.gdp: let gdp: Double?
 CountryDeep.gdpPerCapita: let gdpPerCapita: Double?
+CountryDeep.gdpPerCapitaUsd: let gdpPerCapitaUsd: Double?
+CountryDeep.gdpUsd: let gdpUsd: Double?
 CountryDeep.highestPoint: let highestPoint: CountryElevationPoint?
 CountryDeep.init(from:): init(from decoder: any Decoder) throws
 CountryDeep.internetUsers: let internetUsers: Double?
+CountryDeep.internetUsersPercent: let internetUsersPercent: Double?
 CountryDeep.ioc: let ioc: String?
 CountryDeep.iso3: let iso3: String?
 CountryDeep.landArea: let landArea: Double?
@@ -793,18 +821,20 @@ CountryDeep.plate: let plate: String?
 CountryDeep.plugs: let plugs: [String]?
 CountryDeep.population: let population: Int?
 CountryDeep.populationGrowth: let populationGrowth: Double?
+CountryDeep.populationGrowthPercent: let populationGrowthPercent: Double?
 CountryDeep.populationPeriod: let populationPeriod: String?
 CountryDeep.postalFormat: let postalFormat: String?
 CountryDeep.postalRegex: let postalRegex: String?
 CountryDeep.region: let region: String?
 CountryDeep.subregion: let subregion: String?
-CountryDeep.tax: let tax: String?
+CountryDeep.tax: let tax: CountryTax?
 CountryDeep.taxIdFormat: let taxIdFormat: String?
 CountryDeep.taxIdRegex: let taxIdRegex: String?
-CountryDeep.taxRate: let taxRate: Double?
+CountryDeep.taxRate: var taxRate: Double? { get }
 CountryDeep.tld: let tld: String?
 CountryDeep.units: let units: String?
 CountryDeep.urbanPopulation: let urbanPopulation: Double?
+CountryDeep.urbanPopulationPercent: let urbanPopulationPercent: Double?
 CountryDeep.voltage: let voltage: Int?
 CountryDeep.waterArea: let waterArea: Double?
 CountryDeep.weekStart: let weekStart: String?
@@ -847,6 +877,15 @@ CountryStates: conformsTo Swift.Encodable
 CountryStates: conformsTo Swift.Sendable
 CountryStates: conformsTo Swift.SendableMetatype
 CountryStates: struct CountryStates
+CountryTax.encode(to:): func encode(to encoder: any Encoder) throws
+CountryTax.init(from:): init(from decoder: any Decoder) throws
+CountryTax.name: let name: String?
+CountryTax.rate: let rate: Double?
+CountryTax: conformsTo Swift.Decodable
+CountryTax: conformsTo Swift.Encodable
+CountryTax: conformsTo Swift.Sendable
+CountryTax: conformsTo Swift.SendableMetatype
+CountryTax: struct CountryTax
 DNS.domain: let domain: String
 DNS.init(from:): init(from decoder: any Decoder) throws
 DNS.records: let records: [DNSRecord]

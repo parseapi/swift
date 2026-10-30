@@ -58,15 +58,39 @@ public struct Continent: Codable, Sendable {
 }
 
 public struct ContinentCountryItem: Codable, Sendable {
-	public let country: String
-	public let name: String
-	public let emoji: String?
-	public let callingCode: String?
+ public let country: String
+ public let name: String
+ public let flag: String?
+ public var emoji: String? { flag }
+ public let callingCode: String?
+ private enum CodingKeys:String,CodingKey {case country,name,flag,callingCode}
+ private enum LegacyKeys:String,CodingKey {case emoji}
+ public init(from decoder:any Decoder)throws {
+  let values=try decoder.container(keyedBy:CodingKeys.self)
+  country=try values.decode(String.self,forKey:.country);name=try values.decode(String.self,forKey:.name)
+  callingCode=try values.decodeIfPresent(String.self,forKey:.callingCode)
+  flag=try values.contains(.flag) ? values.decodeIfPresent(String.self,forKey:.flag) : decoder.container(keyedBy:LegacyKeys.self).decodeIfPresent(String.self,forKey:.emoji)
+ }
 }
 
 public struct ContinentCountries: Codable, Sendable {
 	public let continent: String
 	public let countries: [ContinentCountryItem]
+}
+
+public struct CountryCapital: Codable, Sendable {
+ public let name:String?
+ public let lat:Double?
+ public let lon:Double?
+ private enum CodingKeys:String,CodingKey {case name,lat,lon}
+ public func encode(to encoder:any Encoder)throws {var values=encoder.container(keyedBy:CodingKeys.self);try values.encode(name,forKey:.name);try values.encode(lat,forKey:.lat);try values.encode(lon,forKey:.lon)}
+}
+public struct CountryTax: Codable, Sendable {
+ public let name:String?
+ /// Standard national reference percentage, not calculated tax due.
+ public let rate:Double?
+ private enum CodingKeys:String,CodingKey {case name,rate}
+ public func encode(to encoder:any Encoder)throws {var values=encoder.container(keyedBy:CodingKeys.self);try values.encode(name,forKey:.name);try values.encode(rate,forKey:.rate)}
 }
 
 public struct Country: Codable, Sendable {
@@ -78,10 +102,67 @@ public struct Country: Codable, Sendable {
 	public let currencyName: String?
 	public let currencySymbol: String?
 	public let callingCode: String?
-	public let emoji: String?
+	public let flag: String?
+	public var emoji: String? { flag }
 	public let languages: [String]
 	public let deep: CountryDeep?
 	public let timezones: [String]?
+	public let iso3: String?
+	public let numeric: Int?
+	public let nameFull: String?
+	/// Legacy source getter; encoded JSON uses name_full only.
+	public var fullName: String? { nameFull }
+	public let demonym: String?
+	public let region: String?
+	public let subregion: String?
+	public let capital: CountryCapital?
+	public var capitalLat: Double? { capital?.lat }
+	public var capitalLon: Double? { capital?.lon }
+	public let borders: [String]?
+	public let blocs: [String]?
+	private enum CodingKeys: String, CodingKey {
+		case country, name, nameLocal, continent, currency, currencyName, currencySymbol, callingCode, flag, languages, deep, timezones, iso3, numeric, demonym, region, subregion, capital, borders, blocs
+		case nameFull
+	}
+	private enum LegacyCodingKeys: String, CodingKey { case fullName, emoji, capitalLat, capitalLon }
+
+	public init(from decoder: any Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		country = try values.decode(String.self, forKey: .country)
+		name = try values.decode(String.self, forKey: .name)
+		nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
+		continent = try values.decodeIfPresent(String.self, forKey: .continent)
+		currency = try values.decodeIfPresent(String.self, forKey: .currency)
+		currencyName = try values.decodeIfPresent(String.self, forKey: .currencyName)
+		currencySymbol = try values.decodeIfPresent(String.self, forKey: .currencySymbol)
+		callingCode = try values.decodeIfPresent(String.self, forKey: .callingCode)
+		let legacy = try decoder.container(keyedBy: LegacyCodingKeys.self)
+        flag = try values.contains(.flag) ? values.decodeIfPresent(String.self,forKey:.flag) : legacy.decodeIfPresent(String.self,forKey:.emoji)
+		languages = try values.decodeIfPresent([String].self, forKey: .languages) ?? []
+		deep = try values.decodeIfPresent(CountryDeep.self, forKey: .deep)
+		timezones = try values.decodeIfPresent([String].self, forKey: .timezones)
+		iso3 = try values.decodeIfPresent(String.self, forKey: .iso3)
+		numeric = try values.decodeIfPresent(Int.self, forKey: .numeric)
+		if values.contains(.nameFull) {
+			nameFull = try values.decodeIfPresent(String.self, forKey: .nameFull)
+		} else {
+			let legacy = try decoder.container(keyedBy: LegacyCodingKeys.self)
+			nameFull = try legacy.decodeIfPresent(String.self, forKey: .fullName)
+		}
+		demonym = try values.decodeIfPresent(String.self, forKey: .demonym)
+		region = try values.decodeIfPresent(String.self, forKey: .region)
+		subregion = try values.decodeIfPresent(String.self, forKey: .subregion)
+		if let nested = try? values.decode(CountryCapital.self,forKey:.capital) {
+            capital = nested
+        } else {
+            let name = try values.decodeIfPresent(String.self,forKey:.capital)
+            capital = name != nil || legacy.contains(.capitalLat) || legacy.contains(.capitalLon)
+                ? CountryCapital(name:name,lat:try legacy.decodeIfPresent(Double.self,forKey:.capitalLat),lon:try legacy.decodeIfPresent(Double.self,forKey:.capitalLon)) : nil
+        }
+		borders = try values.decodeIfPresent([String].self, forKey: .borders)
+		blocs = try values.decodeIfPresent([String].self, forKey: .blocs)
+	}
+
 }
 
 
@@ -1107,8 +1188,9 @@ public struct CountryDeep: Codable, Sendable {
 	public let tld: String?
 	public let borders: [String]?
 	public let blocs: [String]?
-	public let tax: String?
-	public let taxRate: Double?
+	public let tax: CountryTax?
+	public var taxRate: Double? { tax?.rate }
+	/// Historical flat payload only; omitted from current encoding.
 	public let taxIdFormat: String?
 	public let taxIdRegex: String?
 	public let weekStart: String?
@@ -1125,8 +1207,72 @@ public struct CountryDeep: Codable, Sendable {
 	public let plate: String?
 
 	private enum CodingKeys: String, CodingKey {
-		case gdp, gdpPerCapita, populationGrowth, urbanPopulation, internetUsers, iso3, numeric, fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, taxRate, taxIdFormat, taxIdRegex, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
+		case gdpUsd, gdpPerCapitaUsd, populationGrowthPercent, urbanPopulationPercent, internetUsersPercent, elevationAverage, gdp, gdpPerCapita, populationGrowth, urbanPopulation, internetUsers, iso3, numeric, fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
 	}
+	public let gdpUsd: Double?
+	public let gdpPerCapitaUsd: Double?
+	public let populationGrowthPercent: Double?
+	public let urbanPopulationPercent: Double?
+	public let internetUsersPercent: Double?
+	/// Average terrain elevation in meters above sea level.
+	public let elevationAverage: Double?
+ private enum LegacyTaxKeys:String,CodingKey {case taxRate,taxIdFormat,taxIdRegex}
+ public init(from decoder:any Decoder)throws {
+  let values=try decoder.container(keyedBy:CodingKeys.self)
+  gdp=try values.decodeIfPresent(Double.self,forKey:.gdp)
+  gdpPerCapita=try values.decodeIfPresent(Double.self,forKey:.gdpPerCapita)
+  populationGrowth=try values.decodeIfPresent(Double.self,forKey:.populationGrowth)
+  urbanPopulation=try values.decodeIfPresent(Double.self,forKey:.urbanPopulation)
+  internetUsers=try values.decodeIfPresent(Double.self,forKey:.internetUsers)
+  iso3=try values.decodeIfPresent(String.self,forKey:.iso3)
+  numeric=try values.decodeIfPresent(Int.self,forKey:.numeric)
+  fullName=try values.decodeIfPresent(String.self,forKey:.fullName)
+  demonym=try values.decodeIfPresent(String.self,forKey:.demonym)
+  capital=try values.decodeIfPresent(String.self,forKey:.capital)
+  capitalLat=try values.decodeIfPresent(Double.self,forKey:.capitalLat)
+  capitalLon=try values.decodeIfPresent(Double.self,forKey:.capitalLon)
+  region=try values.decodeIfPresent(String.self,forKey:.region)
+  subregion=try values.decodeIfPresent(String.self,forKey:.subregion)
+  population=try values.decodeIfPresent(Int.self,forKey:.population)
+  area=try values.decodeIfPresent(Double.self,forKey:.area)
+  landArea=try values.decodeIfPresent(Double.self,forKey:.landArea)
+  waterArea=try values.decodeIfPresent(Double.self,forKey:.waterArea)
+  coastline=try values.decodeIfPresent(Double.self,forKey:.coastline)
+  elevation=try values.decodeIfPresent(Double.self,forKey:.elevation)
+  lowestPoint=try values.decodeIfPresent(CountryElevationPoint.self,forKey:.lowestPoint)
+  highestPoint=try values.decodeIfPresent(CountryElevationPoint.self,forKey:.highestPoint)
+  tld=try values.decodeIfPresent(String.self,forKey:.tld)
+  borders=try values.decodeIfPresent([String].self,forKey:.borders)
+  blocs=try values.decodeIfPresent([String].self,forKey:.blocs)
+  weekStart=try values.decodeIfPresent(String.self,forKey:.weekStart)
+  units=try values.decodeIfPresent(String.self,forKey:.units)
+  drivingSide=try values.decodeIfPresent(String.self,forKey:.drivingSide)
+  plugs=try values.decodeIfPresent([String].self,forKey:.plugs)
+  voltage=try values.decodeIfPresent(Int.self,forKey:.voltage)
+  frequency=try values.decodeIfPresent(Int.self,forKey:.frequency)
+  emergency=try values.decodeIfPresent(CountryEmergency.self,forKey:.emergency)
+  postalFormat=try values.decodeIfPresent(String.self,forKey:.postalFormat)
+  postalRegex=try values.decodeIfPresent(String.self,forKey:.postalRegex)
+  ioc=try values.decodeIfPresent(String.self,forKey:.ioc)
+  fifa=try values.decodeIfPresent(String.self,forKey:.fifa)
+  plate=try values.decodeIfPresent(String.self,forKey:.plate)
+  gdpUsd=try values.decodeIfPresent(Double.self,forKey:.gdpUsd)
+  gdpPerCapitaUsd=try values.decodeIfPresent(Double.self,forKey:.gdpPerCapitaUsd)
+  populationGrowthPercent=try values.decodeIfPresent(Double.self,forKey:.populationGrowthPercent)
+  urbanPopulationPercent=try values.decodeIfPresent(Double.self,forKey:.urbanPopulationPercent)
+  internetUsersPercent=try values.decodeIfPresent(Double.self,forKey:.internetUsersPercent)
+  elevationAverage=try values.decodeIfPresent(Double.self,forKey:.elevationAverage)
+  let legacy=try decoder.container(keyedBy:LegacyTaxKeys.self)
+  if let nested=try? values.decode(CountryTax.self,forKey:.tax) { tax=nested;taxIdFormat=nil;taxIdRegex=nil }
+  else {
+   let name=try values.decodeIfPresent(String.self,forKey:.tax)
+   tax=name != nil || legacy.contains(.taxRate) || legacy.contains(.taxIdFormat) || legacy.contains(.taxIdRegex)
+    ? CountryTax(name:name,rate:try legacy.decodeIfPresent(Double.self,forKey:.taxRate)) : nil
+   taxIdFormat=try legacy.decodeIfPresent(String.self,forKey:.taxIdFormat)
+   taxIdRegex=try legacy.decodeIfPresent(String.self,forKey:.taxIdRegex)
+  }
+ }
+
 }
 
 public struct CountryElevationPoint: Codable, Sendable {
