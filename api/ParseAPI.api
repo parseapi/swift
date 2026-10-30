@@ -965,7 +965,7 @@ DistrictDeep: conformsTo Swift.Encodable
 DistrictDeep: conformsTo Swift.Sendable
 DistrictDeep: conformsTo Swift.SendableMetatype
 DistrictDeep: struct DistrictDeep
-Domain.available: let available: Bool
+Domain.available: let available: Bool?
 Domain.deep: let deep: DomainDeep?
 Domain.domain: let domain: String
 Domain.init(from:): init(from decoder: any Decoder) throws

@@ -47,24 +47,25 @@ import Testing
 		}
 	}
 
-	@Test func existingDomainCallableAndBooleanStayUnchanged() async throws {
-		for available in [true, false] {
-			let stub = StubTransport(body: "{\"domain\":\"x.example\",\"available\":\(available),\"deep\":{\"registration\":{\"registered\":false}}}")
-			let client = try makeClient(stub)
-			let lookup: (String, Bool) async throws -> Domain = client.domain
-			let result = try await lookup("x.example", true)
-			let unchangedBoolean: Bool = result.available
-			#expect(unchangedBoolean == available && result.deep?.registration?.registered == false)
-			#expect(result.deep?.registration?.dnssec == nil && result.deep?.registration?.status == nil)
-			#expect(stub.requests.count == 1)
-		}
-		let stub = StubTransport(body: #"{"domain":"x.example","available":null}"#)
-		do {
-			_ = try await makeClient(stub).domain("x.example")
-			Issue.record("The existing nonoptional Domain model must retain its unknown decoding failure")
-		} catch is DecodingError { }
-		#expect(stub.requests.count == 1, "A decode failure does not repeat the lookup")
-	}
+	@Test func existingDomainCallablePreservesUnknownAndKnownAvailability() async throws {
+        for (raw, expected) in [("true", true as Bool?), ("false", false as Bool?), ("null", nil)] {
+            for signing in ["", ",\"dnssec\":null", ",\"dnssec\":false", ",\"dnssec\":true"] {
+                let detail = raw == "null" ? "{}" : raw == "true" ? "{\"registration\":{\"registered\":false}}" : "{\"registration\":{\"registered\":true\(signing)}}"
+                let body = "{\"domain\":\"x.example\",\"available\":\(raw),\"deep\":\(detail)}"
+                let stub = StubTransport(body: body), client = try makeClient(stub)
+                let lookup: (String, Bool) async throws -> Domain = client.domain
+                let result = try await lookup("x.example", true)
+                let available: Bool? = result.available
+                #expect(available == expected)
+                #expect(result.deep?.registration?.dnssec == (raw == "false" ? (signing.contains("false") ? false : signing.contains("true") ? true : nil) : nil))
+                #expect(stub.requests.count == 1)
+            }
+        }
+        let stub = StubTransport(body: #"{"domain":"x.example","available":"false"}"#)
+        do { _ = try await makeClient(stub).domain("x.example"); Issue.record("A string is not nullable boolean availability") }
+        catch is DecodingError { }
+        #expect(stub.requests.count == 1, "A decode failure does not repeat the lookup")
+    }
 
 	@Test func noDeepDefaultAndExplicitFalseRemainAvailable() async throws {
 		let stub = StubTransport(body: #"{"domain":"x.example","available":false}"#)

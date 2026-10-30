@@ -105,7 +105,7 @@ try await parse.elevation(35.2271, -80.8431)
 try await parse.point(36.0726, -79.792)
 try await parse.weather(40.7128, -74.006)
 try await parse.domain("example.com")
-try await parse.domainResult("example.com", deep: true)
+try await parse.domain("example.com", deep: true)
 try await parse.stack("example.com")
 try await parse.asn("AS13335")
 try await parse.mx("example.com")
@@ -250,7 +250,7 @@ Choose enrichment for the question you need answered.
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |
 
-Use `domainResult` when availability may be unknown: `available` is `true`, `false`, or `nil`. It makes the same single Domain request and preserves partial registration detail. The existing `domain` method keeps its `Bool` property and decoding behavior; an unknown availability result cannot decode into that model.
+Use `domain` for registration availability: `available` is `true`, `false`, or `nil` when unknown. Missing or null DNSSEC is unknown, while `false` is a known unsigned observation. The existing `domainResult` method and model remain available.
 
 Email deep includes mailbox status and the reason for the result, plus a suggested first name, no-reply flag, plus-address tag and mail service. The suggested name is not a verified identity. Unavailable details are null.
 

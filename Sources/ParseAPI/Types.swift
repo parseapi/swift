@@ -616,7 +616,8 @@ public struct DomainDeep: Codable, Sendable {
 
 public struct Domain: Codable, Sendable {
 	public let domain: String
-	public let available: Bool
+	/// True means unregistered, false means registered, nil means unknown.
+	public let available: Bool?
 	public let deep: DomainDeep?
 }
 

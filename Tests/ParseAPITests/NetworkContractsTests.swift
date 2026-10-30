@@ -37,5 +37,5 @@ import Testing
     let roundtrip = try decoder.decode(Stack.self, from: oldEncoded)
     #expect(roundtrip.cms?.first?.technology == "wordpress" && roundtrip.frameworks?.isEmpty == true && roundtrip.analytics == nil)
     let domain = try read(Domain.self, "domain_unregistered")
-    #expect(domain.available && domain.deep?.registration?.registered == false && domain.deep?.registration?.dnssec == nil)
+    #expect(domain.available == true && domain.deep?.registration?.registered == false && domain.deep?.registration?.dnssec == nil)
 }
