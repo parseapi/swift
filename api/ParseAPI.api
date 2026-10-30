@@ -1750,6 +1750,7 @@ Postal.state: let state: String?
 Postal.stateName: let stateName: String?
 Postal.stateNameLocal: let stateNameLocal: String?
 Postal.timezone: let timezone: String?
+Postal.type: let type: String?
 Postal: conformsTo Swift.Decodable
 Postal: conformsTo Swift.Encodable
 Postal: conformsTo Swift.Sendable
@@ -1814,6 +1815,7 @@ PostalMetro.name: let name: String
 PostalMetro.otherShare: let otherShare: Double?
 PostalMetro.residentialShare: let residentialShare: Double?
 PostalMetro.share: let share: Double?
+PostalMetro.sharePercent: let sharePercent: Double?
 PostalMetro.type: let type: String
 PostalMetro: conformsTo Swift.Decodable
 PostalMetro: conformsTo Swift.Encodable

@@ -220,6 +220,8 @@ public struct PostalMetro: Codable, Sendable {
 	public let residentialShare: Double?
 	public let businessShare: Double?
 	public let otherShare: Double?
+	/// Percentage of ZIP addresses (0-100). Nil is unknown or absent.
+	public let sharePercent: Double?
 }
 
 /// A supported Australian postcode suburb choice, independent of the scalar city.
@@ -247,6 +249,8 @@ public struct Postal: Codable, Sendable {
 	public let longitude: Double?
 	public let timezone: String?
 	public let deep: PostalDeep?
+	/// Open ZIP type, including future values. Nil is unknown or absent.
+	public let type: String?
 }
 
 public struct PostalNearbyItem: Codable, Sendable {
