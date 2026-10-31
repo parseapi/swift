@@ -2032,3 +2032,26 @@ public struct StateCapital: Codable, Sendable {
 	public let lat: Double?
 	public let lon: Double?
 }
+
+public struct Currency: Codable, Sendable {
+	public let currency: String
+	public let isoNumeric: Int?
+	public let name: String
+	public let namePlural: String?
+	public let symbol: String?
+	public let symbolNative: String?
+	public let digits: Int?
+	public let countries: [String]?
+	public let deep: CurrencyDeep?
+}
+
+public struct CurrencyRate: Codable, Sendable {
+	public let base: String
+	public let quote: String
+	public let rate: Double
+	public let date: String
+	public let amount: Double?
+	public let converted: Double?
+}
+
+public struct CurrencyDeep: Codable, Sendable {}

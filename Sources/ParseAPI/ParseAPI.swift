@@ -75,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.10.10"
+	static let version = "1.11.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -439,6 +439,20 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// One language by BCP 47 shortest code (en) or ISO 639-3 (eng).
+	public func currency(_ code: String, deep: Bool = false) async throws -> Currency {
+		try await get("/currency/\(enc(code))", query: deepQuery(deep))
+	}
+
+	/// Select translated display names for this request.
+	public func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency {
+		try await get("/currency/\(enc(code))", query: [("lang", lang)] + deepQuery(deep))
+	}
+
+	/// Daily official reference cross rate. Pass date for a past day, amount to convert.
+	public func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate {
+		try await get("/currency/\(enc(base))/\(enc(quote))", query: [("date", date), ("amount", amount.map(num))])
+	}
+
 	public func language(_ code: String, deep: Bool = false) async throws -> Language {
 		try await get("/language/\(enc(code))", query: deepQuery(deep))
 	}

@@ -886,6 +886,39 @@ CountryTax: conformsTo Swift.Encodable
 CountryTax: conformsTo Swift.Sendable
 CountryTax: conformsTo Swift.SendableMetatype
 CountryTax: struct CountryTax
+Currency.countries: let countries: [String]?
+Currency.currency: let currency: String
+Currency.deep: let deep: CurrencyDeep?
+Currency.digits: let digits: Int?
+Currency.init(from:): init(from decoder: any Decoder) throws
+Currency.isoNumeric: let isoNumeric: Int?
+Currency.name: let name: String
+Currency.namePlural: let namePlural: String?
+Currency.symbol: let symbol: String?
+Currency.symbolNative: let symbolNative: String?
+Currency: conformsTo Swift.Decodable
+Currency: conformsTo Swift.Encodable
+Currency: conformsTo Swift.Sendable
+Currency: conformsTo Swift.SendableMetatype
+Currency: struct Currency
+CurrencyDeep.init(from:): init(from decoder: any Decoder) throws
+CurrencyDeep: conformsTo Swift.Decodable
+CurrencyDeep: conformsTo Swift.Encodable
+CurrencyDeep: conformsTo Swift.Sendable
+CurrencyDeep: conformsTo Swift.SendableMetatype
+CurrencyDeep: struct CurrencyDeep
+CurrencyRate.amount: let amount: Double?
+CurrencyRate.base: let base: String
+CurrencyRate.converted: let converted: Double?
+CurrencyRate.date: let date: String
+CurrencyRate.init(from:): init(from decoder: any Decoder) throws
+CurrencyRate.quote: let quote: String
+CurrencyRate.rate: let rate: Double
+CurrencyRate: conformsTo Swift.Decodable
+CurrencyRate: conformsTo Swift.Encodable
+CurrencyRate: conformsTo Swift.Sendable
+CurrencyRate: conformsTo Swift.SendableMetatype
+CurrencyRate: struct CurrencyRate
 DNS.domain: let domain: String
 DNS.init(from:): init(from decoder: any Decoder) throws
 DNS.records: let records: [DNSRecord]
@@ -1631,6 +1664,9 @@ ParseAPI.country(_:deep:): func country(_ code: String, deep: Bool = false) asyn
 ParseAPI.country(_:deep:lang:): func country(_ code: String, deep: Bool = false, lang: String?) async throws -> Country
 ParseAPI.countryStates(_:): func countryStates(_ code: String) async throws -> CountryStates
 ParseAPI.countryStates(_:lang:): func countryStates(_ code: String, lang: String?) async throws -> CountryStates
+ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
+ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
+ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
 ParseAPI.date(_:format:to:deep:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false) async throws -> DateInfo
 ParseAPI.date(_:format:to:deep:lang:): func date(_ date: String, format: String? = nil, to: String? = nil, deep: Bool = false, lang: String?) async throws -> DateInfo
 ParseAPI.dateToday(to:deep:): func dateToday(to: String? = nil, deep: Bool = false) async throws -> DateInfo
