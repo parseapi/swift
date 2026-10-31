@@ -80,10 +80,20 @@ public struct ContinentCountries: Codable, Sendable {
 
 public struct CountryCapital: Codable, Sendable {
  public let name:String?
- public let lat:Double?
- public let lon:Double?
- private enum CodingKeys:String,CodingKey {case name,lat,lon}
- public func encode(to encoder:any Encoder)throws {var values=encoder.container(keyedBy:CodingKeys.self);try values.encode(name,forKey:.name);try values.encode(lat,forKey:.lat);try values.encode(lon,forKey:.lon)}
+ public let latitude:Double?
+ public let longitude:Double?
+ private enum CodingKeys:String,CodingKey {case name,latitude,longitude,lat,lon}
+ init(name:String?,latitude:Double?,longitude:Double?) {self.name=name;self.latitude=latitude;self.longitude=longitude}
+ public init(from decoder:any Decoder)throws {
+  let values=try decoder.container(keyedBy:CodingKeys.self)
+  name=try values.decodeIfPresent(String.self,forKey:.name)
+  latitude=try values.decodeIfPresent(Double.self,forKey:values.contains(.latitude) ? .latitude : .lat)
+  longitude=try values.decodeIfPresent(Double.self,forKey:values.contains(.longitude) ? .longitude : .lon)
+ }
+ public func encode(to encoder:any Encoder)throws {
+  var values=encoder.container(keyedBy:CodingKeys.self)
+  try values.encode(name,forKey:.name);try values.encode(latitude,forKey:.latitude);try values.encode(longitude,forKey:.longitude)
+ }
 }
 public struct CountryTax: Codable, Sendable {
  public let name:String?
@@ -135,8 +145,8 @@ public struct Country: Codable, Sendable {
 	public let region: String?
 	public let subregion: String?
 	public let capital: CountryCapital?
-	public var capitalLat: Double? { capital?.lat }
-	public var capitalLon: Double? { capital?.lon }
+	public var capitalLat: Double? { capital?.latitude }
+	public var capitalLon: Double? { capital?.longitude }
 	public let borders: [String]?
 	public let blocs: [String]?
 	private enum CodingKeys: String, CodingKey {
@@ -178,7 +188,7 @@ public struct Country: Codable, Sendable {
         } else {
             let name = try values.decodeIfPresent(String.self,forKey:.capital)
             capital = name != nil || legacy.contains(.capitalLat) || legacy.contains(.capitalLon)
-                ? CountryCapital(name:name,lat:try legacy.decodeIfPresent(Double.self,forKey:.capitalLat),lon:try legacy.decodeIfPresent(Double.self,forKey:.capitalLon)) : nil
+                ? CountryCapital(name:name,latitude:try legacy.decodeIfPresent(Double.self,forKey:.capitalLat),longitude:try legacy.decodeIfPresent(Double.self,forKey:.capitalLon)) : nil
         }
 		borders = try values.decodeIfPresent([String].self, forKey: .borders)
 		blocs = try values.decodeIfPresent([String].self, forKey: .blocs)
@@ -201,6 +211,24 @@ public struct CountryStateItem: Codable, Sendable {
 public struct CountryStates: Codable, Sendable {
 	public let country: String
 	public let states: [CountryStateItem]
+}
+
+public struct StateCapital: Codable, Sendable {
+ public let name:String?
+ public let latitude:Double?
+ public let longitude:Double?
+ private enum CodingKeys:String,CodingKey {case name,latitude,longitude,lat,lon}
+ init(name:String?,latitude:Double?,longitude:Double?) {self.name=name;self.latitude=latitude;self.longitude=longitude}
+ public init(from decoder:any Decoder)throws {
+  let values=try decoder.container(keyedBy:CodingKeys.self)
+  name=try values.decodeIfPresent(String.self,forKey:.name)
+  latitude=try values.decodeIfPresent(Double.self,forKey:values.contains(.latitude) ? .latitude : .lat)
+  longitude=try values.decodeIfPresent(Double.self,forKey:values.contains(.longitude) ? .longitude : .lon)
+ }
+ public func encode(to encoder:any Encoder)throws {
+  var values=encoder.container(keyedBy:CodingKeys.self)
+  try values.encode(name,forKey:.name);try values.encode(latitude,forKey:.latitude);try values.encode(longitude,forKey:.longitude)
+ }
 }
 
 public struct State: Codable, Sendable {
@@ -2027,11 +2055,6 @@ public struct StateTax: Codable, Sendable {
 }
 
 
-public struct StateCapital: Codable, Sendable {
-	public let name: String?
-	public let lat: Double?
-	public let lon: Double?
-}
 
 public struct Currency: Codable, Sendable {
 	public let currency: String

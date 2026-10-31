@@ -781,8 +781,8 @@ Country: conformsTo Swift.SendableMetatype
 Country: struct Country
 CountryCapital.encode(to:): func encode(to encoder: any Encoder) throws
 CountryCapital.init(from:): init(from decoder: any Decoder) throws
-CountryCapital.lat: let lat: Double?
-CountryCapital.lon: let lon: Double?
+CountryCapital.latitude: let latitude: Double?
+CountryCapital.longitude: let longitude: Double?
 CountryCapital.name: let name: String?
 CountryCapital: conformsTo Swift.Decodable
 CountryCapital: conformsTo Swift.Encodable
@@ -2009,9 +2009,10 @@ State: conformsTo Swift.Encodable
 State: conformsTo Swift.Sendable
 State: conformsTo Swift.SendableMetatype
 State: struct State
+StateCapital.encode(to:): func encode(to encoder: any Encoder) throws
 StateCapital.init(from:): init(from decoder: any Decoder) throws
-StateCapital.lat: let lat: Double?
-StateCapital.lon: let lon: Double?
+StateCapital.latitude: let latitude: Double?
+StateCapital.longitude: let longitude: Double?
 StateCapital.name: let name: String?
 StateCapital: conformsTo Swift.Decodable
 StateCapital: conformsTo Swift.Encodable
