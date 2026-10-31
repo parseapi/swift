@@ -93,6 +93,25 @@ public struct CountryTax: Codable, Sendable {
  public func encode(to encoder:any Encoder)throws {var values=encoder.container(keyedBy:CodingKeys.self);try values.encode(name,forKey:.name);try values.encode(rate,forKey:.rate)}
 }
 
+
+private struct ISOWireKey: CodingKey {
+ let stringValue: String
+ let intValue: Int? = nil
+ init(_ value: String) { stringValue = value }
+ init?(stringValue: String) { self.init(stringValue) }
+ init?(intValue: Int) { return nil }
+}
+
+private func decodeISOWire<T: Decodable>(_ type: T.Type, from decoder: any Decoder,
+ canonical: String, camelCase: String, legacy: [String]) throws -> T? {
+ let values = try decoder.container(keyedBy: ISOWireKey.self)
+ for name in [canonical, camelCase] + legacy {
+  let key = ISOWireKey(name)
+  if values.contains(key) { return try values.decodeIfPresent(type, forKey: key) }
+ }
+ return nil
+}
+
 public struct Country: Codable, Sendable {
 	public let country: String
 	public let name: String
@@ -121,7 +140,9 @@ public struct Country: Codable, Sendable {
 	public let borders: [String]?
 	public let blocs: [String]?
 	private enum CodingKeys: String, CodingKey {
-		case country, name, nameLocal, continent, currency, currencyName, currencySymbol, callingCode, flag, languages, deep, timezones, iso3, numeric, demonym, region, subregion, capital, borders, blocs
+		case iso3 = "iso_alpha3"
+		case numeric = "iso_numeric"
+		case country, name, nameLocal, continent, currency, currencyName, currencySymbol, callingCode, flag, languages, deep, timezones,  demonym, region, subregion, capital, borders, blocs
 		case nameFull
 	}
 	private enum LegacyCodingKeys: String, CodingKey { case fullName, emoji, capitalLat, capitalLon }
@@ -141,8 +162,8 @@ public struct Country: Codable, Sendable {
 		languages = try values.decodeIfPresent([String].self, forKey: .languages) ?? []
 		deep = try values.decodeIfPresent(CountryDeep.self, forKey: .deep)
 		timezones = try values.decodeIfPresent([String].self, forKey: .timezones)
-		iso3 = try values.decodeIfPresent(String.self, forKey: .iso3)
-		numeric = try values.decodeIfPresent(Int.self, forKey: .numeric)
+		iso3 = try decodeISOWire(String.self, from: decoder, canonical: "iso_alpha3", camelCase: "isoAlpha3", legacy: ["iso3"])
+		numeric = try decodeISOWire(Int.self, from: decoder, canonical: "iso_numeric", camelCase: "isoNumeric", legacy: ["numeric"])
 		if values.contains(.nameFull) {
 			nameFull = try values.decodeIfPresent(String.self, forKey: .nameFull)
 		} else {
@@ -192,8 +213,34 @@ public struct State: Codable, Sendable {
 	public let latitude: Double?
 	public let longitude: Double?
 	public let timezones: [String]
-	public let iso31662: String?
+	public let iso: String?
+	public let fips: String?
+	public let areaCodes: [String]?
+	public let capital: StateCapital?
 	public let deep: StateDeep?
+
+ private enum CodingKeys: String, CodingKey {
+  case state, name, nameLocal, type, country, countryName, latitude, longitude, timezones, fips, areaCodes, capital, deep
+  case iso = "iso_subdivision"
+ }
+ public init(from decoder: any Decoder) throws {
+  let values = try decoder.container(keyedBy: CodingKeys.self)
+  state = try values.decode(String.self, forKey: .state)
+  name = try values.decode(String.self, forKey: .name)
+  nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
+  type = try values.decodeIfPresent(String.self, forKey: .type)
+  country = try values.decode(String.self, forKey: .country)
+  countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+  latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+  longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+  timezones = try values.decode([String].self, forKey: .timezones)
+  iso = try decodeISOWire(String.self, from: decoder, canonical: "iso_subdivision", camelCase: "isoSubdivision", legacy: ["iso", "iso_3166_2", "iso31662"])
+  fips = try values.decodeIfPresent(String.self, forKey: .fips)
+  areaCodes = try values.decodeIfPresent([String].self, forKey: .areaCodes)
+  capital = try values.decodeIfPresent(StateCapital.self, forKey: .capital)
+  deep = try values.decodeIfPresent(StateDeep.self, forKey: .deep)
+ }
+ public var iso31662:String? {iso}
 }
 
 public struct StateDistrictItem: Codable, Sendable {
@@ -724,6 +771,24 @@ public struct Language: Codable, Sendable {
 	public let script: String?
 	public let direction: String
 	public let deep: LanguageDeep?
+	public let iso3: String?
+	public let countries: [String]?
+
+ private enum CodingKeys: String, CodingKey {
+  case language, name, nameLocal, script, direction, deep, countries
+  case iso3 = "iso_alpha3"
+ }
+ public init(from decoder: any Decoder) throws {
+  let values = try decoder.container(keyedBy: CodingKeys.self)
+  language = try values.decode(String.self, forKey: .language)
+  name = try values.decode(String.self, forKey: .name)
+  nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
+  script = try values.decodeIfPresent(String.self, forKey: .script)
+  direction = try values.decode(String.self, forKey: .direction)
+  deep = try values.decodeIfPresent(LanguageDeep.self, forKey: .deep)
+  iso3 = try decodeISOWire(String.self, from: decoder, canonical: "iso_alpha3", camelCase: "isoAlpha3", legacy: ["iso3"])
+  countries = try values.decodeIfPresent([String].self, forKey: .countries)
+ }
 }
 
 /// A parsed person name. Junk input returns valid false, never an error.
@@ -1193,7 +1258,9 @@ public struct CountryDeep: Codable, Sendable {
 	public let plate: String?
 
 	private enum CodingKeys: String, CodingKey {
-		case gdpUsd, gdpPerCapitaUsd, populationGrowthPercent, urbanPopulationPercent, internetUsersPercent, elevationAverage, gdp, gdpPerCapita, populationGrowth, urbanPopulation, internetUsers, iso3, numeric, fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
+		case iso3 = "iso_alpha3"
+		case numeric = "iso_numeric"
+		case gdpUsd, gdpPerCapitaUsd, populationGrowthPercent, urbanPopulationPercent, internetUsersPercent, elevationAverage, gdp, gdpPerCapita, populationGrowth, urbanPopulation, internetUsers,  fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
 	}
 	public let gdpUsd: Double?
 	public let gdpPerCapitaUsd: Double?
@@ -1210,8 +1277,8 @@ public struct CountryDeep: Codable, Sendable {
   populationGrowth=try values.decodeIfPresent(Double.self,forKey:.populationGrowth)
   urbanPopulation=try values.decodeIfPresent(Double.self,forKey:.urbanPopulation)
   internetUsers=try values.decodeIfPresent(Double.self,forKey:.internetUsers)
-  iso3=try values.decodeIfPresent(String.self,forKey:.iso3)
-  numeric=try values.decodeIfPresent(Int.self,forKey:.numeric)
+  iso3 = try decodeISOWire(String.self, from: decoder, canonical: "iso_alpha3", camelCase: "isoAlpha3", legacy: ["iso3"])
+  numeric = try decodeISOWire(Int.self, from: decoder, canonical: "iso_numeric", camelCase: "isoNumeric", legacy: ["numeric"])
   fullName=try values.decodeIfPresent(String.self,forKey:.fullName)
   demonym=try values.decodeIfPresent(String.self,forKey:.demonym)
   capital=try values.decodeIfPresent(String.self,forKey:.capital)
@@ -1276,19 +1343,33 @@ public struct CountryEmergency: Codable, Sendable {
 
 
 public struct StateDeep: Codable, Sendable {
-	public let population: Int?
-	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
-	public let populationPeriod: String? = nil
-	public let area: Double?
-	public let fips: String?
-	public let capital: String?
-	public let areaCodes: [String]?
-	public let tax: String?
-	public let taxRate: Double?
-
-	private enum CodingKeys: String, CodingKey {
-		case population, area, fips, capital, areaCodes, tax, taxRate
-	}
+ public let population:Int?
+ @available(*,deprecated,message:"No longer returned; retained for source compatibility")
+ public let populationPeriod:String? = nil
+ public let area:Double?
+ public let tax:StateTax?
+ /// Historical Deep read members retained for existing source consumers.
+ public let fips:String?
+ public let capital:String?
+ public let areaCodes:[String]?
+ public var taxRate:Double? {tax?.rate}
+ private enum CodingKeys:String,CodingKey {case population,area,tax}
+ private enum LegacyKeys:String,CodingKey {case fips,capital,areaCodes,taxRate}
+ public init(from decoder:any Decoder)throws {
+  let values=try decoder.container(keyedBy:CodingKeys.self)
+  let legacy=try decoder.container(keyedBy:LegacyKeys.self)
+  population=try values.decodeIfPresent(Int.self,forKey:.population)
+  area=try values.decodeIfPresent(Double.self,forKey:.area)
+  fips=try legacy.decodeIfPresent(String.self,forKey:.fips)
+  capital=try legacy.decodeIfPresent(String.self,forKey:.capital)
+  areaCodes=try legacy.decodeIfPresent([String].self,forKey:.areaCodes)
+  if let nested=try? values.decode(StateTax.self,forKey:.tax) {tax=nested}
+  else {
+   let name=try values.decodeIfPresent(String.self,forKey:.tax)
+   let rate=try legacy.decodeIfPresent(Double.self,forKey:.taxRate)
+   tax=name != nil || rate != nil ? StateTax(name:name,rate:rate) : nil
+  }
+ }
 }
 
 
@@ -1395,8 +1476,15 @@ public struct HLRDeep: Codable, Sendable {
 
 
 public struct LanguageDeep: Codable, Sendable {
-	public let iso3: String?
-	public let countries: [String]?
+ /// Historical Deep read members; current canonical responses keep these facts in Core.
+ public let iso3:String?
+ public let countries:[String]?
+ private enum LegacyKeys:String,CodingKey {case countries}
+ public init(from decoder:any Decoder)throws {
+  iso3=try decodeISOWire(String.self,from:decoder,canonical:"iso_alpha3",camelCase:"isoAlpha3",legacy:["iso3"])
+  countries=try decoder.container(keyedBy:LegacyKeys.self).decodeIfPresent([String].self,forKey:.countries)
+ }
+ public func encode(to encoder:any Encoder)throws {_ = encoder.container(keyedBy:LegacyKeys.self)}
 }
 
 
@@ -1927,4 +2015,20 @@ public struct CityNearbyCoordinates: Codable, Sendable {
     public let longitude: Double
     public let radius: Double
     public let unit: String
+}
+
+
+
+
+public struct StateTax: Codable, Sendable {
+	public let name: String?
+	/// Reference rate in percent.
+	public let rate: Double?
+}
+
+
+public struct StateCapital: Codable, Sendable {
+	public let name: String?
+	public let lat: Double?
+	public let lon: Double?
 }

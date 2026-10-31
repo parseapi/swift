@@ -1437,9 +1437,11 @@ IndustryDeep: typealias IndustryDeep = NAICSDeep
 IndustryExclusion: typealias IndustryExclusion = NAICSExclusion
 IndustryMatch: typealias IndustryMatch = NAICSMatch
 IndustrySearch: typealias IndustrySearch = NAICSSearch
+Language.countries: let countries: [String]?
 Language.deep: let deep: LanguageDeep?
 Language.direction: let direction: String
 Language.init(from:): init(from decoder: any Decoder) throws
+Language.iso3: let iso3: String?
 Language.language: let language: String
 Language.name: let name: String
 Language.nameLocal: let nameLocal: String?
@@ -1450,6 +1452,7 @@ Language: conformsTo Swift.Sendable
 Language: conformsTo Swift.SendableMetatype
 Language: struct Language
 LanguageDeep.countries: let countries: [String]?
+LanguageDeep.encode(to:): func encode(to encoder: any Encoder) throws
 LanguageDeep.init(from:): init(from decoder: any Decoder) throws
 LanguageDeep.iso3: let iso3: String?
 LanguageDeep: conformsTo Swift.Decodable
@@ -1949,11 +1952,15 @@ StackTechnology: conformsTo Swift.Encodable
 StackTechnology: conformsTo Swift.Sendable
 StackTechnology: conformsTo Swift.SendableMetatype
 StackTechnology: struct StackTechnology
+State.areaCodes: let areaCodes: [String]?
+State.capital: let capital: StateCapital?
 State.country: let country: String
 State.countryName: let countryName: String?
 State.deep: let deep: StateDeep?
+State.fips: let fips: String?
 State.init(from:): init(from decoder: any Decoder) throws
-State.iso31662: let iso31662: String?
+State.iso31662: var iso31662: String? { get }
+State.iso: let iso: String?
 State.latitude: let latitude: Double?
 State.longitude: let longitude: Double?
 State.name: let name: String
@@ -1966,6 +1973,15 @@ State: conformsTo Swift.Encodable
 State: conformsTo Swift.Sendable
 State: conformsTo Swift.SendableMetatype
 State: struct State
+StateCapital.init(from:): init(from decoder: any Decoder) throws
+StateCapital.lat: let lat: Double?
+StateCapital.lon: let lon: Double?
+StateCapital.name: let name: String?
+StateCapital: conformsTo Swift.Decodable
+StateCapital: conformsTo Swift.Encodable
+StateCapital: conformsTo Swift.Sendable
+StateCapital: conformsTo Swift.SendableMetatype
+StateCapital: struct StateCapital
 StateDeep.area: let area: Double?
 StateDeep.areaCodes: let areaCodes: [String]?
 StateDeep.capital: let capital: String?
@@ -1973,8 +1989,8 @@ StateDeep.fips: let fips: String?
 StateDeep.init(from:): init(from decoder: any Decoder) throws
 StateDeep.population: let population: Int?
 StateDeep.populationPeriod: let populationPeriod: String?
-StateDeep.tax: let tax: String?
-StateDeep.taxRate: let taxRate: Double?
+StateDeep.tax: let tax: StateTax?
+StateDeep.taxRate: var taxRate: Double? { get }
 StateDeep: conformsTo Swift.Decodable
 StateDeep: conformsTo Swift.Encodable
 StateDeep: conformsTo Swift.Sendable
@@ -2009,6 +2025,14 @@ StateDistricts: conformsTo Swift.Encodable
 StateDistricts: conformsTo Swift.Sendable
 StateDistricts: conformsTo Swift.SendableMetatype
 StateDistricts: struct StateDistricts
+StateTax.init(from:): init(from decoder: any Decoder) throws
+StateTax.name: let name: String?
+StateTax.rate: let rate: Double?
+StateTax: conformsTo Swift.Decodable
+StateTax: conformsTo Swift.Encodable
+StateTax: conformsTo Swift.Sendable
+StateTax: conformsTo Swift.SendableMetatype
+StateTax: struct StateTax
 Time: typealias Time = Timezone
 TimeLocation.candidates: let candidates: [TimeLocationCandidate]
 TimeLocation.encode(to:): func encode(to encoder: any Encoder) throws
