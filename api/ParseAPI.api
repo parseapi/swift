@@ -1857,7 +1857,7 @@ PostalDeep.metros: let metros: [PostalMetro]?
 PostalDeep.neighbors: let neighbors: [String]?
 PostalDeep.population: let population: Int?
 PostalDeep.populationPeriod: let populationPeriod: String?
-PostalDeep.propertyTax: let propertyTax: PropertyTax?
+PostalDeep.propertyTax: let propertyTax: PostalPropertyTax?
 PostalDeep.tax: let tax: String?
 PostalDeep.taxRate: let taxRate: Double?
 PostalDeep.taxRateCity: let taxRateCity: Double?
@@ -1945,6 +1945,15 @@ PostalNearbyItem: conformsTo Swift.Encodable
 PostalNearbyItem: conformsTo Swift.Sendable
 PostalNearbyItem: conformsTo Swift.SendableMetatype
 PostalNearbyItem: struct PostalNearbyItem
+PostalPropertyTax.annualMedian: let annualMedian: Double
+PostalPropertyTax.currency: let currency: String?
+PostalPropertyTax.init(from:): init(from decoder: any Decoder) throws
+PostalPropertyTax.period: let period: String?
+PostalPropertyTax: conformsTo Swift.Decodable
+PostalPropertyTax: conformsTo Swift.Encodable
+PostalPropertyTax: conformsTo Swift.Sendable
+PostalPropertyTax: conformsTo Swift.SendableMetatype
+PostalPropertyTax: struct PostalPropertyTax
 PropertyTax.annualMedian: let annualMedian: Double
 PropertyTax.currency: let currency: String
 PropertyTax.init(from:): init(from decoder: any Decoder) throws
@@ -2509,9 +2518,10 @@ WeatherHour: conformsTo Swift.Sendable
 WeatherHour: conformsTo Swift.SendableMetatype
 WeatherHour: struct WeatherHour
 WeatherMinute.at: let at: String?
+WeatherMinute.encode(to:): func encode(to encoder: any Encoder) throws
 WeatherMinute.init(from:): init(from decoder: any Decoder) throws
-WeatherMinute.precipitation: let precipitation: Double?
-WeatherMinute.precipitationIn: let precipitationIn: Double?
+WeatherMinute.precipitationRate: let precipitationRate: Double?
+WeatherMinute.precipitationRateIn: let precipitationRateIn: Double?
 WeatherMinute.type: let type: String?
 WeatherMinute: conformsTo Swift.Decodable
 WeatherMinute: conformsTo Swift.Encodable

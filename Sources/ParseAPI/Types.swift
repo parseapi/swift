@@ -1077,9 +1077,35 @@ public struct EmojiSearch: Codable, Sendable {
 
 public struct WeatherMinute: Codable, Sendable {
 	public let at: String?
-	public let precipitation: Double?
-	public let precipitationIn: Double?
+	/// Instantaneous precipitation rate in mm/hour.
+	public let precipitationRate: Double?
+	/// Instantaneous precipitation rate in inches/hour.
+	public let precipitationRateIn: Double?
 	public let type: String?
+
+	private enum CodingKeys: String, CodingKey {
+		case at, type
+		case precipitationRate = "precipitation_rate"
+		case precipitationRateIn = "precipitation_rate_in"
+	}
+
+	public init(from decoder: any Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		at = try values.decodeIfPresent(String.self, forKey: .at)
+		type = try values.decodeIfPresent(String.self, forKey: .type)
+		precipitationRate = try decodeISOWire(Double.self, from: decoder,
+			canonical: "precipitation_rate", camelCase: "precipitationRate", legacy: ["precipitation"])
+		precipitationRateIn = try decodeISOWire(Double.self, from: decoder,
+			canonical: "precipitation_rate_in", camelCase: "precipitationRateIn", legacy: ["precipitation_in", "precipitationIn"])
+	}
+
+	public func encode(to encoder: any Encoder) throws {
+		var values = encoder.container(keyedBy: CodingKeys.self)
+		try values.encodeIfPresent(at, forKey: .at)
+		try values.encodeIfPresent(precipitationRate, forKey: .precipitationRate)
+		try values.encodeIfPresent(precipitationRateIn, forKey: .precipitationRateIn)
+		try values.encodeIfPresent(type, forKey: .type)
+	}
 }
 
 public struct WeatherDay: Codable, Sendable {
@@ -1450,6 +1476,15 @@ public struct CityDeep: Codable, Sendable {
 }
 
 
+/// Postal's compact annual property-tax statistic. Currency context is on PostalDeep.
+public struct PostalPropertyTax: Codable, Sendable {
+	public let annualMedian: Double
+	/// Read from older richer responses when supplied; nil for compact records.
+	public let currency: String?
+	/// Read from older richer responses when supplied; nil when absent.
+	public let period: String?
+}
+
 public struct PostalDeep: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
@@ -1469,7 +1504,7 @@ public struct PostalDeep: Codable, Sendable {
 	public let taxRateCity: Double?
 	public let taxRateSpecial: Double?
 	/// Median annual property tax payable on owner-occupied homes in this statistical area. Null when unsupported, missing or censored.
-	public let propertyTax: PropertyTax?
+	public let propertyTax: PostalPropertyTax?
 
 	private enum CodingKeys: String, CodingKey {
 		case elevation, elevationFt, population, area, landArea, waterArea, currency, neighbors, metros, tax, taxRate, taxRateState, taxRateCounty, taxRateCity, taxRateSpecial, propertyTax

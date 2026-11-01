@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11.2 — 2026-10-31
+
+- Breaking native model repair: decode compact Postal property tax as `PostalPropertyTax`, preserving optional currency and period from older richer payloads. Explicit old tax-type annotations need updating; District property tax is unchanged.
+- Breaking minute member rename: use Weather minute `precipitationRate` and `precipitationRateIn` for hourly rates. Read old wire keys during rollout; canonical keys, including explicit null, take priority. Encode only `precipitation_rate` and `precipitation_rate_in`. Historical precipitation amounts are unchanged.
+
 ## 1.10.5 — 2026-10-27
 
 - Add optional Country Deep fields: gdp, gdp_per_capita, population_growth, urban_population and internet_users. GDP uses US dollars; growth and population shares use percent. Missing values remain null.
