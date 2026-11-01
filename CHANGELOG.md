@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.11.3 — 2026-11-01
+
+- Read existing Point electoral detail without losing leading-zero district codes or nullable metadata.
+- Preserve every released method/model member, Card behavior, Postal and Weather compatibility readers, and API contract selection.
+- This compatible public addition uses Billy's finite third-digit release exception; feature classification is retained.
+
 ## 1.11.2 — 2026-10-31
 
 - Breaking native model repair: decode compact Postal property tax as `PostalPropertyTax`, preserving optional currency and period from older richer payloads. Explicit old tax-type annotations need updating; District property tax is unchanged.

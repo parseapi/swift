@@ -75,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.11.2"
+	static let version = "1.11.3"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.0.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -809,7 +809,7 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Resolve the country, state, district and timezone at coordinates. Deep adds terrain and compact
-	/// nearest-city context on every plan. The timezone ID stays in core. The nearest city is null
+	/// nearest-city context on paid plans or with retained Deep access. The timezone ID stays in core. The nearest city is null
 	/// when none is within 200 km.
 	public func point(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Point {
 		try await get("/point", query: [("lat", num(lat)), ("lon", num(lon))] + deepQuery(deep))

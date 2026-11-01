@@ -1815,6 +1815,7 @@ PointCity: conformsTo Swift.Sendable
 PointCity: conformsTo Swift.SendableMetatype
 PointCity: struct PointCity
 PointDeep.city: let city: PointCity?
+PointDeep.electoral: let electoral: PointElectoral?
 PointDeep.elevation: let elevation: Double?
 PointDeep.elevationFt: let elevationFt: Double?
 PointDeep.init(from:): init(from decoder: any Decoder) throws
@@ -1824,6 +1825,15 @@ PointDeep: conformsTo Swift.Encodable
 PointDeep: conformsTo Swift.Sendable
 PointDeep: conformsTo Swift.SendableMetatype
 PointDeep: struct PointDeep
+PointElectoral.code: let code: String
+PointElectoral.congress: let congress: Int?
+PointElectoral.init(from:): init(from decoder: any Decoder) throws
+PointElectoral.name: let name: String?
+PointElectoral: conformsTo Swift.Decodable
+PointElectoral: conformsTo Swift.Encodable
+PointElectoral: conformsTo Swift.Sendable
+PointElectoral: conformsTo Swift.SendableMetatype
+PointElectoral: struct PointElectoral
 Postal.city: let city: String?
 Postal.cityLocal: let cityLocal: String?
 Postal.country: let country: String

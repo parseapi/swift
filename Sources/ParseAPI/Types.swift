@@ -931,11 +931,19 @@ public struct Elevation: Codable, Sendable {
 	public let resolution: Double?
 }
 
+/// Electoral district at the requested coordinates. Codes preserve leading zeros.
+public struct PointElectoral: Codable, Sendable {
+	public let code: String
+	public let name: String?
+	public let congress: Int?
+}
+
 public struct PointDeep: Codable, Sendable {
 	public let elevation: Double?
 	public let elevationFt: Double?
 	public let resolution: Double?
 	public let city: PointCity?
+	public let electoral: PointElectoral?
 }
 
 public struct Point: Codable, Sendable {
