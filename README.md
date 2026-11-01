@@ -1,6 +1,6 @@
 ```swift
 // Package.swift dependencies
-.package(url: "https://github.com/parseapi/swift", from: "1.11.3")
+.package(url: "https://github.com/parseapi/swift", from: "1.11.4")
 ```
 
 ```swift
@@ -150,7 +150,9 @@ if let cursor = first.next {
 }
 ```
 
-Directory `deep` adds detail to each profile in the same pooled request on every plan. Omitted deep, empty deep and partial detail remain distinct; description, logo, social_profiles, phone_numbers, email_addresses, domains, founded, employees, registrations and sources may be absent on older server releases. Sources attribute only their listed selected enrichment fields. Founding precision is preserved separately from incorporation. Missing listings do not establish private ownership, and a domain match does not prove legal identity. Coverage describes the returned edition, not every company worldwide.
+Directory `deep` adds detail to each profile on paid plans in the same pooled request. Existing accounts retain their current Deep access. Omitted deep, empty deep and partial detail remain distinct; description, logo, social_profiles, phone_numbers, email_addresses, domains, founded, employees, registrations and sources may be absent on older server releases. Sources attribute only their listed selected enrichment fields. Founding precision is preserved separately from incorporation. Missing listings do not establish private ownership, and a domain match does not prove legal identity. Coverage describes the returned edition, not every company worldwide.
+
+The public-directory service retires national-number Company lookups in both API versions. Use the directory methods with API 2.0.0.
 
 Company directory social profiles contain `platform`, `url` and `handle`; unknown metadata stays null. Phone and email records use `type` for the source-reported purpose. Earlier response fields remain readable by the client.
 
@@ -212,7 +214,7 @@ Source deep adds `standard_offset`, `standard_offset_seconds`, signed `dst_offse
 
 Australian postal lookups include core `localities` with suburb choices (`city`, `state`, `stateName`) on every plan. Null or an omitted field means unknown, while `[]` means the reviewed reference has no eligible choices. `city` stays null when the source is ambiguous, even if there is only one eligible choice. Let the user select their suburb and keep manual entry available. These are geographic choices, not mailing-address verification. [G-NAF source, adaptations and licence](https://parseapi.com/legal/attribution#postal-au).
 
-Postal and District paid profiles include `deep.property_tax` where supported. It contains `annual_median`, `currency` and `period`: median annual property tax payable on owner-occupied homes in the statistical area. The amount is adjusted to the final year of the reporting period (`YYYY-YYYY`). This is an area statistic, not a rate or an individual property bill. Unsupported, missing and censored estimates are null.
+Postal paid profiles include compact `deep.property_tax: { annual_median }` where supported; `deep.currency` supplies the currency. District keeps the richer property-tax record with `annual_median`, `currency` and `period` (`YYYY-YYYY`). Both are area estimates of annual tax payable on owner-occupied homes, not a rate or an individual property bill. Unsupported, missing and censored estimates are null. Postal readers also accept earlier nested currency and period values when present.
 
 ```swift
 let place = try await parse.postal("28202", country: "US", deep: true)
@@ -221,7 +223,7 @@ let propertyTax = place.deep?.propertyTax
 
 Read `population` as the source’s count for that place boundary. Keep missing or null values unknown and preserve a known zero. State district lists include each district’s population. Postal nearby and distance detail remains metropolitan associations only. Continent population stays in core.
 
-Point returns the timezone ID with the core location. Its optional deep detail adds terrain and compact nearest-city context on every plan. A nearest city is null when none is within 200 km.
+Point returns the timezone ID with the core location. Its optional Deep adds terrain, compact nearest-city context and supported electoral detail on paid plans. Existing accounts retain their current Deep access. A nearest city is null when none is within 200 km.
 
 Weather returns current conditions by default. Paid deep adds specialist current measurements, forecasts and related detail. A past `date` is a UTC day and requires deep: it adds `deep.history` alongside current conditions. Date alone does not request history.
 
@@ -243,11 +245,12 @@ Choose enrichment for the question you need answered.
 | IP | Richer IP fields included with a paid plan. No separate check meter. |
 | Domain | Registration dates, registrar, status and DNSSEC, included with a paid plan. Use `dns` for DNS records and `mx` for mail routing. |
 | Email | A metered mailbox check with deliverability, catch-all, status, reason and address hints, using included email checks or enabled on-demand usage. |
-| Phone | Numbering-plan state and timezone, pooled on every plan. |
+| Phone | Numbering-plan state and timezone on paid plans in the same pooled request. Existing accounts retain their current Deep access. |
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
-| Company (national number), Industry, Name, Weather | Richer reference/profile facts on paid plans. |
-| Time, Date, Language, Emoji | Optional same-question facts, pooled on every plan. |
-| Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
+| Industry, Name, Weather | Richer reference/profile facts on paid plans. |
+| Time, Date, Emoji | Optional detail on paid plans in the same pooled request. Existing accounts retain their current Deep access. |
+| Language | All language facts are in Core; requested Deep is empty. |
+| Point | Terrain, compact nearest-city context and supported electoral detail on paid plans in the same pooled request. Existing accounts retain their current Deep access. The timezone ID is Core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |
 
 Use `domain` for registration availability: `available` is `true`, `false`, or `nil` when unknown. Missing or null DNSSEC is unknown, while `false` is a known unsigned observation. The existing `domainResult` method and model remain available.
@@ -325,9 +328,10 @@ and a CDN SVG `logo`. Brand detection uses reviewed network rules independently
 of issuer records. Unknown or ambiguous prefixes return null brand fields and a
 generic logo; a known network without reviewed artwork also uses the generic logo.
 
-Optional Deep adds `prefix`, `issuer`, `country`, `type` and `prepaid`, included
-in the same pooled request on every plan. Six or more digits enable directory
-matching. Fewer digits return all-null Deep fields. Compare `deep.prefix` with
+Optional Deep adds `prefix`, `issuer`, `country`, `type` and `prepaid` on paid plans
+in the same pooled request. Existing accounts retain their current Deep access.
+Requested but locked Deep is `{}`. Six or more digits enable directory
+matching. With Deep access, fewer digits return all-null Deep fields. Compare `deep.prefix` with
 `bin`: equal is an exact recorded match; shorter is broader; null is no match.
 The longest row wins, including null fields. `prepaid: null` means unknown, not
 false. This is partial reference data, not card validity or payment acceptance.
