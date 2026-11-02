@@ -4,7 +4,6 @@ import Testing
 
 private let directoryProfileJSON = #"{"id":"co_222222222222","name":"Example","country":"US","website":null,"listings":[{"exchange":"Future Exchange","symbol":"A/B"}],"address":null,"deep":{"legal_name":"Example Inc.","aliases":[],"jurisdiction":{"country":"US","state":null},"status":"future-status","websites":[{"domain":"example.com","url":null}],"identifiers":[{"type":"registration","authority":"future:registry","value":"0000123"}],"incorporated":null,"addresses":[{"type":"future-role","street":null,"city":"Example City","state":null,"postal":null,"country":"US"}],"industries":[{"type":"future-scheme","code":"001","name":null}],"parent":null,"description":null,"logo":null,"socials":[],"founded":{"value":"2006","precision":"year"},"sources":[{"type":"website","url":"https://example.com/","fields":["founded"],"observed_at":"2026-09-23T17:35:06.956Z","updated_at":null,"future":true}],"future":true},"future":true}"#
 private let directorySearchJSON = #"{"companies":[{"id":"co_222222222222","name":"Example","country":"US","website":null,"listings":[{"exchange":"Future Exchange","symbol":"A/B"}],"address":null,"deep":{"legal_name":"Example Inc.","aliases":[],"jurisdiction":{"country":"US","state":null},"status":"future-status","websites":[{"domain":"example.com","url":null}],"identifiers":[{"type":"registration","authority":"future:registry","value":"0000123"}],"incorporated":null,"addresses":[{"type":"future-role","street":null,"city":"Example City","state":null,"postal":null,"country":"US"}],"industries":[{"type":"future-scheme","code":"001","name":null}],"parent":null,"description":null,"logo":null,"socials":[],"founded":{"value":"2006","precision":"year"},"sources":[{"type":"website","url":"https://example.com/","fields":["founded"],"observed_at":"2026-09-23T17:35:06.956Z","updated_at":null,"future":true}],"future":true},"future":true,"match":{"field":"future-field","value":"0000123","type":"future-scheme","authority":null,"exchange":null,"future":true}}],"next":"opaque+/="}"#
-private let directoryCoverageJSON = #"{"scope":"sample","label":"Company directory","description":"Edition profiles","snapshot_at":"2026-09-23T17:35:06.956Z","companies":0,"countries":[],"with_website":0,"with_listings":0,"with_address":0,"future":true}"#
 
 @Suite struct CompanyDirectoryTests {
  @Test func canonicalCollections() throws {
@@ -16,7 +15,7 @@ private let directoryCoverageJSON = #"{"scope":"sample","label":"Company directo
  }
 
  @Test func routesSelectorsAndResponseFields() async throws {
-  let stub = StubTransport([(200,directoryProfileJSON,[:]),(200,directoryProfileJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directoryCoverageJSON,[:])])
+  let stub = StubTransport([(200,directoryProfileJSON,[:]),(200,directoryProfileJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:])])
   let c = try makeClient(stub)
   let profile = try await c.companyId("co_/ ?",deep:true)
   #expect(profile.deep?.identifiers?.first?.value == "0000123")
@@ -30,14 +29,12 @@ private let directoryCoverageJSON = #"{"scope":"sample","label":"Company directo
   _ = try await c.companySearch(domain:"https://sub.example.com/a?b=1")
   _ = try await c.companySearch(ticker:"A/B",exchange:"Future Exchange")
   _ = try await c.companySearch(identifier:"0000123",authority:"future:registry")
-  let coverage = try await c.companyCoverage()
-  #expect(coverage.companies == 0 && coverage.countries.isEmpty)
   let expected = [
    "/company/id/co_%2F%20%3F?deep=true", "/company/id/co_222222222222",
    "/company?q=A%20%26%20B&country=US&limit=2&cursor=opaque%2B%2F%3D&deep=true",
    "/company?domain=https%3A%2F%2Fsub.example.com%2Fa%3Fb%3D1",
    "/company?ticker=A%2FB&exchange=Future%20Exchange",
-   "/company?identifier=0000123&authority=future%3Aregistry", "/company/directory/coverage"
+   "/company?identifier=0000123&authority=future%3Aregistry"
   ]
   #expect(stub.requests.count == expected.count)
   for (request,path) in zip(stub.requests,expected) {

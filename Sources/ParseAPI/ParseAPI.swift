@@ -928,10 +928,6 @@ public final class ParseAPI: Sendable {
 			("industry", industry), ("industry_type", industryType)] + deepQuery(deep))
 	}
 
-	/// Counts for this directory edition, not complete country or worldwide coverage.
-	public func companyCoverage() async throws -> CompanyCoverage {
-		try await get("/company/directory/coverage")
-	}
 
 	// MARK: - Transport
 

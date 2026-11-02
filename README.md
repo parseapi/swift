@@ -133,7 +133,7 @@ DNS uses pooled requests on every plan. Omit `type` to check A, AAAA, CNAME, MX,
 
 ## Company directory
 
-`companyId`, `companySearch`, `companyCoverage` retrieve directory profiles, search candidates and edition coverage. Existing national company-number validation stays unchanged. Use at most one of query (sent as `q`), domain, ticker or identifier, or discover by country or exact industry; country filters the candidates, exchange narrows a ticker and authority narrows an identifier. The API validates combinations. Each call makes one request and does not automatically resolve candidates or fetch linked assets.
+`companyId` and `companySearch` retrieve directory profiles and search candidates. Existing national company-number validation stays unchanged. Use at most one of query (sent as `q`), domain, ticker or identifier, or discover by country or exact industry; country filters the candidates, exchange narrows a ticker and authority narrows an identifier. The API validates combinations. Each call makes one request and does not automatically resolve candidates or fetch linked assets.
 
 ```swift
 let page = try await parse.companySearch(domain: "cloudflare.com", deep: true)
@@ -141,7 +141,6 @@ if let candidate = page.companies.first {
     let profile = try await parse.companyId(candidate.id, deep: true)
     // profile.deep and each CompanyProfileDeep member are optional.
 }
-let coverage = try await parse.companyCoverage()
 
 // Continue a name search with the same selector, filters and limit.
 let first = try await parse.companySearch(query: "Example", country: "US", limit: 10)
@@ -150,9 +149,11 @@ if let cursor = first.next {
 }
 ```
 
-Directory `deep` adds detail to each profile in the same pooled request on every plan. Omitted deep, empty deep and partial detail remain distinct; description, logo, social_profiles, phone_numbers, email_addresses, domains, founded, employees, registrations and sources may be absent on older server releases. Sources attribute only their listed selected enrichment fields. Founding precision is preserved separately from incorporation. Missing listings do not establish private ownership, and a domain match does not prove legal identity. Coverage describes the returned edition, not every company worldwide.
+Directory `deep` adds detail to each profile on paid plans in the same pooled request. Existing accounts retain their current Deep access. Omitted deep, empty deep and partial detail remain distinct; description, logo, social_profiles, phone_numbers, email_addresses, domains, founded, employees, registrations and sources may be absent on older server releases. Sources attribute only their listed selected enrichment fields. Founding precision is preserved separately from incorporation. Missing listings do not establish private ownership, and a domain match does not prove legal identity.
 
-Company directory social profiles contain `platform`, `url` and `handle`; unknown metadata stays null. Phone and email records use `type` for the source-reported purpose. Earlier response fields remain readable by the client.
+The public-directory service retires national-number Company lookups in both API versions. Use the directory methods with API 2.0.0.
+
+Company directory social profiles include `platform` and `url`. Known handles are included when available; unknown handles may be omitted or returned as null by older servers. Phone and email records use `type` for the source-reported purpose. Earlier response fields remain readable by the client.
 
 Discovery example: `try await parse.companySearch(country: "US", industry: "0700", industryType: "sic")`
 
@@ -245,7 +246,7 @@ Choose enrichment for the question you need answered.
 | Email | A metered mailbox check with deliverability, catch-all, status, reason and address hints, using included email checks or enabled on-demand usage. |
 | Phone | Numbering-plan state and timezone, pooled on every plan. |
 | Postal, Country, State, City, District | Geographic profiles on paid plans. Collections keep deep on each record. |
-| Company (national number), Industry, Name, Weather | Richer reference/profile facts on paid plans. |
+| Industry, Name, Weather | Richer reference/profile facts on paid plans. |
 | Time, Date, Language, Emoji | Optional same-question facts, pooled on every plan. |
 | Point | Terrain and compact nearest-city context, pooled on every plan. The timezone ID is core. |
 | Carrier, HLR | Place or network details included in the same metered lookup. |

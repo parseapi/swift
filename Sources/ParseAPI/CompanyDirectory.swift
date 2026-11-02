@@ -138,6 +138,8 @@ public struct CompanySocialProfile: Codable, Sendable {
 public struct CompanyPhoneNumber: Codable, Sendable {
  public let number: String
  public let type: String?
+ public let country: String?
+ public let e164: String?
 }
 public struct CompanyEmailAddress: Codable, Sendable {
  public let address: String
@@ -211,43 +213,4 @@ public struct CompanyCandidate: Codable, Sendable {
 public struct CompanySearch: Codable, Sendable {
 	public let companies: [CompanyCandidate]
 	public let next: String?
-}
-
-/// Counts for this directory edition, not complete country or worldwide coverage.
-public struct CompanyCoverage: Codable, Sendable {
-	public let scope: String
-	public let label: String
-	public let description: String
-	public let snapshotAt: String
-	public let companies: Int
-	public let countries: [String]
-	public let withWebsite: Int
-	public let withListings: Int
-	public let withAddress: Int
-
-	private enum CodingKeys: String, CodingKey { case scope, label, description, snapshotAt, companies, countries, withWebsite, withListings, withAddress }
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		scope = try values.decode(String.self, forKey: .scope)
-		label = try values.decode(String.self, forKey: .label)
-		description = try values.decode(String.self, forKey: .description)
-		snapshotAt = values.contains(.snapshotAt) ? try values.decode(String.self, forKey: .snapshotAt) : ""
-		companies = try values.decode(Int.self, forKey: .companies)
-		countries = try values.decode([String].self, forKey: .countries)
-		withWebsite = try values.decode(Int.self, forKey: .withWebsite)
-		withListings = try values.decode(Int.self, forKey: .withListings)
-		withAddress = try values.decode(Int.self, forKey: .withAddress)
-	}
-	public func encode(to encoder: Encoder) throws {
-		var values = encoder.container(keyedBy: CodingKeys.self)
-		try values.encode(scope, forKey: .scope)
-		try values.encode(label, forKey: .label)
-		try values.encode(description, forKey: .description)
-		if !snapshotAt.isEmpty { try values.encode(snapshotAt, forKey: .snapshotAt) }
-		try values.encode(companies, forKey: .companies)
-		try values.encode(countries, forKey: .countries)
-		try values.encode(withWebsite, forKey: .withWebsite)
-		try values.encode(withListings, forKey: .withListings)
-		try values.encode(withAddress, forKey: .withAddress)
-	}
 }

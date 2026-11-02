@@ -460,22 +460,6 @@ CompanyCountry: conformsTo Swift.Encodable
 CompanyCountry: conformsTo Swift.Sendable
 CompanyCountry: conformsTo Swift.SendableMetatype
 CompanyCountry: struct CompanyCountry
-CompanyCoverage.companies: let companies: Int
-CompanyCoverage.countries: let countries: [String]
-CompanyCoverage.description: let description: String
-CompanyCoverage.encode(to:): func encode(to encoder: any Encoder) throws
-CompanyCoverage.init(from:): init(from decoder: any Decoder) throws
-CompanyCoverage.label: let label: String
-CompanyCoverage.scope: let scope: String
-CompanyCoverage.snapshotAt: let snapshotAt: String
-CompanyCoverage.withAddress: let withAddress: Int
-CompanyCoverage.withListings: let withListings: Int
-CompanyCoverage.withWebsite: let withWebsite: Int
-CompanyCoverage: conformsTo Swift.Decodable
-CompanyCoverage: conformsTo Swift.Encodable
-CompanyCoverage: conformsTo Swift.Sendable
-CompanyCoverage: conformsTo Swift.SendableMetatype
-CompanyCoverage: struct CompanyCoverage
 CompanyDeep.acn: let acn: String?
 CompanyDeep.activity: let activity: String?
 CompanyDeep.countryName: let countryName: String?
@@ -511,6 +495,8 @@ CompanyMatch: conformsTo Swift.Encodable
 CompanyMatch: conformsTo Swift.Sendable
 CompanyMatch: conformsTo Swift.SendableMetatype
 CompanyMatch: struct CompanyMatch
+CompanyPhoneNumber.country: let country: String?
+CompanyPhoneNumber.e164: let e164: String?
 CompanyPhoneNumber.init(from:): init(from decoder: any Decoder) throws
 CompanyPhoneNumber.number: let number: String
 CompanyPhoneNumber.type: let type: String?
@@ -1652,7 +1638,6 @@ ParseAPI.citySearchList(_:limit:options:): func citySearchList(_ query: String, 
 ParseAPI.citySiblings(_:options:): func citySiblings(_ id: String, options: CityRelationsOptions = CityRelationsOptions()) async throws -> CityRelations
 ParseAPI.company(_:country:deep:): func company(_ number: String, country: String? = nil, deep: Bool = false) async throws -> Company
 ParseAPI.company(_:country:deep:lang:): func company(_ number: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> Company
-ParseAPI.companyCoverage(): func companyCoverage() async throws -> CompanyCoverage
 ParseAPI.companyId(_:deep:): func companyId(_ id: String, deep: Bool = false) async throws -> CompanyProfile
 ParseAPI.companySearch(query:domain:ticker:identifier:country:exchange:authority:limit:cursor:deep:): func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil, identifier: String? = nil, country: String? = nil, exchange: String? = nil, authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false) async throws -> CompanySearch
 ParseAPI.companySearch(query:domain:ticker:identifier:country:exchange:authority:limit:cursor:deep:industry:industryType:): func companySearch(query: String? = nil, domain: String? = nil, ticker: String? = nil, identifier: String? = nil, country: String? = nil, exchange: String? = nil, authority: String? = nil, limit: Int? = nil, cursor: String? = nil, deep: Bool = false, industry: String?, industryType: String? = nil) async throws -> CompanySearch

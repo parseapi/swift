@@ -17,7 +17,6 @@ private actor ResponseRecorder {
    let time = try decoder.decode(Timezone.self, from: responseBody(profile, "time"))
    let metadata = try decoder.decode(EmojiMetadata.self, from: responseBody(profile, "emoji-metadata"))
    let catalog = try decoder.decode(EmojiCatalog.self, from: responseBody(profile, "emoji-catalog"))
-   let coverage = try decoder.decode(CompanyCoverage.self, from: responseBody(profile, "company-coverage"))
    let company = try decoder.decode(CompanyProfile.self, from: responseBody(profile, "company-profile"))
    precondition(!zones.timezones.isEmpty && time.unix == 1791907200)
    precondition(time.location?.candidates.first?.country == "US")
@@ -27,10 +26,10 @@ private actor ResponseRecorder {
    precondition(company.deep?.employees?.method == (profile == "standard" ? "reported" : ""))
    if profile == "standard" {
     precondition(!zones.timezoneDatabaseVersion.isEmpty)
-    precondition(!metadata.sourceVersion.isEmpty && !coverage.snapshotAt.isEmpty)
+    precondition(!metadata.sourceVersion.isEmpty)
    } else {
     precondition(zones.timezoneDatabaseVersion.isEmpty)
-    precondition(metadata.sourceVersion.isEmpty && coverage.snapshotAt.isEmpty)
+    precondition(metadata.sourceVersion.isEmpty)
     precondition(time.location?.candidates.first?.id == nil && time.location?.candidates.first?.timezone == nil)
     precondition(time.location?.source == "")
    }
