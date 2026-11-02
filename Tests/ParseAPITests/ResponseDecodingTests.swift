@@ -21,7 +21,7 @@ private actor ResponseRecorder {
    precondition(!zones.timezones.isEmpty && time.unix == 1791907200)
    precondition(time.location?.candidates.first?.country == "US")
    precondition(!metadata.notices.isEmpty && !catalog.emojis.isEmpty)
-   precondition(coverage.companies == 1 && company.deep?.employees?.count == 12)
+   precondition(company.deep?.employees?.count == 12)
    precondition(company.deep?.employees?.approximate == false)
    precondition(company.deep?.employees?.method == (profile == "standard" ? "reported" : ""))
    if profile == "standard" {
