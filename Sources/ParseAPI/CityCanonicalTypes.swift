@@ -7,6 +7,24 @@ public struct CityMatch: Codable, Sendable {
     public let value: String
     public let language: String?
     public let editDistance: Int?
+
+    private enum CodingKeys: String, CodingKey { case type, source, value, language, editDistance }
+    public init(from decoder: any Decoder) throws {
+        let fields = try decoder.container(keyedBy: CodingKeys.self)
+        type = try fields.decode(String.self, forKey: .type)
+        source = try fields.decodeIfPresent(String.self, forKey: .source) ?? ""
+        value = try fields.decode(String.self, forKey: .value)
+        language = try fields.decodeIfPresent(String.self, forKey: .language)
+        editDistance = try fields.decodeIfPresent(Int.self, forKey: .editDistance)
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var fields = encoder.container(keyedBy: CodingKeys.self)
+        try fields.encode(type, forKey: .type)
+        if !source.isEmpty { try fields.encode(source, forKey: .source) }
+        try fields.encode(value, forKey: .value)
+        try fields.encodeIfPresent(language, forKey: .language)
+        try fields.encodeIfPresent(editDistance, forKey: .editDistance)
+    }
 }
 
 /// Complete City Core facts. Unknown facts remain nil; requested detail is optional.
@@ -32,7 +50,16 @@ public struct CityResource: Codable, Sendable {
     public let distance: Double?
     public let distanceMi: Double?
     public let parent: CityParent?
-    public let deep: CityDeep?
+	public let capitalOf: String?
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let population: Int?
+	public let populationPeriod: String? = nil
+	public let populationObservedOn: String?
+	public let populationBasis: String?
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
 }
 
 /// Safe bounded identities on HTTP409 ambiguous_city; no Deep fields.

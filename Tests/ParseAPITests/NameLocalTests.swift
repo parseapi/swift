@@ -10,13 +10,13 @@ import Testing
   for suffix in [#","name_local":"München"}"#, #","name_local":null}"#, "}"] {
    let data = Data((String(base.dropLast()) + suffix).utf8)
    let expected: String? = suffix.contains("München") ? "München" : nil
-   #expect(try decoder.decode(Country.self, from: data).nameLocal == expected)
-   #expect(try decoder.decode(State.self, from: data).nameLocal == expected)
-   #expect(try decoder.decode(City.self, from: data).nameLocal == expected)
-   #expect(try decoder.decode(CityNearest.self, from: data).nameLocal == expected)
-   #expect(try decoder.decode(Language.self, from: data).nameLocal == expected)
-   #expect(try decoder.decode(Holiday.self, from: data).nameLocal == expected)
-   #expect(try decoder.decode(PointCity.self, from: data).nameLocal == expected)
+ #expect(try decoder.decode(Country.self, from: data).nameLocal == expected)
+ #expect(try decoder.decode(State.self, from: data).nameLocal == expected)
+ #expect(try decoder.decode(City.self, from: data).nameLocal == expected)
+ #expect(try decoder.decode(CityNearest.self, from: data).nameLocal == expected)
+ #expect(try decoder.decode(Language.self, from: data).nameLocal == expected)
+ #expect(try decoder.decode(Holiday.self, from: data).nameLocal == expected)
+ #expect(try decoder.decode(PointCity.self, from: data).nameLocal == expected)
   }
  }
 }

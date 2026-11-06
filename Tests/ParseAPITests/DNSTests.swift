@@ -10,11 +10,11 @@ import Testing
 		])
 		let client = try makeClient(stub)
 		let result = try await client.dns("_dmarc.bücher.example.", type: "txt")
-		#expect(result.records.count == 2 && result.records[0].ttl == 0)
-		#expect(result.records[0].value == #""one" "two""#)
-		#expect(result.records[1].type == "CNAME")
-		#expect(try await client.dns("example.com").records.isEmpty)
-		#expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/dns/_dmarc.b%C3%BCcher.example.?type=txt")
-		#expect(stub.requests[1].url!.absoluteString == "https://api.parseapi.com/dns/example.com")
+ #expect(result.records.count == 2 && result.records[0].ttl == 0)
+ #expect(result.records[0].value == #""one" "two""#)
+ #expect(result.records[1].type == "CNAME")
+ #expect(try await client.dns("example.com").records.isEmpty)
+ #expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/dns/_dmarc.b%C3%BCcher.example.?type=txt")
+ #expect(stub.requests[1].url!.absoluteString == "https://api.parseapi.com/dns/example.com")
 	}
 }

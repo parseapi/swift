@@ -42,16 +42,17 @@ import Testing
 			let client = try makeClient(stub)
 			for call in [localized, plain] {
 				do { try await call(client); Issue.record("expected fixture miss") }
-				catch let error as ParseAPIError { #expect(error.status == 404) }
+				catch let error as ParseAPIError {
+ #expect(error.status == 404) }
 			}
-			#expect(stub.requests.count == 2, "one request per call: \(name)")
+ #expect(stub.requests.count == 2, "one request per call: \(name)")
 			var first = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)!
 			let next = URLComponents(url: stub.requests[1].url!, resolvingAgainstBaseURL: false)!
-			#expect(first.queryItems?.filter { $0.name == "lang" }.map(\.value) == ["fr-CA"], "language: \(name)")
-			#expect(next.queryItems?.contains { $0.name == "lang" } != true, "no language leak: \(name)")
+ #expect(first.queryItems?.filter { $0.name == "lang" }.map(\.value) == ["fr-CA"], "language: \(name)")
+ #expect(next.queryItems?.contains { $0.name == "lang" } != true, "no language leak: \(name)")
 			let remaining = (first.queryItems ?? []).filter { $0.name != "lang" }
 			first.queryItems = remaining.isEmpty ? nil : remaining
-			#expect(first.url == next.url, "only the language query changes: \(name)")
+ #expect(first.url == next.url, "only the language query changes: \(name)")
 		}
 	}
 
@@ -61,10 +62,10 @@ import Testing
 		_ = try await client.date("03/04/2026", format: "dmy", to: "2026-12-25", deep: true, lang: "fr&deep=false")
 		let url = URLComponents(url: stub.requests[0].url!, resolvingAgainstBaseURL: false)!
 		let items = url.queryItems ?? []
-		#expect(url.percentEncodedPath == "/date/03%2F04%2F2026")
-		#expect(items.filter { $0.name == "lang" }.map(\.value) == ["fr&deep=false"])
-		#expect(items.filter { $0.name == "deep" }.map(\.value) == ["true"])
-		#expect(items.first { $0.name == "format" }?.value == "dmy")
+ #expect(url.percentEncodedPath == "/date/03%2F04%2F2026")
+ #expect(items.filter { $0.name == "lang" }.map(\.value) == ["fr&deep=false"])
+ #expect(items.filter { $0.name == "deep" }.map(\.value) == ["true"])
+ #expect(items.first { $0.name == "format" }?.value == "dmy")
 	}
 
 	@Test func originalFunctionReferencesRemainAvailable() async throws {
@@ -76,7 +77,7 @@ import Testing
 		_ = try? await continent("AF")
 		_ = try? await country("DE", false)
 		_ = try? await date("03/04/2026", "dmy", nil, false)
-		#expect(stub.requests.count == 3)
-		#expect(stub.requests.allSatisfy { $0.url?.query?.contains("lang=") != true })
+ #expect(stub.requests.count == 3)
+ #expect(stub.requests.allSatisfy { $0.url?.query?.contains("lang=") != true })
 	}
 }

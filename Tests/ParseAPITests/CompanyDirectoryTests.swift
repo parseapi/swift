@@ -2,66 +2,64 @@ import Foundation
 import Testing
 @testable import ParseAPI
 
-private let directoryProfileJSON = #"{"id":"co_222222222222","name":"Example","country":"US","website":null,"listings":[{"exchange":"Future Exchange","symbol":"A/B"}],"address":null,"deep":{"legal_name":"Example Inc.","aliases":[],"jurisdiction":{"country":"US","state":null},"status":"future-status","websites":[{"domain":"example.com","url":null}],"identifiers":[{"type":"registration","authority":"future:registry","value":"0000123"}],"incorporated":null,"addresses":[{"type":"future-role","street":null,"city":"Example City","state":null,"postal":null,"country":"US"}],"industries":[{"type":"future-scheme","code":"001","name":null}],"parent":null,"description":null,"logo":null,"socials":[],"founded":{"value":"2006","precision":"year"},"sources":[{"type":"website","url":"https://example.com/","fields":["founded"],"observed_at":"2026-09-23T17:35:06.956Z","updated_at":null,"future":true}],"future":true},"future":true}"#
-private let directorySearchJSON = #"{"companies":[{"id":"co_222222222222","name":"Example","country":"US","website":null,"listings":[{"exchange":"Future Exchange","symbol":"A/B"}],"address":null,"deep":{"legal_name":"Example Inc.","aliases":[],"jurisdiction":{"country":"US","state":null},"status":"future-status","websites":[{"domain":"example.com","url":null}],"identifiers":[{"type":"registration","authority":"future:registry","value":"0000123"}],"incorporated":null,"addresses":[{"type":"future-role","street":null,"city":"Example City","state":null,"postal":null,"country":"US"}],"industries":[{"type":"future-scheme","code":"001","name":null}],"parent":null,"description":null,"logo":null,"socials":[],"founded":{"value":"2006","precision":"year"},"sources":[{"type":"website","url":"https://example.com/","fields":["founded"],"observed_at":"2026-09-23T17:35:06.956Z","updated_at":null,"future":true}],"future":true},"future":true,"match":{"field":"future-field","value":"0000123","type":"future-scheme","authority":null,"exchange":null,"future":true}}],"next":"opaque+/="}"#
-private let directoryCoverageJSON = #"{"scope":"sample","label":"Company directory","description":"Edition profiles","snapshot_at":"2026-09-23T17:35:06.956Z","companies":0,"countries":[],"with_website":0,"with_listings":0,"with_address":0,"future":true}"#
+private let directoryProfileJSON = #"{"id":"co_222222222222","name":"Example","country":"US","website":null,"listings":[{"exchange":"Future Exchange","symbol":"A/B"}],"address":null,"future":true,"legal_name":"Example Inc.","aliases":[],"jurisdiction":{"country":"US","state":null},"status":"future-status","websites":[{"domain":"example.com","url":null}],"identifiers":[{"type":"registration","authority":"future:registry","value":"0000123"}],"incorporated":null,"addresses":[{"type":"future-role","street":null,"city":"Example City","state":null,"postal":null,"country":"US"}],"industries":[{"type":"future-scheme","code":"001","name":null}],"parent":null,"description":null,"logo":null,"socials":[],"founded":{"value":"2006","precision":"year"},"sources":[{"type":"website","url":"https://example.com/","fields":["founded"],"observed_at":"2026-09-23T17:35:06.956Z","updated_at":null,"future":true}]}"#
+private let directorySearchJSON = #"{"companies":[{"id":"co_222222222222","name":"Example","country":"US","website":null,"listings":[{"exchange":"Future Exchange","symbol":"A/B"}],"address":null,"future":true,"match":{"field":"future-field","value":"0000123","type":"future-scheme","authority":null,"exchange":null,"future":true},"legal_name":"Example Inc.","aliases":[],"jurisdiction":{"country":"US","state":null},"status":"future-status","websites":[{"domain":"example.com","url":null}],"identifiers":[{"type":"registration","authority":"future:registry","value":"0000123"}],"incorporated":null,"addresses":[{"type":"future-role","street":null,"city":"Example City","state":null,"postal":null,"country":"US"}],"industries":[{"type":"future-scheme","code":"001","name":null}],"parent":null,"description":null,"logo":null,"socials":[],"founded":{"value":"2006","precision":"year"},"sources":[{"type":"website","url":"https://example.com/","fields":["founded"],"observed_at":"2026-09-23T17:35:06.956Z","updated_at":null,"future":true}]}],"next":"opaque+/="}"#
 
 @Suite struct CompanyDirectoryTests {
  @Test func canonicalCollections() throws {
   let decoder=JSONDecoder();decoder.keyDecodingStrategy = .convertFromSnakeCase
   let deep=try decoder.decode(CompanyProfileDeep.self,from:Data(#"{"domains":[{"domain":"other.example","url":null}],"social_profiles":[{"platform":"future-platform","url":"https://social.example/acme","handle":null}],"phone_numbers":[{"number":"617-555-0100","type":"office"}],"email_addresses":[{"address":"help@example.com","type":null}],"future":true}"#.utf8))
-  #expect(deep.domains?.first?.domain == "other.example" && deep.domains?.first?.url == nil)
-  #expect(deep.socialProfiles?.first?.platform == "future-platform" && deep.socialProfiles?.first?.handle == nil)
-  #expect(deep.phoneNumbers?.first?.type == "office" && deep.emailAddresses?.first?.type == nil)
+ #expect(deep.domains?.first?.domain == "other.example" && deep.domains?.first?.url == nil)
+ #expect(deep.socialProfiles?.first?.platform == "future-platform" && deep.socialProfiles?.first?.handle == nil)
+ #expect(deep.phoneNumbers?.first?.type == "office" && deep.emailAddresses?.first?.type == nil)
  }
 
  @Test func routesSelectorsAndResponseFields() async throws {
-  let stub = StubTransport([(200,directoryProfileJSON,[:]),(200,directoryProfileJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directoryCoverageJSON,[:])])
+  let stub = StubTransport([(200,directoryProfileJSON,[:]),(200,directoryProfileJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:]),(200,directorySearchJSON,[:])])
   let c = try makeClient(stub)
   let profile = try await c.companyId("co_/ ?",deep:true)
-  #expect(profile.deep?.identifiers?.first?.value == "0000123")
-  #expect(profile.deep?.status == "future-status" && profile.deep?.socials?.isEmpty == true)
-  #expect(profile.deep?.founded?.precision == "year" && profile.deep?.sources?.first?.updatedAt == nil)
-  #expect(profile.deep?.jurisdiction?.state == nil)
+ #expect(profile.identifiers?.first?.value == "0000123")
+ #expect(profile.status == "future-status" && profile.socials?.isEmpty == true)
+ #expect(profile.founded?.precision == "year" && profile.sources?.first?.updatedAt == nil)
+ #expect(profile.jurisdiction?.state == nil)
   _ = try await c.companyId("co_222222222222")
   let search = try await c.companySearch(query:"A & B",country:"US",limit:2,cursor:"opaque+/=",deep:true)
-  #expect(search.next == "opaque+/=" && search.companies.first?.match.field == "future-field")
-  #expect(search.companies.first?.deep?.legalName == "Example Inc.")
+ #expect(search.next == "opaque+/=" && search.companies.first?.match.field == "future-field")
+ #expect(search.companies.first?.legalName == "Example Inc.")
   _ = try await c.companySearch(domain:"https://sub.example.com/a?b=1")
   _ = try await c.companySearch(ticker:"A/B",exchange:"Future Exchange")
   _ = try await c.companySearch(identifier:"0000123",authority:"future:registry")
-  let coverage = try await c.companyCoverage()
-  #expect(coverage.companies == 0 && coverage.countries.isEmpty)
   let expected = [
    "/company/id/co_%2F%20%3F?deep=true", "/company/id/co_222222222222",
    "/company?q=A%20%26%20B&country=US&limit=2&cursor=opaque%2B%2F%3D&deep=true",
    "/company?domain=https%3A%2F%2Fsub.example.com%2Fa%3Fb%3D1",
    "/company?ticker=A%2FB&exchange=Future%20Exchange",
-   "/company?identifier=0000123&authority=future%3Aregistry", "/company/directory/coverage"
+   "/company?identifier=0000123&authority=future%3Aregistry"
   ]
-  #expect(stub.requests.count == expected.count)
+ #expect(stub.requests.count == expected.count)
   for (request,path) in zip(stub.requests,expected) {
-   #expect(request.url?.absoluteString == "https://api.parseapi.com"+path)
-   #expect(request.value(forHTTPHeaderField:"Parse-Version") == "2.0.0")
+ #expect(request.url?.absoluteString == "https://api.parseapi.com"+path)
+ #expect(request.value(forHTTPHeaderField:"X-API-Version") == "2.1.0")
   }
  }
  @Test func oldEmptyPartialAndFutureDeep() throws {
   let decoder=JSONDecoder();decoder.keyDecodingStrategy = .convertFromSnakeCase
   for suffix in ["", #","deep":{}"#, #","deep":{"legal_name":"Old name"}"#, #","deep":{"socials":null,"sources":null,"description":null,"employees":null}"#] {
    let value=try decoder.decode(CompanyProfile.self,from:Data((#"{"id":"co_222222222222","name":"Example","listings":[]"#+suffix+"}").utf8))
-   #expect(value.deep?.socials == nil && value.deep?.sources == nil && value.deep?.founded == nil && value.deep?.employees == nil)
-   if suffix.isEmpty { #expect(value.deep == nil) }
+ #expect(value.socials == nil && value.sources == nil && value.founded == nil && value.employees == nil)
+   if suffix.isEmpty { }
   }
-  let value=try decoder.decode(CompanyProfile.self,from:Data(#"{"id":"co_222222222222","name":"Example","listings":[],"deep":{"socials":[],"sources":[],"founded":{"value":"spring 2006","precision":"season"}}}"#.utf8))
-  #expect(value.deep?.socials?.isEmpty == true && value.deep?.sources?.isEmpty == true && value.deep?.founded?.precision == "season")
+  let value=try decoder.decode(CompanyProfile.self,from:Data(#"{"id":"co_222222222222","name":"Example","listings":[],"socials":[],"sources":[],"founded":{"value":"spring 2006","precision":"season"}}"#.utf8))
+ #expect(value.socials?.isEmpty == true && value.sources?.isEmpty == true && value.founded?.precision == "season")
   let empty=try decoder.decode(CompanySearch.self,from:Data(#"{"companies":[],"next":null}"#.utf8))
-  #expect(empty.companies.isEmpty && empty.next == nil)
+ #expect(empty.companies.isEmpty && empty.next == nil)
  }
  @Test func serverValidatesSelectorCombinations() async throws {
   let stub=StubTransport(status:400,body:#"{"code":"invalid_request","message":"Choose one selector"}"#)
   do { _ = try await makeClient(stub).companySearch(query:"Example",domain:"example.com"); Issue.record("Expected server error") }
-  catch let error as ParseAPIError { #expect(error.code == "invalid_request") }
-  #expect(stub.requests.count == 1)
+  catch let error as ParseAPIError {
+ #expect(error.code == "invalid_request") }
+ #expect(stub.requests.count == 1)
  }
  @Test func employeeObservationsPreserveZeroFalseDatesAndOpenCodes() async throws {
   let cases: [(String,Int,String,String,String,Bool)] = [
@@ -76,11 +74,11 @@ private let directoryCoverageJSON = #"{"scope":"sample","label":"Company directo
    let client=try makeClient(stub)
    let profile=try await client.companyId("co_222222222222",deep:true)
    let page=try await client.companySearch(query:"Example",deep:true)
-   for optional in [profile.deep?.employees,page.companies.first?.deep?.employees] {
+   for optional in [profile.employees,page.companies.first?.employees] {
     let value=try #require(optional)
-    #expect(value.count == count && value.asOf == date)
-    #expect(value.basis == (count == 12500 ? "full_time_equivalent" : count == 7 ? "future_basis" : nil))
-    #expect(value.scope == scope && value.method == method && value.approximate == approximate)
+ #expect(value.count == count && value.asOf == date)
+ #expect(value.basis == (count == 12500 ? "full_time_equivalent" : count == 7 ? "future_basis" : nil))
+ #expect(value.scope == scope && value.method == method && value.approximate == approximate)
    }
   }
  }
@@ -103,9 +101,9 @@ private let directoryCoverageJSON = #"{"scope":"sample","label":"Company directo
   ]
   for (request,wanted) in zip(stub.requests,expected) {
    let parts=URLComponents(url:try #require(request.url),resolvingAgainstBaseURL:false)
-   #expect(parts?.path == "/company")
+ #expect(parts?.path == "/company")
    let values=Dictionary(uniqueKeysWithValues:(parts?.queryItems ?? []).map {($0.name,$0.value ?? "")})
-   #expect(values == wanted)
+ #expect(values == wanted)
   }
  }
 
@@ -117,14 +115,18 @@ private let directoryCoverageJSON = #"{"scope":"sample","label":"Company directo
    let pageText = #"{"companies":["# + text.dropLast() + #","match":{"field":"identifier"}}],"next":null}"#
    let stub=StubTransport([(200,text,[:]),(200,pageText,[:])]);let client=try makeClient(stub)
    let profile=try await client.companyId("co_222222222222",deep:true);let page=try await client.companySearch(identifier:"0001234567",authority:"RA000599",deep:true)
-   for rows in [profile.deep?.registrations,page.companies.first?.deep?.registrations] {
-    if let r=rows?.first {#expect(r.number == "0001234567" && r.jurisdiction.country == "US" && r.formationDate == "2004-02-29");#expect(r.address?.kind == "principal" && r.address?.postal == "00123-0001")}
-    if deep == #"{"registrations":[]}"# {#expect(rows?.isEmpty == true)}
+   for rows in [profile.registrations,page.companies.first?.registrations] {
+    if let r=rows?.first {
+ #expect(r.number == "0001234567" && r.jurisdiction.country == "US" && r.formationDate == "2004-02-29")
+ #expect(r.address?.kind == "principal" && r.address?.postal == "00123-0001")}
+    if deep == #"{"registrations":[]}"# {
+ #expect(rows?.isEmpty == true)}
    }
   }
   let itemFuture=item.replacingOccurrences(of:"domestic",with:"future_role").replacingOccurrences(of:#""formation_date":"2004-02-29""#,with:#""formation_date":null"#)
   let decoder=JSONDecoder();decoder.keyDecodingStrategy = .convertFromSnakeCase
-  let future=try decoder.decode(CompanyProfileRegistration.self,from:Data(itemFuture.utf8));#expect(future.role == "future_role" && future.formationDate == nil)
+  let future=try decoder.decode(CompanyProfileRegistration.self,from:Data(itemFuture.utf8))
+ #expect(future.role == "future_role" && future.formationDate == nil)
  }
 
 }

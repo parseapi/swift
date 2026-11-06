@@ -2,10 +2,7 @@ import Foundation
 
 // Response types for the reviewed ParseAPI public API contract.
 // Nullable fields are optionals; optional detail belongs to its owning entity.
-// Deep objects follow the triad: nil when not requested, empty when
-// requested but locked, populated when unlocked, so every field inside
-// a deep type is optional. Unknown fields are ignored by Codable.
-// JSON keys are snake_case and decode with convertFromSnakeCase.
+// Optional 2.1 detail belongs to its owning resource. Missing and null remain unknown.
 
 // Core list fields have always represented collections. Keep their public
 // types stable when a response carries null or omits an empty collection.
@@ -16,6 +13,15 @@ extension KeyedDecodingContainer {
 }
 
 public struct IPDeep: Codable, Sendable {
+	/// Approximate range location; ASN type is the origin network category.
+	public let stateName: String?
+	public let postal: String?
+	public let latitude: Double?
+	public let longitude: Double?
+	public let timezone: String?
+	public let network: String?
+	public let asnType: String?
+	public let proxy: Bool?
 	public let state: String?
 	public let city: String?
 	public let registry: String?
@@ -32,13 +38,32 @@ public struct IPDeep: Codable, Sendable {
 }
 
 public struct IP: Codable, Sendable {
+	public let stateName: String?
+	public let postal: String?
+	public let latitude: Double?
+	public let longitude: Double?
+	public let timezone: String?
+	public let network: String?
+	public let asnType: String?
+	public let proxy: Bool?
 	public let ip: String
 	public let country: String?
 	public let countryName: String?
 	public let continent: String?
 	public let asn: String?
 	public let asnName: String?
-	public let deep: IPDeep?
+	public let state: String?
+	public let city: String?
+	public let registry: String?
+	public let datacenter: Bool?
+	public let relay: Bool?
+	public let tor: Bool?
+	public let vpn: Bool?
+	public let provider: String?
+	public let district: String?
+	public let districtName: String?
+	public let censusDivision: String?
+	public let censusRegion: String?
 }
 
 public struct Continent: Codable, Sendable {
@@ -134,7 +159,7 @@ public struct Country: Codable, Sendable {
 	public let flag: String?
 	public var emoji: String? { flag }
 	public let languages: [String]
-	public let deep: CountryDeep?
+
 	public let timezones: [String]?
 	public let iso3: String?
 	public let numeric: Int?
@@ -149,50 +174,158 @@ public struct Country: Codable, Sendable {
 	public var capitalLon: Double? { capital?.longitude }
 	public let borders: [String]?
 	public let blocs: [String]?
+	public let gdp: Double?
+	public let gdpPerCapita: Double?
+	public let populationGrowth: Double?
+	public let urbanPopulation: Double?
+	public let internetUsers: Double?
+	public let population: Int?
+	public let populationPeriod: String? = nil
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
+	public let coastline: Double?
+	public let elevation: Double?
+	public let lowestPoint: CountryElevationPoint?
+	public let highestPoint: CountryElevationPoint?
+	public let tld: String?
+	public let tax: CountryTax?
+	public let taxIdFormat: String?
+	public let taxIdRegex: String?
+	public let weekStart: String?
+	public let units: String?
+	public let drivingSide: String?
+	public let plugs: [String]?
+	public let voltage: Int?
+	public let frequency: Int?
+	public let emergency: CountryEmergency?
+	public let postalFormat: String?
+	public let postalRegex: String?
+	public let ioc: String?
+	public let fifa: String?
+	public let plate: String?
+	public let gdpUsd: Double?
+	public let gdpPerCapitaUsd: Double?
+	public let populationGrowthPercent: Double?
+	public let urbanPopulationPercent: Double?
+	public let internetUsersPercent: Double?
+	public let elevationAverage: Double?
 	private enum CodingKeys: String, CodingKey {
-		case iso3 = "iso_alpha3"
-		case numeric = "iso_numeric"
-		case country, name, nameLocal, continent, currency, currencyName, currencySymbol, callingCode, flag, languages, deep, timezones,  demonym, region, subregion, capital, borders, blocs
+		case area
+		case blocs
+		case borders
+		case callingCode
+		case capital
+		case coastline
+		case continent
+		case country
+		case currency
+		case currencyName
+		case currencySymbol
+		case demonym
+		case drivingSide
+		case elevation
+		case elevationAverage
+		case emergency
+		case fifa
+		case flag
+		case frequency
+		case gdp
+		case gdpPerCapita
+		case gdpPerCapitaUsd
+		case gdpUsd
+		case highestPoint
+		case internetUsers
+		case internetUsersPercent
+		case ioc
+		case iso3 = "isoAlpha3"
+		case landArea
+		case languages
+		case lowestPoint
+		case name
 		case nameFull
+		case nameLocal
+		case numeric = "isoNumeric"
+		case plate
+		case plugs
+		case population
+		case populationGrowth
+		case populationGrowthPercent
+		case populationPeriod
+		case postalFormat
+		case postalRegex
+		case region
+		case subregion
+		case tax
+		case taxIdFormat
+		case taxIdRegex
+		case timezones
+		case tld
+		case units
+		case urbanPopulation
+		case urbanPopulationPercent
+		case voltage
+		case waterArea
+		case weekStart
 	}
-	private enum LegacyCodingKeys: String, CodingKey { case fullName, emoji, capitalLat, capitalLon }
-
-	public init(from decoder: any Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		country = try values.decode(String.self, forKey: .country)
-		name = try values.decode(String.self, forKey: .name)
-		nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
-		continent = try values.decodeIfPresent(String.self, forKey: .continent)
-		currency = try values.decodeIfPresent(String.self, forKey: .currency)
-		currencyName = try values.decodeIfPresent(String.self, forKey: .currencyName)
-		currencySymbol = try values.decodeIfPresent(String.self, forKey: .currencySymbol)
-		callingCode = try values.decodeIfPresent(String.self, forKey: .callingCode)
-		let legacy = try decoder.container(keyedBy: LegacyCodingKeys.self)
-        flag = try values.contains(.flag) ? values.decodeIfPresent(String.self,forKey:.flag) : legacy.decodeIfPresent(String.self,forKey:.emoji)
-		languages = try values.decodeIfPresent([String].self, forKey: .languages) ?? []
-		deep = try values.decodeIfPresent(CountryDeep.self, forKey: .deep)
-		timezones = try values.decodeIfPresent([String].self, forKey: .timezones)
-		iso3 = try decodeISOWire(String.self, from: decoder, canonical: "iso_alpha3", camelCase: "isoAlpha3", legacy: ["iso3"])
-		numeric = try decodeISOWire(Int.self, from: decoder, canonical: "iso_numeric", camelCase: "isoNumeric", legacy: ["numeric"])
-		if values.contains(.nameFull) {
-			nameFull = try values.decodeIfPresent(String.self, forKey: .nameFull)
-		} else {
-			let legacy = try decoder.container(keyedBy: LegacyCodingKeys.self)
-			nameFull = try legacy.decodeIfPresent(String.self, forKey: .fullName)
-		}
-		demonym = try values.decodeIfPresent(String.self, forKey: .demonym)
-		region = try values.decodeIfPresent(String.self, forKey: .region)
-		subregion = try values.decodeIfPresent(String.self, forKey: .subregion)
-		if let nested = try? values.decode(CountryCapital.self,forKey:.capital) {
-            capital = nested
-        } else {
-            let name = try values.decodeIfPresent(String.self,forKey:.capital)
-            capital = name != nil || legacy.contains(.capitalLat) || legacy.contains(.capitalLon)
-                ? CountryCapital(name:name,latitude:try legacy.decodeIfPresent(Double.self,forKey:.capitalLat),longitude:try legacy.decodeIfPresent(Double.self,forKey:.capitalLon)) : nil
-        }
-		borders = try values.decodeIfPresent([String].self, forKey: .borders)
-		blocs = try values.decodeIfPresent([String].self, forKey: .blocs)
-	}
+ public init(from decoder: Decoder) throws {
+  let values = try decoder.container(keyedBy: CodingKeys.self)
+  country = try values.decodeIfPresent(String.self, forKey: .country) ?? ""
+  name = try values.decodeIfPresent(String.self, forKey: .name) ?? ""
+  nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
+  continent = try values.decodeIfPresent(String.self, forKey: .continent)
+  currency = try values.decodeIfPresent(String.self, forKey: .currency)
+  currencyName = try values.decodeIfPresent(String.self, forKey: .currencyName)
+  currencySymbol = try values.decodeIfPresent(String.self, forKey: .currencySymbol)
+  callingCode = try values.decodeIfPresent(String.self, forKey: .callingCode)
+  flag = try values.decodeIfPresent(String.self, forKey: .flag)
+  languages = try values.decodeIfPresent([String].self, forKey: .languages) ?? []
+  timezones = try values.decodeIfPresent([String].self, forKey: .timezones)
+  iso3 = try values.decodeIfPresent(String.self, forKey: .iso3)
+  numeric = try values.decodeIfPresent(Int.self, forKey: .numeric)
+  nameFull = try values.decodeIfPresent(String.self, forKey: .nameFull)
+  demonym = try values.decodeIfPresent(String.self, forKey: .demonym)
+  region = try values.decodeIfPresent(String.self, forKey: .region)
+  subregion = try values.decodeIfPresent(String.self, forKey: .subregion)
+  capital = try values.decodeIfPresent(CountryCapital.self, forKey: .capital)
+  borders = try values.decodeIfPresent([String].self, forKey: .borders)
+  blocs = try values.decodeIfPresent([String].self, forKey: .blocs)
+  gdp = try values.decodeIfPresent(Double.self, forKey: .gdp)
+  gdpPerCapita = try values.decodeIfPresent(Double.self, forKey: .gdpPerCapita)
+  populationGrowth = try values.decodeIfPresent(Double.self, forKey: .populationGrowth)
+  urbanPopulation = try values.decodeIfPresent(Double.self, forKey: .urbanPopulation)
+  internetUsers = try values.decodeIfPresent(Double.self, forKey: .internetUsers)
+  population = try values.decodeIfPresent(Int.self, forKey: .population)
+  area = try values.decodeIfPresent(Double.self, forKey: .area)
+  landArea = try values.decodeIfPresent(Double.self, forKey: .landArea)
+  waterArea = try values.decodeIfPresent(Double.self, forKey: .waterArea)
+  coastline = try values.decodeIfPresent(Double.self, forKey: .coastline)
+  elevation = try values.decodeIfPresent(Double.self, forKey: .elevation)
+  lowestPoint = try values.decodeIfPresent(CountryElevationPoint.self, forKey: .lowestPoint)
+  highestPoint = try values.decodeIfPresent(CountryElevationPoint.self, forKey: .highestPoint)
+  tld = try values.decodeIfPresent(String.self, forKey: .tld)
+  tax = try values.decodeIfPresent(CountryTax.self, forKey: .tax)
+  taxIdFormat = try values.decodeIfPresent(String.self, forKey: .taxIdFormat)
+  taxIdRegex = try values.decodeIfPresent(String.self, forKey: .taxIdRegex)
+  weekStart = try values.decodeIfPresent(String.self, forKey: .weekStart)
+  units = try values.decodeIfPresent(String.self, forKey: .units)
+  drivingSide = try values.decodeIfPresent(String.self, forKey: .drivingSide)
+  plugs = try values.decodeIfPresent([String].self, forKey: .plugs)
+  voltage = try values.decodeIfPresent(Int.self, forKey: .voltage)
+  frequency = try values.decodeIfPresent(Int.self, forKey: .frequency)
+  emergency = try values.decodeIfPresent(CountryEmergency.self, forKey: .emergency)
+  postalFormat = try values.decodeIfPresent(String.self, forKey: .postalFormat)
+  postalRegex = try values.decodeIfPresent(String.self, forKey: .postalRegex)
+  ioc = try values.decodeIfPresent(String.self, forKey: .ioc)
+  fifa = try values.decodeIfPresent(String.self, forKey: .fifa)
+  plate = try values.decodeIfPresent(String.self, forKey: .plate)
+  gdpUsd = try values.decodeIfPresent(Double.self, forKey: .gdpUsd)
+  gdpPerCapitaUsd = try values.decodeIfPresent(Double.self, forKey: .gdpPerCapitaUsd)
+  populationGrowthPercent = try values.decodeIfPresent(Double.self, forKey: .populationGrowthPercent)
+  urbanPopulationPercent = try values.decodeIfPresent(Double.self, forKey: .urbanPopulationPercent)
+  internetUsersPercent = try values.decodeIfPresent(Double.self, forKey: .internetUsersPercent)
+  elevationAverage = try values.decodeIfPresent(Double.self, forKey: .elevationAverage)
+ }
 
 }
 
@@ -245,37 +378,42 @@ public struct State: Codable, Sendable {
 	public let fips: String?
 	public let areaCodes: [String]?
 	public let capital: StateCapital?
-	public let deep: StateDeep?
 
- private enum CodingKeys: String, CodingKey {
-  case state, name, nameLocal, type, country, countryName, latitude, longitude, timezones, fips, areaCodes, capital, deep
-  case iso = "iso_subdivision"
- }
- public init(from decoder: any Decoder) throws {
-  let values = try decoder.container(keyedBy: CodingKeys.self)
-  state = try values.decode(String.self, forKey: .state)
-  name = try values.decode(String.self, forKey: .name)
-  nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
-  type = try values.decodeIfPresent(String.self, forKey: .type)
-  country = try values.decode(String.self, forKey: .country)
-  countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
-  latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
-  longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
-  timezones = try values.decode([String].self, forKey: .timezones)
-  iso = try decodeISOWire(String.self, from: decoder, canonical: "iso_subdivision", camelCase: "isoSubdivision", legacy: ["iso", "iso_3166_2", "iso31662"])
-  fips = try values.decodeIfPresent(String.self, forKey: .fips)
-  areaCodes = try values.decodeIfPresent([String].self, forKey: .areaCodes)
-  capital = try values.decodeIfPresent(StateCapital.self, forKey: .capital)
-  deep = try values.decodeIfPresent(StateDeep.self, forKey: .deep)
- }
+
+ 
+ 
  public var iso31662:String? {iso}
+	public let population:Int?
+	public let populationPeriod:String? = nil
+	public let area:Double?
+	public let tax:StateTax?
+	private enum CodingKeys: String, CodingKey {
+		case area
+		case areaCodes
+		case capital
+		case country
+		case countryName
+		case fips
+		case iso = "isoSubdivision"
+		case latitude
+		case longitude
+		case name
+		case nameLocal
+		case population
+		case populationPeriod
+		case state
+		case tax
+		case timezones
+		case type
+	}
 }
 
 public struct StateDistrictItem: Codable, Sendable {
 	public let district: String
 	public let name: String
 	public let type: String?
-	public let deep: StateDistrictDeep?
+	public let population: Int?
+	public let populationPeriod: String? = nil
 }
 
 public struct StateDistricts: Codable, Sendable {
@@ -297,7 +435,13 @@ public struct District: Codable, Sendable {
 	public let latitude: Double?
 	public let longitude: Double?
 	public let timezones: [String]
-	public let deep: DistrictDeep?
+	public let population: Int?
+	public let populationPeriod: String? = nil
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
+	public let seat: String?
+	public let propertyTax: PropertyTax?
 }
 
 public struct City: Codable, Sendable {
@@ -317,10 +461,20 @@ public struct City: Codable, Sendable {
 	public let longitude: Double?
 	public let timezone: String?
 	public let id: String?
-	public let deep: CityDeep?
+
 	/// Present only when hierarchy was requested; nil also represents unreviewed grain.
 	public let grain: String?
 	public let parent: CityParent?
+	public let capitalOf: String?
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let population: Int?
+	public let populationPeriod: String? = nil
+	public let populationObservedOn: String?
+	public let populationBasis: String?
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
 }
 
 /// Nearest-city lookups add the distance from the query point.
@@ -342,9 +496,19 @@ public struct CityNearest: Codable, Sendable {
 	public let id: String?
 	public let distance: Double
 	public let distanceMi: Double
-	public let deep: CityDeep?
+
 	public let grain: String?
 	public let parent: CityParent?
+	public let capitalOf: String?
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let population: Int?
+	public let populationPeriod: String? = nil
+	public let populationObservedOn: String?
+	public let populationBasis: String?
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
 }
 
 public struct CitySearch: Codable, Sendable {
@@ -379,7 +543,6 @@ public struct PostalMetro: Codable, Sendable {
 	public let residentialShare: Double?
 	public let businessShare: Double?
 	public let otherShare: Double?
-	/// Percentage of ZIP addresses (0-100). Nil is unknown or absent.
 	public let sharePercent: Double?
 }
 
@@ -407,9 +570,21 @@ public struct Postal: Codable, Sendable {
 	public let latitude: Double?
 	public let longitude: Double?
 	public let timezone: String?
-	public let deep: PostalDeep?
+
 	/// Open ZIP type, including future values. Nil is unknown or absent.
 	public let type: String?
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let population: Int?
+	public let populationPeriod: String? = nil
+	public let area: Double?
+	public let landArea: Double?
+	public let waterArea: Double?
+	public let currency: String?
+	public let neighbors: [String]?
+	public let metros: [PostalMetro]?
+	public let propertyTax: PostalPropertyTax?
+	public let tax: PostalTax?
 }
 
 public struct PostalNearbyItem: Codable, Sendable {
@@ -419,7 +594,7 @@ public struct PostalNearbyItem: Codable, Sendable {
 	public let country: String
 	public let distance: Double
 	public let distanceMi: Double
-	public let deep: PostalMetroDeep?
+	public let metros: [PostalMetro]?
 }
 
 public struct PostalNearby: Codable, Sendable {
@@ -428,13 +603,13 @@ public struct PostalNearby: Codable, Sendable {
 	public let radius: Double
 	public let unit: String
 	public let nearby: [PostalNearbyItem]
-	public let deep: PostalMetroDeep?
+	public let metros: [PostalMetro]?
 }
 
 public struct PostalDistanceEnd: Codable, Sendable {
 	public let postal: String
 	public let city: String?
-	public let deep: PostalMetroDeep?
+	public let metros: [PostalMetro]?
 }
 
 public struct PostalDistance: Codable, Sendable {
@@ -470,22 +645,14 @@ public struct Email: Codable, Sendable {
 	public let domainValid: Bool?
 	public let role: Bool
 	public let disposable: Bool
-	public let deep: EmailDeep?
-
-	public init(from decoder: Decoder) throws {
-		let c = try decoder.container(keyedBy: CodingKeys.self)
-		email = try c.decode(String.self, forKey: .email)
-		didyoumean = try c.decodeIfPresent(String.self, forKey: .didyoumean)
-		valid = try c.decode(Bool.self, forKey: .valid)
-		// 1.0.0 omits free and domain_type.
-		free = try c.decodeIfPresent(Bool.self, forKey: .free) ?? false
-		domain = try c.decodeIfPresent(String.self, forKey: .domain)
-		domainType = try c.decodeIfPresent(String.self, forKey: .domainType)
-		domainValid = try c.decodeIfPresent(Bool.self, forKey: .domainValid)
-		role = try c.decode(Bool.self, forKey: .role)
-		disposable = try c.decode(Bool.self, forKey: .disposable)
-		deep = try c.decodeIfPresent(EmailDeep.self, forKey: .deep)
-	}
+	public let firstName: String?
+	public let noReply: Bool?
+	public let tag: String?
+	public let mailProvider: String?
+	public let deliverable: Bool?
+	public let catchall: Bool?
+	public let status: String?
+	public let reason: String?
 }
 
 
@@ -562,7 +729,9 @@ public struct Phone: Codable, Sendable {
 	public let type: String?
 	public let national: String?
 	public let international: String?
-	public let deep: PhoneDeep?
+	public let state: String?
+	public let stateName: String?
+	public let timezone: String?
 }
 
 public struct Carrier: Codable, Sendable {
@@ -572,7 +741,9 @@ public struct Carrier: Codable, Sendable {
 	public let type: String?
 	public let carrier: String?
 	public let burner: Bool?
-	public let deep: CarrierDeep?
+	public let city: String?
+	public let state: String?
+	public let stateName: String?
 }
 
 public struct Caller: Codable, Sendable {
@@ -592,7 +763,13 @@ public struct HLR: Codable, Sendable {
 	public let live: Bool?
 	/// Handset reachable at the last check. Nil means unconfirmed.
 	public let connected: Bool?
-	public let deep: HLRDeep?
+	public let roaming: Bool?
+	public let roamingNetwork: String?
+	public let roamingCountry: String?
+	public let network: String?
+	public let originalNetwork: String?
+	public let mcc: String?
+	public let mnc: String?
 }
 
 public struct MXRecord: Codable, Sendable {
@@ -620,12 +797,12 @@ public struct Stack: Codable, Sendable {
 	public let chat: [StackTechnology]?
 	public let payments: [StackTechnology]?
 	public let hosting: [StackTechnology]?
-	public let deep: StackDeep?
+	
 }
 
 extension Stack {
 	private enum CodingKeys: String, CodingKey {
-		case domain, url, checkedAt, cms, servers, frameworks, ecommerce, analytics, chat, payments, hosting, deep
+		case domain, url, checkedAt, cms, servers, frameworks, ecommerce, analytics, chat, payments, hosting
 	}
 	public init(from decoder: any Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -640,7 +817,6 @@ extension Stack {
 		chat = try values.decodeIfPresent([StackTechnology].self, forKey: .chat)
 		payments = try values.decodeIfPresent([StackTechnology].self, forKey: .payments)
 		hosting = try values.decodeIfPresent([StackTechnology].self, forKey: .hosting)
-		deep = try values.decodeIfPresent(StackDeep.self, forKey: .deep)
 	}
 	public func encode(to encoder: any Encoder) throws {
 		var values = encoder.container(keyedBy: CodingKeys.self)
@@ -655,13 +831,11 @@ extension Stack {
 		try values.encode(chat, forKey: .chat)
 		try values.encode(payments, forKey: .payments)
 		try values.encode(hosting, forKey: .hosting)
-		try values.encodeIfPresent(deep, forKey: .deep)
 	}
 
 }
 
 public struct DomainRegistration: Codable, Sendable {
-	public let registered: Bool?
 	public let created: String?
 	public let updated: String?
 	public let expires: String?
@@ -678,14 +852,14 @@ public struct Domain: Codable, Sendable {
 	public let domain: String
 	/// True means unregistered, false means registered, nil means unknown.
 	public let available: Bool?
-	public let deep: DomainDeep?
+	public let registration: DomainRegistration?
 }
 
 /// Domain availability with nil for an unknown registration result.
 public struct DomainResult: Codable, Sendable {
 	public let domain: String
 	public let available: Bool?
-	public let deep: DomainDeep?
+	public let registration: DomainRegistration?
 }
 
 public struct ASN: Codable, Sendable {
@@ -702,7 +876,11 @@ public struct Card: Codable, Sendable {
 	public let brand: String?
 	public let brandName: String?
 	public let logo: String
-	public let deep: CardDeep?
+	public let prefix: String?
+	public let issuer: String?
+	public let country: String?
+	public let type: String?
+	public let prepaid: Bool?
 }
 
 /// Optional recorded issuer details. Nil fields mean unknown.
@@ -782,12 +960,15 @@ public struct UseragentDeep: Codable, Sendable {
 
 public struct Useragent: Codable, Sendable {
 	public let useragent: String
-	public let device: String?
-	public let os: String?
-	public let browser: String?
+	public let device: UseragentDeviceDeep?
+	public let os: UseragentOSDeep?
+	public let browser: UseragentBrowserDeep?
 	public let bot: Bool
 	public let mobile: Bool
-	public let deep: UseragentDeep?
+	public let engine: UseragentEngineDeep?
+	public let headless: Bool?
+	public let ai: Bool?
+	public let botDetails: UseragentBot?
 }
 
 
@@ -798,25 +979,19 @@ public struct Language: Codable, Sendable {
 	public let nameLocal: String?
 	public let script: String?
 	public let direction: String
-	public let deep: LanguageDeep?
+
 	public let iso3: String?
 	public let countries: [String]?
-
- private enum CodingKeys: String, CodingKey {
-  case language, name, nameLocal, script, direction, deep, countries
-  case iso3 = "iso_alpha3"
- }
- public init(from decoder: any Decoder) throws {
-  let values = try decoder.container(keyedBy: CodingKeys.self)
-  language = try values.decode(String.self, forKey: .language)
-  name = try values.decode(String.self, forKey: .name)
-  nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
-  script = try values.decodeIfPresent(String.self, forKey: .script)
-  direction = try values.decode(String.self, forKey: .direction)
-  deep = try values.decodeIfPresent(LanguageDeep.self, forKey: .deep)
-  iso3 = try decodeISOWire(String.self, from: decoder, canonical: "iso_alpha3", camelCase: "isoAlpha3", legacy: ["iso3"])
-  countries = try values.decodeIfPresent([String].self, forKey: .countries)
- }
+	
+	private enum CodingKeys: String, CodingKey {
+		case countries
+		case direction
+		case iso3 = "isoAlpha3"
+		case language
+		case name
+		case nameLocal
+		case script
+	}
 }
 
 /// A parsed person name. Junk input returns valid false, never an error.
@@ -829,7 +1004,11 @@ public struct Name: Codable, Sendable {
 	public let middle: String?
 	public let last: String?
 	public let suffix: String?
-	public let deep: NameDeep?
+	public let gender: String?
+	public let salutation: String?
+	public let short: String?
+	public let directory: String?
+	public let initials: String?
 }
 
 
@@ -845,7 +1024,7 @@ public typealias Time = Timezone
 /// Serving timezone IDs and their pinned rule edition.
 public struct TimeZones: Codable, Sendable {
 	public let timezoneDatabaseVersion: String
-	public let timezones: [String]
+	public let timezones: [String]?
 	public let at: String?
 	public let zones: [TimeZoneEntry]?
 
@@ -853,14 +1032,14 @@ public struct TimeZones: Codable, Sendable {
 	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		timezoneDatabaseVersion = values.contains(.timezoneDatabaseVersion) ? try values.decode(String.self, forKey: .timezoneDatabaseVersion) : ""
-		timezones = try values.decode([String].self, forKey: .timezones)
+		timezones = try values.decodeIfPresent([String].self, forKey: .timezones)
 		at = try values.decodeIfPresent(String.self, forKey: .at)
 		zones = try values.decodeIfPresent([TimeZoneEntry].self, forKey: .zones)
 	}
 	public func encode(to encoder: Encoder) throws {
 		var values = encoder.container(keyedBy: CodingKeys.self)
 		if !timezoneDatabaseVersion.isEmpty { try values.encode(timezoneDatabaseVersion, forKey: .timezoneDatabaseVersion) }
-		try values.encode(timezones, forKey: .timezones)
+		try values.encodeIfPresent(timezones, forKey: .timezones)
 		try values.encodeIfPresent(at, forKey: .at)
 		try values.encodeIfPresent(zones, forKey: .zones)
 	}
@@ -878,7 +1057,16 @@ public struct Timezone: Codable, Sendable {
 	public let unix: Int64?
 	public let to: TimezoneConversionTarget?
 	public let targets: [TimezoneConversionTarget]?
-	public let deep: TimezoneDeep?
+	public let standardOffset: String?
+	public let standardOffsetSeconds: Int?
+	public let dstOffsetSeconds: Int?
+	public let season: TimeSeason?
+	public let timezoneDatabaseVersion: String?
+	public let resolution: TimeResolution?
+	public let name: String?
+	public let offsetMinutes: Int?
+	public let offsetSeconds: Int?
+	public let nextDst: TimezoneNextDST?
 }
 
 public struct TimezoneConversionTarget: Codable, Sendable {
@@ -888,7 +1076,9 @@ public struct TimezoneConversionTarget: Codable, Sendable {
 	public let dst: Bool
 	public let at: String
 	public let unix: Int64?
-	public let deep: TimezoneConversionTargetDeep?
+	public let name: String?
+	public let offsetMinutes: Int?
+	public let offsetSeconds: Int?
 }
 
 /// Calendar facts. Ambiguous or invalid input has valid false and nil calendar fields.
@@ -898,7 +1088,18 @@ public struct DateInfo: Codable, Sendable {
 	public let unix: Int64?
 	public let to: String?
 	public let days: Int?
-	public let deep: DateInfoDeep?
+	public let year: Int?
+	public let month: Int?
+	public let monthName: String?
+	public let day: Int?
+	public let weekday: Int?
+	public let weekdayName: String?
+	public let week: Int?
+	public let weekYear: Int?
+	public let dayOfYear: Int?
+	public let quarter: Int?
+	public let leap: Bool?
+	public let daysInMonth: Int?
 }
 
 public struct Holiday: Codable, Sendable {
@@ -955,8 +1156,13 @@ public struct Point: Codable, Sendable {
 	public let stateName: String?
 	public let district: String?
 	public let districtName: String?
-	public let deep: PointDeep?
+
 	public let timezone: String?
+	public let elevation: Double?
+	public let elevationFt: Double?
+	public let resolution: Double?
+	public let city: PointCity?
+	public let electoral: PointElectoral?
 }
 
 public struct WeatherForecastPeriod: Codable, Sendable {
@@ -1044,6 +1250,15 @@ public struct WeatherCurrent: Codable, Sendable {
 	public let conditionName: String?
 	public let conditionEmoji: String?
 	public let observedAt: String?
+
+public let dewpoint: Double?
+	public let dewpointF: Double?
+	public let windGust: Double?
+	public let windGustMph: Double?
+	public let pressure: Double?
+	public let pressureInhg: Double?
+	public let visibility: Double?
+	public let visibilityMi: Double?
 }
 
 public struct WeatherStation: Codable, Sendable {
@@ -1058,7 +1273,13 @@ public struct Weather: Codable, Sendable {
 	public let longitude: Double
 	public let current: WeatherCurrent
 	public let station: WeatherStation?
-	public let deep: WeatherDeep?
+	public let forecast: [WeatherForecastPeriod]?
+	public let alerts: [WeatherAlert]?
+	public let hours: [WeatherHour]?
+	public let history: WeatherHistory?
+	public let minutes: [WeatherMinute]?
+	public let days: [WeatherDay]?
+	public let air: WeatherAir?
 }
 
 public struct EmojiSkin: Codable, Sendable {
@@ -1073,7 +1294,16 @@ public struct Emoji: Codable, Sendable {
 	public let name: String
 	public let shortcodes: [String]
 	public let category: String?
-	public let deep: EmojiDeep?
+	public let artwork: [String: EmojiArtwork]?
+	public let subcategory: String?
+	public let base: String?
+	public let variants: [EmojiVariant]?
+	public let codepoints: [String]?
+	public let hex: String?
+	public let status: String?
+	public let version: String?
+	public let keywords: [String]?
+	public let skins: [EmojiSkin]?
 }
 
 public struct EmojiSearch: Codable, Sendable {
@@ -1157,7 +1387,7 @@ public struct Address: Codable, Sendable {
 	public let countryName: String?
 	public let latitude: Double?
 	public let longitude: Double?
-	public let deep: AddressDeep?
+	
 }
 
 public struct AddressSuggestion: Codable, Sendable {
@@ -1215,10 +1445,21 @@ public struct Company: Codable, Sendable {
 	public let city: String?
 	public let state: String?
 	public let postal: String?
-	public let deep: CompanyDeep?
+	public let activity: String?
+	public let stateName: String?
+	public let countryName: String?
+	public let vat: String?
+	public let gst: Bool?
+	public let acn: String?
+	public let siren: String?
+	public let siege: Bool?
+	public let kind: String?
+	public let invoice: String?
 }
 
-public struct AddressDeep: Codable, Sendable {}
+public struct AddressDeep: Codable, Sendable {
+	public let electoral: PointElectoral?
+}
 
 
 public struct NAICSChild: Codable, Sendable {
@@ -1255,7 +1496,9 @@ public struct NAICS: Codable, Sendable {
 	public let parentName: String?
 	public let year: Int
 	public let country: String
-	public let deep: NAICSDeep?
+	public let description: String?
+	public let children: [NAICSChild]?
+	public let exclusions: [NAICSExclusion]?
 }
 
 public struct NAICSSearch: Codable, Sendable {
@@ -1320,8 +1563,8 @@ public struct CountryDeep: Codable, Sendable {
 	public let plate: String?
 
 	private enum CodingKeys: String, CodingKey {
-		case iso3 = "iso_alpha3"
-		case numeric = "iso_numeric"
+		case iso3 = "isoAlpha3"
+		case numeric = "isoNumeric"
 		case gdpUsd, gdpPerCapitaUsd, populationGrowthPercent, urbanPopulationPercent, internetUsersPercent, elevationAverage, gdp, gdpPerCapita, populationGrowth, urbanPopulation, internetUsers,  fullName, demonym, capital, capitalLat, capitalLon, region, subregion, population, area, landArea, waterArea, coastline, elevation, lowestPoint, highestPoint, tld, borders, blocs, tax, weekStart, units, drivingSide, plugs, voltage, frequency, emergency, postalFormat, postalRegex, ioc, fifa, plate
 	}
 	public let gdpUsd: Double?
@@ -1404,6 +1647,22 @@ public struct CountryEmergency: Codable, Sendable {
 }
 
 
+public struct StateTax: Codable, Sendable {
+	public let name: String?
+	/// Reference rate in percent.
+	public let rate: Double?
+}
+
+public struct PostalTax: Codable, Sendable {
+	public let name: String?
+	/// Combined ZIP rate and its components, in percent.
+	public let rate: Double?
+	public let rateState: Double?
+	public let rateCounty: Double?
+	public let rateCity: Double?
+	public let rateSpecial: Double?
+}
+
 public struct StateDeep: Codable, Sendable {
  public let population:Int?
  @available(*,deprecated,message:"No longer returned; retained for source compatibility")
@@ -1484,12 +1743,13 @@ public struct CityDeep: Codable, Sendable {
 }
 
 
-/// Postal's compact annual property-tax statistic. Currency context is on PostalDeep.
+/// Postal-area property-tax estimate. Currency belongs to the surrounding Postal profile.
 public struct PostalPropertyTax: Codable, Sendable {
+	/// Median annual tax payable, not a rate or an individual property bill.
 	public let annualMedian: Double
-	/// Read from older richer responses when supplied; nil for compact records.
+	/// Present only in older richer responses. Current Postal currency is in the surrounding profile.
 	public let currency: String?
-	/// Read from older richer responses when supplied; nil when absent.
+	/// Present only when an older response supplies its reporting period.
 	public let period: String?
 }
 
@@ -1503,19 +1763,15 @@ public struct PostalDeep: Codable, Sendable {
 	public let landArea: Double?
 	public let waterArea: Double?
 	public let currency: String?
+	/// Same-country postal codes, preserving leading zeros and source order.
 	public let neighbors: [String]?
 	public let metros: [PostalMetro]?
-	public let tax: String?
-	public let taxRate: Double?
-	public let taxRateState: Double?
-	public let taxRateCounty: Double?
-	public let taxRateCity: Double?
-	public let taxRateSpecial: Double?
+	public let tax: PostalTax?
 	/// Median annual property tax payable on owner-occupied homes in this statistical area. Null when unsupported, missing or censored.
 	public let propertyTax: PostalPropertyTax?
 
 	private enum CodingKeys: String, CodingKey {
-		case elevation, elevationFt, population, area, landArea, waterArea, currency, neighbors, metros, tax, taxRate, taxRateState, taxRateCounty, taxRateCity, taxRateSpecial, propertyTax
+		case elevation, elevationFt, population, area, landArea, waterArea, currency, neighbors, metros, tax, propertyTax
 	}
 }
 
@@ -1561,7 +1817,6 @@ public struct LanguageDeep: Codable, Sendable {
 
 public struct NameDeep: Codable, Sendable {
 	public let gender: String?
-	public let salutation: String?
 	public let short: String?
 	public let directory: String?
 	public let initials: String?
@@ -1673,8 +1928,11 @@ public struct NAICSSearchItem: Codable, Sendable {
 	public let level: Int
 	public let parent: String?
 	public let parentName: String?
-	public let deep: NAICSDeep?
+
 	public let match: NAICSMatch?
+	public let description: String?
+	public let children: [NAICSChild]?
+	public let exclusions: [NAICSExclusion]?
 }
 
 /// Property-tax estimate for an area, not a specific property.
@@ -1729,28 +1987,48 @@ public struct TimeLocationCandidate: Codable, Sendable {
 	public let longitude: Double?
 }
 public struct TimeLocation: Codable, Sendable {
-	public let input: TimeLocationInput
-	public let status: String
+	public let input: TimeLocationInput?
+	public let status: String?
 	public let candidates: [TimeLocationCandidate]
 	public let truncated: Bool
 	public let source: String
+	public let id: String?
+	public let name: String?
+	public let country: String?
+	public let state: String?
+	public let latitude: Double?
+	public let longitude: Double?
 
-	private enum CodingKeys: String, CodingKey { case input, status, candidates, truncated, source }
+	private enum CodingKeys: String, CodingKey { case input, status, candidates, truncated, source, id, name, country, state, latitude, longitude }
 	public init(from decoder: any Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
-		input = try values.decode(TimeLocationInput.self, forKey: .input)
-		status = try values.decode(String.self, forKey: .status)
-		candidates = try values.decode([TimeLocationCandidate].self, forKey: .candidates)
-		truncated = try values.decode(Bool.self, forKey: .truncated)
+		input = try values.decodeIfPresent(TimeLocationInput.self, forKey: .input)
+		status = try values.decodeIfPresent(String.self, forKey: .status)
+		candidates = try values.decodeIfPresent([TimeLocationCandidate].self, forKey: .candidates) ?? []
+		truncated = try values.decodeIfPresent(Bool.self, forKey: .truncated) ?? false
 		source = values.contains(.source) ? try values.decode(String.self, forKey: .source) : ""
+		id = try values.decodeIfPresent(String.self, forKey: .id)
+		name = try values.decodeIfPresent(String.self, forKey: .name)
+		country = try values.decodeIfPresent(String.self, forKey: .country)
+		state = try values.decodeIfPresent(String.self, forKey: .state)
+		latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+		longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
 	}
 	public func encode(to encoder: any Encoder) throws {
 		var values = encoder.container(keyedBy: CodingKeys.self)
-		try values.encode(input, forKey: .input)
-		try values.encode(status, forKey: .status)
-		try values.encode(candidates, forKey: .candidates)
-		try values.encode(truncated, forKey: .truncated)
+		try values.encodeIfPresent(input, forKey: .input)
+		try values.encodeIfPresent(status, forKey: .status)
+		if status != nil {
+			try values.encode(candidates, forKey: .candidates)
+			try values.encode(truncated, forKey: .truncated)
+		}
 		if !source.isEmpty { try values.encode(source, forKey: .source) }
+		try values.encodeIfPresent(id, forKey: .id)
+		try values.encodeIfPresent(name, forKey: .name)
+		try values.encodeIfPresent(country, forKey: .country)
+		try values.encodeIfPresent(state, forKey: .state)
+		try values.encodeIfPresent(latitude, forKey: .latitude)
+		try values.encodeIfPresent(longitude, forKey: .longitude)
 	}
 }
 
@@ -1776,21 +2054,7 @@ public typealias IndustrySearch = NAICSSearch
 
 
 
-public struct BinDeep: Codable, Sendable {}
 
-/// Card-prefix reference data. Nil means unknown.
-public struct Bin: Codable, Sendable {
-	public let bin: String
-	/// Actual longest matched prefix, which may be shorter than the input.
-	public let prefix: String?
-	public let country: String?
-	public let issuer: String?
-	public let brand: String?
-	public let brandName: String?
-	public let type: String?
-	public let prepaid: Bool?
-	public let deep: BinDeep?
-}
 
 
 
@@ -1830,8 +2094,18 @@ public struct EmojiParseItem: Codable, Sendable {
 	public let name: String
 	public let shortcodes: [String]
 	public let category: String?
-	public let deep: EmojiDeep?
+
 	public let positions: [EmojiPosition]
+	public let artwork: [String: EmojiArtwork]?
+	public let subcategory: String?
+	public let base: String?
+	public let variants: [EmojiVariant]?
+	public let codepoints: [String]?
+	public let hex: String?
+	public let status: String?
+	public let version: String?
+	public let keywords: [String]?
+	public let skins: [EmojiSkin]?
 }
 public struct EmojiParse: Codable, Sendable { public let emojis: [EmojiParseItem] }
 
@@ -1844,8 +2118,7 @@ public struct EmojiArtwork: Codable, Sendable {
 }
 
 public struct EmojiCompleteness: Codable, Sendable {
-	public let missingCount: Int
-	public let unexpectedCount: Int
+ public let complete: Bool?
 }
 
 public struct EmojiSource: Codable, Sendable {
@@ -1887,7 +2160,6 @@ public struct EmojiArtworkSource: Codable, Sendable {
 }
 
 public struct EmojiMetadata: Codable, Sendable {
- public let shortcodeSources: [String:EmojiShortcodeSourceMetadata]?
 	public let edition: String
 	public let maxVersion: String?
 	public let sourceVersion: String
@@ -1897,10 +2169,9 @@ public struct EmojiMetadata: Codable, Sendable {
 	public let artworkSources: [EmojiArtworkSource]
 	public let notices: [EmojiNotice]
 
-	private enum CodingKeys: String, CodingKey { case shortcodeSources, edition, maxVersion, sourceVersion, total, completeness, sources, artworkSources, notices }
+	private enum CodingKeys: String, CodingKey { case edition, maxVersion, sourceVersion, total, completeness, sources, artworkSources, notices }
 	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
-		shortcodeSources = try values.decodeIfPresent([String:EmojiShortcodeSourceMetadata].self, forKey: .shortcodeSources)
 		edition = try values.decode(String.self, forKey: .edition)
 		maxVersion = try values.decodeIfPresent(String.self, forKey: .maxVersion)
 		sourceVersion = values.contains(.sourceVersion) ? try values.decode(String.self, forKey: .sourceVersion) : ""
@@ -1912,7 +2183,6 @@ public struct EmojiMetadata: Codable, Sendable {
 	}
 	public func encode(to encoder: Encoder) throws {
 		var values = encoder.container(keyedBy: CodingKeys.self)
-		try values.encodeIfPresent(shortcodeSources, forKey: .shortcodeSources)
 		try values.encode(edition, forKey: .edition)
 		try values.encodeIfPresent(maxVersion, forKey: .maxVersion)
 		if !sourceVersion.isEmpty { try values.encode(sourceVersion, forKey: .sourceVersion) }
@@ -1926,7 +2196,6 @@ public struct EmojiMetadata: Codable, Sendable {
 
 public struct EmojiCatalog: Codable, Sendable {
  public let localization: EmojiCatalogLocalization?
-	public let profile: String?
 	public let scope: EmojiCatalogScope?
 	public let search: EmojiCatalogSearchFacts?
 	public let metadata: EmojiMetadata
@@ -1938,17 +2207,16 @@ public struct EmojiCatalog: Codable, Sendable {
 }
 
 public struct EmojiCatalogOptions: Sendable {
-	public var profile: String?
-	public var deep: Bool
+
+
 	public var lang: String?
 	public var category: String?
 	public var subcategory: String?
 	public var version: String?
 	public var maxVersion: String?
 	public var includeSkinTones: Bool?
-	public init(deep: Bool = true, lang: String? = nil, category: String? = nil, subcategory: String? = nil, version: String? = nil, maxVersion: String? = nil, includeSkinTones: Bool? = nil, profile: String? = nil) {
-		self.profile = profile
-		self.deep = deep; self.lang = lang; self.category = category; self.subcategory = subcategory; self.version = version; self.maxVersion = maxVersion; self.includeSkinTones = includeSkinTones
+	public init(lang: String? = nil, category: String? = nil, subcategory: String? = nil, version: String? = nil, maxVersion: String? = nil, includeSkinTones: Bool? = nil) {
+		self.lang = lang; self.category = category; self.subcategory = subcategory; self.version = version; self.maxVersion = maxVersion; self.includeSkinTones = includeSkinTones
 	}
 }
 
@@ -1998,6 +2266,7 @@ public struct EmojiShortcodeSourceMetadata: Codable, Sendable {
 
 
 public struct CityOptions: Sendable {
+	public let romanized: Bool
 	public let country: String?
 	public let state: String?
 	public let type: String?
@@ -2007,11 +2276,14 @@ public struct CityOptions: Sendable {
 	public let ambiguity: String?
 	public let deep: Bool
 	public let lang: String?
-	public init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, deep: Bool = false, lang: String? = nil) {
+	public init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, deep: Bool = false, lang: String? = nil, romanized: Bool) {
 		self.country = country; self.state = state; self.type = type; self.grain = grain
 		self.aliases = aliases; self.hierarchy = hierarchy; self.ambiguity = ambiguity
-		self.deep = deep; self.lang = lang
+		self.deep = deep; self.lang = lang; self.romanized = romanized
 	}
+	public init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, deep: Bool = false, lang: String? = nil) {
+        self.init(country: country, state: state, type: type, grain: grain, aliases: aliases, hierarchy: hierarchy, ambiguity: ambiguity, deep: deep, lang: lang, romanized: false)
+    }
 }
 
 public struct CityCollectionOptions: Sendable {
@@ -2024,11 +2296,11 @@ public struct CityCollectionOptions: Sendable {
 	public let ambiguity: String?
 	public let minPopulation: Int64?
 	public let maxPopulation: Int64?
-	public let timezone: String?
+
 	/// west,south,east,north; west greater than east crosses the date line.
 	public let bbox: String?
 	public let sort: String?
-	public let order: String?
+
 	public let page: Bool
 	public let cursor: String?
 	public let deep: Bool
@@ -2042,11 +2314,10 @@ public struct CityCollectionOptions: Sendable {
 	public let match: String?
 	public let maxDistance: Int?
 
-	public init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, minPopulation: Int64? = nil, maxPopulation: Int64? = nil, timezone: String? = nil, bbox: String? = nil, sort: String? = nil, order: String? = nil, page: Bool = false, cursor: String? = nil, deep: Bool = false, lang: String? = nil, countries: [String]? = nil, excludeCountries: [String]? = nil, timezones: [String]? = nil, minElevation: Double? = nil, maxElevation: Double? = nil, match: String? = nil, maxDistance: Int? = nil, romanized: Bool = false) {
+	public init(country: String? = nil, state: String? = nil, type: String? = nil, grain: String? = nil, aliases: Bool = false, hierarchy: Bool = false, ambiguity: String? = nil, minPopulation: Int64? = nil, maxPopulation: Int64? = nil, bbox: String? = nil, sort: String? = nil, page: Bool = false, cursor: String? = nil, deep: Bool = false, lang: String? = nil, countries: [String]? = nil, excludeCountries: [String]? = nil, timezones: [String]? = nil, minElevation: Double? = nil, maxElevation: Double? = nil, match: String? = nil, maxDistance: Int? = nil, romanized: Bool = false) {
 		self.country = country; self.state = state; self.type = type; self.grain = grain
 		self.aliases = aliases; self.hierarchy = hierarchy; self.ambiguity = ambiguity
-		self.minPopulation = minPopulation; self.maxPopulation = maxPopulation; self.timezone = timezone
-		self.bbox = bbox; self.sort = sort; self.order = order; self.page = page; self.cursor = cursor
+		self.minPopulation = minPopulation; self.maxPopulation = maxPopulation; self.bbox = bbox; self.sort = sort; self.page = page; self.cursor = cursor
 		self.deep = deep; self.lang = lang
 		self.countries = countries; self.excludeCountries = excludeCountries; self.timezones = timezones
 		self.minElevation = minElevation; self.maxElevation = maxElevation; self.match = match; self.maxDistance = maxDistance; self.romanized = romanized
@@ -2064,10 +2335,10 @@ public struct CityParent: Codable, Sendable {
 }
 
 public struct CityList: Codable, Sendable {
-    public let object: String
-    public let data: [CityResource]
-    public let hasMore: Bool?
-    public let url: String?
+
+    public let cities: [City]
+
+
     public let nextCursor: String?
     public let q: String?
     public let country: String?
@@ -2077,26 +2348,16 @@ public struct CityList: Codable, Sendable {
 }
 
 public struct CityNearbyCoordinates: Codable, Sendable {
-    public let object: String
-    public let data: [CityResource]
-    public let hasMore: Bool?
-    public let url: String?
+
+    public let nearby: [CityNearest]
+
+
     public let nextCursor: String?
     public let latitude: Double
     public let longitude: Double
     public let radius: Double
     public let unit: String
 }
-
-
-
-
-public struct StateTax: Codable, Sendable {
-	public let name: String?
-	/// Reference rate in percent.
-	public let rate: Double?
-}
-
 
 
 public struct Currency: Codable, Sendable {
@@ -2108,7 +2369,7 @@ public struct Currency: Codable, Sendable {
 	public let symbolNative: String?
 	public let digits: Int?
 	public let countries: [String]?
-	public let deep: CurrencyDeep?
+	
 }
 
 public struct CurrencyRate: Codable, Sendable {
@@ -2118,6 +2379,9 @@ public struct CurrencyRate: Codable, Sendable {
 	public let date: String
 	public let amount: Double?
 	public let converted: Double?
+	public let source: String?
 }
 
 public struct CurrencyDeep: Codable, Sendable {}
+
+

@@ -6,32 +6,32 @@ import Testing
 	@Test func contractPinSurvivesRetriesAndSelfLookup() async throws {
 		let stub = StubTransport([
 			(503, #"{"code":"unavailable","message":"Try again"}"#, ["Retry-After": "0"]),
-			(200, #"{"ip":"192.0.2.1","country":null,"deep":{"datacenter":null},"future":true}"#, [:]),
+			(200, #"{"ip":"192.0.2.1","country":null,"future":true,"datacenter":null}"#, [:]),
 		])
 		let client = try makeClient(stub, key: "parse_app_version_test", appId: "com.example.version", retries: 1)
 		let result = try await client.ipSelf(deep: true)
-		#expect(result.ip == "192.0.2.1")
-		#expect(result.country == nil)
-		#expect(result.deep != nil)
-		#expect(result.deep?.datacenter == nil)
-		#expect(stub.requests.count == 2)
+ #expect(result.ip == "192.0.2.1")
+ #expect(result.country == nil)
+ #expect(result.datacenter == nil)
+ #expect(stub.requests.count == 2)
 		for request in stub.requests {
-			#expect(request.url?.absoluteString == "https://api.parseapi.com/ip?deep=true")
-			#expect(request.value(forHTTPHeaderField: "Parse-Version") == "2.0.0")
-			#expect(request.value(forHTTPHeaderField: "X-API-Key") == "parse_app_version_test")
-			#expect(request.value(forHTTPHeaderField: "X-App-Id") == "com.example.version")
-			#expect(request.value(forHTTPHeaderField: "User-Agent") == "parseapi-swift/\(ParseAPI.version)")
+ #expect(request.url?.absoluteString == "https://api.parseapi.com/ip?deep=true")
+ #expect(request.value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+ #expect(request.value(forHTTPHeaderField: "Parse-Version") == nil)
+ #expect(request.value(forHTTPHeaderField: "X-API-Key") == "parse_app_version_test")
+ #expect(request.value(forHTTPHeaderField: "X-App-Id") == "com.example.version")
+ #expect(request.value(forHTTPHeaderField: "User-Agent") == "parseapi-swift/\(ParseAPI.version)")
 		}
 	}
 
 	@Test func contractPinWithUserAgentInput() async throws {
-		let stub = StubTransport(body: #"{"useragent":"Example/1.0","bot":false,"mobile":false,"deep":{}}"#)
+		let stub = StubTransport(body: #"{"useragent":"Example/1.0","bot":false,"mobile":false}"#)
 		_ = try await makeClient(stub, appId: "com.example.version").useragent("Example/1.0")
 		let request = stub.requests[0]
-		#expect(request.value(forHTTPHeaderField: "Parse-Version") == "2.0.0")
-		#expect(request.value(forHTTPHeaderField: "User-Agent") == "Example/1.0")
-		#expect(request.value(forHTTPHeaderField: "X-API-Key") == "parse_testtesttesttest")
-		#expect(request.value(forHTTPHeaderField: "X-App-Id") == "com.example.version")
+ #expect(request.value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+ #expect(request.value(forHTTPHeaderField: "User-Agent") == "Example/1.0")
+ #expect(request.value(forHTTPHeaderField: "X-API-Key") == "parse_testtesttesttest")
+ #expect(request.value(forHTTPHeaderField: "X-App-Id") == "com.example.version")
 	}
 
 	@Test(arguments: [400, 410]) func versionErrorDoesNotRetryOrFallBack(status: Int) async throws {
@@ -40,11 +40,11 @@ import Testing
 			_ = try await makeClient(stub, retries: 2).ipSelf()
 			Issue.record("Expected an API error")
 		} catch let error as ParseAPIError {
-			#expect(error.status == status)
-			#expect(error.code == "invalid_request")
-			#expect(error.requestId == "req_version")
+ #expect(error.status == status)
+ #expect(error.code == "invalid_request")
+ #expect(error.requestId == "req_version")
 		}
-		#expect(stub.requests.count == 1)
-		#expect(stub.requests[0].value(forHTTPHeaderField: "Parse-Version") == "2.0.0")
+ #expect(stub.requests.count == 1)
+ #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
 	}
 }

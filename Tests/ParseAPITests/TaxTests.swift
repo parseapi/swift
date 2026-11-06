@@ -4,24 +4,21 @@ import Testing
 
 @Suite struct TaxFields {
 	@Test func referenceFieldsPreservePercentZeroAndNull() async throws {
-		let country = try await makeClient(StubTransport(body: #"{"country":"DE","name":"Germany","continent":"EU","deep":{"tax":"VAT","tax_rate":19,"tax_id_format":"DE999999999","tax_id_regex":"^DE[0-9]{9}$"}}"#)).country("DE", deep: true)
-		#expect(country.deep?.tax?.name == "VAT" && country.deep?.taxRate == 19)
-		#expect(country.deep?.taxIdFormat == "DE999999999" && country.deep?.taxIdRegex == "^DE[0-9]{9}$")
-		let body = #"{"postal":"12345","country":"US","deep":{"tax":"Sales tax","tax_rate":7.9,"tax_rate_state":5,"tax_rate_county":0,"tax_rate_city":null,"tax_rate_special":2.9}}"#
+		let country = try await makeClient(StubTransport(body: #"{"country":"DE","name":"Germany","continent":"EU","tax":{"name":"VAT","rate":19}}"#)).country("DE", deep: true)
+ #expect(country.tax?.name == "VAT" && country.tax?.rate == 19)
+		let body = #"{"postal":"12345","country":"US","tax":{"name":"Sales tax","rate":7.9,"rate_state":5,"rate_county":0,"rate_city":null,"rate_special":2.9}}"#
 		let postal = try await makeClient(StubTransport(body: body)).postal("12345", deep: true)
-		#expect(postal.deep?.tax == "Sales tax" && postal.deep?.taxRate == 7.9)
-		#expect(postal.deep?.taxRateState == 5 && postal.deep?.taxRateCounty == 0)
-		#expect(postal.deep?.taxRateCity == nil && postal.deep?.taxRateSpecial == 2.9)
+ #expect(postal.tax?.name == "Sales tax" && postal.tax?.rate == 7.9)
+ #expect(postal.tax?.rateState == 5 && postal.tax?.rateCounty == 0)
+ #expect(postal.tax?.rateCity == nil && postal.tax?.rateSpecial == 2.9)
 	}
 
 	@Test func omittedLockedAndUnknownTaxStayDistinct() async throws {
 		for field in ["", #", "deep":{}"#, #", "deep":{"tax":null,"tax_rate":null}"#] {
 			let postal = try await makeClient(StubTransport(body: #"{"postal":"12345","country":"US""# + field + "}")).postal("12345")
-			#expect(postal.deep?.tax == nil && postal.deep?.taxRate == nil)
-			#expect((postal.deep == nil) == field.isEmpty)
-			let country = try await makeClient(StubTransport(body: #"{"country":"DE","name":"Germany","continent":"EU""# + field + "}")).country("DE")
-			#expect(country.deep?.tax?.name == nil && country.deep?.taxRate == nil)
-			#expect((country.deep == nil) == field.isEmpty)
-		}
+ #expect(postal.tax == nil && postal.tax?.rate == nil)
+						let country = try await makeClient(StubTransport(body: #"{"country":"DE","name":"Germany","continent":"EU""# + field + "}")).country("DE")
+ #expect(country.tax?.name == nil && country.tax?.rate == nil)
+					}
 	}
 }

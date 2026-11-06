@@ -3,21 +3,31 @@ import Testing
 @testable import ParseAPI
 private func countryFixture(_ name:String)throws->Data{try Data(contentsOf:URL(fileURLWithPath:#filePath).deletingLastPathComponent().appendingPathComponent("Fixtures/"+name))}
 private func countryCodec()->JSONDecoder{let codec=JSONDecoder();codec.keyDecodingStrategy = .convertFromSnakeCase;return codec}
-@Test func correctedCountryFieldsDecode() throws {let c=try countryCodec().decode(Country.self,from:countryFixture("CountryCorrected.json"));#expect(c.nameFull=="United States of America"&&c.fullName==c.nameFull&&c.demonym=="American");#expect(c.deep?.demonym==nil&&c.deep?.fullName==nil);#expect(c.deep?.gdpPerCapitaUsd==90026.52&&c.deep?.elevationAverage==760&&c.deep?.population != nil&&c.deep?.area != nil);let encoder=JSONEncoder();encoder.keyEncodingStrategy = .convertToSnakeCase;let raw=try #require(JSONSerialization.jsonObject(with:encoder.encode(c)) as? [String:Any]);#expect(raw["name_full"] as? String=="United States of America");#expect(raw["full_name"]==nil);let deep=try #require(raw["deep"] as? [String:Any]);#expect(deep["full_name"]==nil&&deep["demonym"]==nil)}
-@Test func countryLegacyNamesAndCanonicalNull() throws {for key in ["name_full","full_name"]{let data=Data(("{\"country\":\"US\",\"name\":\"US\",\"languages\":[],\""+key+"\":\"Full\"}").utf8);let c=try countryCodec().decode(Country.self,from:data);#expect(c.nameFull=="Full"&&c.fullName==c.nameFull)};let data=Data(#"{"country":"US","name":"US","languages":[],"name_full":null,"full_name":"Legacy","deep":{"full_name":"Earlier","demonym":"Earlier"}}"#.utf8);let c=try countryCodec().decode(Country.self,from:data);#expect(c.nameFull==nil&&c.fullName==nil);#expect(c.deep?.fullName=="Earlier"&&c.deep?.demonym=="Earlier")}
-@Test func countryActualAntarcticaNullArray() throws {let c=try countryCodec().decode(Country.self,from:countryFixture("CountryAQ.json"));#expect(c.languages.isEmpty&&c.nameFull=="Antarctica"&&c.deep?.population==0);#expect(c.currency==nil&&c.currencyName==nil&&c.currencySymbol==nil)}
-
+@Test func correctedCountryFieldsDecode() throws {
+ let c=try countryCodec().decode(Country.self,from:countryFixture("CountryCorrected.json"))
+ #expect(c.nameFull=="United States of America" && c.demonym=="American")
+ #expect(c.gdpPerCapitaUsd==90026.52 && c.elevationAverage==760 && c.population != nil && c.area != nil)
+ let encoder=JSONEncoder();encoder.keyEncodingStrategy = .convertToSnakeCase
+ let raw=try #require(JSONSerialization.jsonObject(with:encoder.encode(c)) as? [String:Any])
+ #expect(raw["name_full"] as? String=="United States of America")
+ #expect(raw["deep"]==nil && raw["full_name"]==nil)
+}
+@Test func countryCanonicalNullAndZero() throws {
+ let c=try countryCodec().decode(Country.self,from:Data(#"{"country":"US","name":"US","languages":[],"name_full":null,"demonym":null,"capital":{"name":null,"latitude":0,"longitude":null},"tax":{"name":null,"rate":0},"population":0}"#.utf8))
+ #expect(c.nameFull==nil && c.demonym==nil && c.population==0)
+ #expect(c.capital?.latitude==0 && c.capital?.longitude==nil && c.tax?.rate==0)
+}
 @Test func countryNestedObjectsAndFlag() throws {
- let us=try countryCodec().decode(Country.self,from:countryFixture("CountryCorrected.json"));#expect(us.flag=="🇺🇸"&&us.emoji==us.flag);let cap=try #require(us.capital);#expect(cap.name=="Washington, D.C."&&cap.latitude==38.89&&cap.longitude == -77.05);let tax=try #require(us.deep?.tax);#expect(tax.name==nil&&tax.rate==nil)
- let de=try countryCodec().decode(Country.self,from:countryFixture("CountryDE.json"));#expect(de.deep?.tax?.name=="VAT"&&de.deep?.tax?.rate==19&&de.deep?.taxIdFormat==nil&&de.deep?.taxIdRegex==nil)
- let encoder=JSONEncoder();encoder.keyEncodingStrategy = .convertToSnakeCase;let raw=try #require(JSONSerialization.jsonObject(with:encoder.encode(us)) as? [String:Any]);#expect(raw["emoji"]==nil&&raw["capital_lat"]==nil&&raw["capital_lon"]==nil);let capital=try #require(raw["capital"] as? [String:Any]);#expect(Set(capital.keys)==["name","latitude","longitude"]);let deep=try #require(raw["deep"] as? [String:Any]);#expect(deep["tax_rate"]==nil&&deep["tax_id_format"]==nil&&deep["tax_id_regex"]==nil);let encodedTax=try #require(deep["tax"] as? [String:Any]);#expect(Set(encodedTax.keys)==["name","rate"])
+ let us=try countryCodec().decode(Country.self,from:countryFixture("CountryCorrected.json"))
+ #expect(us.flag=="🇺🇸" && us.capital?.name=="Washington, D.C." && us.capital?.latitude==38.89 && us.capital?.longitude == -77.05)
+ let de=try countryCodec().decode(Country.self,from:countryFixture("CountryDE.json"))
+ #expect(de.tax?.name=="VAT" && de.tax?.rate==19)
 }
-@Test func countryLegacyGroupsPreserveZeroAndCanonicalNull() throws {
- let legacy=try countryCodec().decode(Country.self,from:Data(#"{"country":"XX","name":"Example","emoji":"old","capital":null,"capital_lat":0,"capital_lon":0,"deep":{"tax":null,"tax_rate":0,"tax_id_format":"9","tax_id_regex":"^9$","population":0,"area":0}}"#.utf8));#expect(legacy.flag=="old"&&legacy.capital?.name==nil&&legacy.capital?.latitude==0&&legacy.deep?.tax?.name==nil&&legacy.deep?.tax?.rate==0&&legacy.deep?.taxIdFormat=="9")
- let current=try countryCodec().decode(Country.self,from:Data(#"{"country":"XX","name":"Example","flag":null,"emoji":"old","capital":{"name":null,"latitude":null,"longitude":0},"capital_lat":9,"capital_lon":9,"deep":{"tax":{"name":null,"rate":null},"tax_rate":99,"tax_id_format":"stale"}}"#.utf8));#expect(current.flag==nil&&current.capital?.name==nil&&current.capital?.latitude==nil&&current.capital?.longitude==0&&current.deep?.tax?.rate==nil&&current.deep?.taxIdFormat==nil)
+@Test func countryActualAntarctica() throws {
+ let c=try countryCodec().decode(Country.self,from:countryFixture("CountryAQ.json"))
+ #expect(c.currency==nil && c.currencyName==nil && c.currencySymbol==nil && c.population==0 && c.nameFull=="Antarctica")
 }
-@Test func countryCompactAndLocked() throws {
- for key in ["flag","emoji"]{let item=try countryCodec().decode(ContinentCountryItem.self,from:Data(("{\"country\":\"US\",\"name\":\"US\",\""+key+"\":\"🇺🇸\"}").utf8));#expect(item.flag=="🇺🇸"&&item.emoji==item.flag)}
- let item=try countryCodec().decode(ContinentCountryItem.self,from:Data(#"{"country":"US","name":"US","flag":null,"emoji":"old"}"#.utf8));#expect(item.flag==nil)
- let core=try countryCodec().decode(Country.self,from:Data(#"{"country":"US","name":"US"}"#.utf8));#expect(core.deep==nil);let locked=try countryCodec().decode(Country.self,from:Data(#"{"country":"US","name":"US","deep":{}}"#.utf8));#expect(locked.deep?.tax==nil)
+@Test func countryCoreKeepsDetailUnknown() throws {
+ let core=try countryCodec().decode(Country.self,from:Data(#"{"country":"US","name":"US","languages":[]}"#.utf8))
+ #expect(core.population==nil && core.tax==nil)
 }

@@ -4,21 +4,21 @@ import Testing
 
 @Suite struct CityFoundationTests {
 	private let core = #"{"id":"city_222222222222","name":"Fixture","country":"JP","distance":0,"distance_mi":0}"#
-	private let rich = #"{"id":"city_222222222222","name":"Fixture","country":"JP","distance":0,"distance_mi":0,"grain":"subdivision","parent":{"id":"city_333333333333","name":null,"name_local":"市","country":"JP","state":"14","type":"city","grain":"municipality","future":true},"deep":{"population":0,"population_observed_on":"2025-12-31","population_basis":"registered_population"},"future":true}"#
+	private let rich = #"{"id":"city_222222222222","name":"Fixture","country":"JP","distance":0,"distance_mi":0,"grain":"subdivision","parent":{"id":"city_333333333333","name":null,"name_local":"市","country":"JP","state":"14","type":"city","grain":"municipality","future":true},"future":true,"population":0,"population_observed_on":"2025-12-31","population_basis":"registered_population"}"#
 
 	@Test func optionalParentAndPopulationDecodeWithoutChangingOldBodies() throws {
 		let decoder = JSONDecoder(); decoder.keyDecodingStrategy = .convertFromSnakeCase
 		let old = try decoder.decode(City.self, from: Data(core.utf8))
-		#expect(old.grain == nil && old.parent == nil)
+ #expect(old.grain == nil && old.parent == nil)
 		let city = try decoder.decode(City.self, from: Data(rich.utf8))
-		#expect(city.grain == "subdivision" && city.parent?.id == "city_333333333333")
-		#expect(city.parent?.name == nil && city.parent?.nameLocal == "市")
-		#expect(city.deep?.population == 0 && city.deep?.populationObservedOn == "2025-12-31")
-		#expect(city.deep?.populationBasis == "registered_population")
+ #expect(city.grain == "subdivision" && city.parent?.id == "city_333333333333")
+ #expect(city.parent?.name == nil && city.parent?.nameLocal == "市")
+ #expect(city.population == 0 && city.populationObservedOn == "2025-12-31")
+ #expect(city.populationBasis == "registered_population")
 		let nearest = try decoder.decode(CityNearest.self, from: Data(rich.utf8))
-		#expect(nearest.parent?.grain == "municipality" && nearest.distance == 0)
+ #expect(nearest.parent?.grain == "municipality" && nearest.distance == 0)
 		let explicitNull = rich.replacingOccurrences(of: #""grain":"subdivision""#, with: #""grain":null"#)
-		#expect(try decoder.decode(City.self, from: Data(explicitNull.utf8)).grain == nil)
+ #expect(try decoder.decode(City.self, from: Data(explicitNull.utf8)).grain == nil)
 	}
 
 	@Test func optionsForwardToEachRouteAndExistingFunctionReferenceKeepsItsSignature() async throws {
@@ -36,13 +36,13 @@ import Testing
 			let stub = StubTransport(body:body)
 			try await call(makeClient(stub))
 			let parts = URLComponents(url:stub.requests[0].url!,resolvingAgainstBaseURL:false)!
-			#expect(parts.path == path)
-			#expect(Dictionary(uniqueKeysWithValues:parts.queryItems!.map{($0.name,$0.value!)}) == expected)
+ #expect(parts.path == path)
+ #expect(Dictionary(uniqueKeysWithValues:parts.queryItems!.map{($0.name,$0.value!)}) == expected)
 		}
 		let stub = StubTransport(body:core), client = try makeClient(stub)
 		let existing: (String,String?,String?,Bool) async throws -> City = client.city
 		_ = try await existing("Fixture",nil,nil,false)
 		_ = try await client.city("Fixture",options:CityOptions())
-		#expect(stub.requests.allSatisfy{$0.url?.query == nil})
+ #expect(stub.requests.allSatisfy{$0.url?.query == nil})
 	}
 }

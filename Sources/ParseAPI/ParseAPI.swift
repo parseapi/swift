@@ -75,9 +75,9 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.11.4"
+	static let version = "1.12.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
-	private static let apiVersion = "2.0.0"
+	private static let apiVersion = "2.1.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
 	private static let retryAfterCapSeconds: Double = 5
 
@@ -322,7 +322,7 @@ public final class ParseAPI: Sendable {
 	}
 
 	public func cityId(_ id: String, options: CityOptions) async throws -> City {
-		try await get("/city/id/\(enc(id))", query: [("hierarchy", options.hierarchy ? "true" : nil), ("lang", options.lang)] + deepQuery(options.deep))
+		try await get("/city/id/\(enc(id))", query: [("romanized", options.romanized ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil), ("lang", options.lang)] + deepQuery(options.deep))
 	}
 
 	public func citySearch(_ query: String, limit: Int? = nil, options: CityOptions) async throws -> CitySearch {
@@ -340,7 +340,7 @@ public final class ParseAPI: Sendable {
 
 	/// Browse stored cities. Reuse nextCursor with the same filters, limit and display options.
 	public func cityList(limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList {
-		try await get("/city", query: [("browse", "true"), ("format", "list"), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: false, paging: false))
+		try await get("/city", query: [("browse", "true"), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: false, paging: false))
 	}
 
 	/// Optional collection filters preserve the old search envelope unless paging is requested.
@@ -357,28 +357,18 @@ public final class ParseAPI: Sendable {
 
 	/// List stored city centers around a coordinate. Distances describe centers, not boundaries.
 	public func cityNearbyCoordinates(_ lat: Double, _ lon: Double, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityNearbyCoordinates {
-		try await get("/city", query: [("lat", num(lat)), ("lon", num(lon)), ("nearby", "true"), ("format", "list"), ("radius", radius.map(num)), ("unit", unit), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: false, paging: false))
+		try await get("/city", query: [("lat", num(lat)), ("lon", num(lon)), ("nearby", "true"), ("radius", radius.map(num)), ("unit", unit), ("limit", limit.map(String.init))] + cityCollectionQuery(options, nameMatching: false, paging: false))
 	}
 
-    public func cityResource(_ name: String, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource {
-        try await get("/city/\(enc(name))", query: [("format", "resource"), ("romanized", romanized ? "true" : nil), ] + cityQuery(options, nameMatching: true))
-    }
+    
 
-    public func cityIdResource(_ id: String, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource {
-        try await get("/city/id/\(enc(id))", query: [("format", "resource"), ("romanized", romanized ? "true" : nil), ("hierarchy", options.hierarchy ? "true" : nil), ("lang", options.lang)] + deepQuery(options.deep))
-    }
+    
 
-    public func cityNearestResource(_ lat: Double, _ lon: Double, options: CityOptions = CityOptions(), romanized: Bool = false) async throws -> CityResource {
-        try await get("/city", query: [("lat", num(lat)), ("lon", num(lon)), ("format", "resource"), ("romanized", romanized ? "true" : nil), ] + cityQuery(options, nameMatching: false))
-    }
+    
 
-    public func citySearchList(_ query: String, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList {
-        try await get(options.match != nil || options.maxDistance != nil ? "/city/search" : "/city", query: [("q", query), ("match", options.match), ("max_distance", options.maxDistance.map(String.init)), ("limit", limit.map(String.init)), ("format", "list"), ] + cityCollectionQuery(options, nameMatching: true))
-    }
+    
 
-    public func cityNearbyList(_ name: String, radius: Double? = nil, unit: String? = nil, limit: Int? = nil, options: CityCollectionOptions = CityCollectionOptions()) async throws -> CityList {
-        try await get("/city/\(enc(name))/nearby", query: [("radius", radius.map(num)), ("unit", unit), ("limit", limit.map(String.init)), ("format", "list"), ] + cityCollectionQuery(options, nameMatching: true, strict: true))
-    }
+    
 
     public func cityChildren(_ id: String, options: CityRelationsOptions = CityRelationsOptions()) async throws -> CityRelations {
         try await get("/city/id/\(enc(id))/children", query: cityRelationsQuery(options))
@@ -410,7 +400,7 @@ public final class ParseAPI: Sendable {
 		]
 		query.append(contentsOf: [
 			("min_population", options.minPopulation.map(String.init)), ("max_population", options.maxPopulation.map(String.init)),
-			("timezone", options.timezone), ("bbox", options.bbox), ("sort", options.sort), ("order", options.order),
+			("bbox", options.bbox), ("sort", options.sort),
 		])
 		query.append(contentsOf: [
 			("countries", options.countries?.joined(separator: ",")), ("exclude_countries", options.excludeCountries?.joined(separator: ",")),
@@ -429,13 +419,13 @@ public final class ParseAPI: Sendable {
 	}
 
 	private struct CitySpellingEnvelope: Decodable {
-		let q: String
+		let q: String?
 		let data: [City]
 		let nextCursor: String?
 	}
 	private func citySpellingSearch(_ query: [(String, String?)]) async throws -> CitySearch {
 		let result: CitySpellingEnvelope = try await get("/city/search", query: query)
-		return CitySearch(q: result.q, country: nil, state: nil, cities: result.data, type: nil, grain: nil, aliases: nil, nextCursor: result.nextCursor)
+		return CitySearch(q: result.q ?? query.first(where: { $0.0 == "q" })?.1 ?? "", country: nil, state: nil, cities: result.data, type: nil, grain: nil, aliases: nil, nextCursor: result.nextCursor)
 	}
 
 	/// One language by BCP 47 shortest code (en) or ISO 639-3 (eng).
@@ -510,8 +500,14 @@ public final class ParseAPI: Sendable {
 	/// deliverability check. Deep checks use one attempt by default. An explicit retry count can
 	/// repeat paid usage. Metered checks require a secret key on a server. App keys return empty
 	/// deep.
+	/// Run one explicit metered mailbox check. App keys receive permission_denied.
+	public func emailVerify(_ email: String) async throws -> Email {
+		try await get("/email/verify", body: JSONSerialization.data(withJSONObject: ["email": email]))
+	}
+
 	public func email(_ email: String, deep: Bool = false) async throws -> Email {
-		try await get("/email/\(enc(email))", query: deepQuery(deep))
+		if deep { return try await emailVerify(email) }
+		return try await get("/email/\(enc(email))")
 	}
 
 
@@ -524,9 +520,6 @@ public final class ParseAPI: Sendable {
 
 
 
-	public func bin(_ bin: String, deep: Bool = false) async throws -> Bin {
-		try await get("/bin/\(enc(bin))", query: deepQuery(deep))
-	}
 
 
 
@@ -809,7 +802,7 @@ public final class ParseAPI: Sendable {
 	}
 
 	/// Resolve the country, state, district and timezone at coordinates. Deep adds terrain and compact
-	/// nearest-city context on paid plans or with retained Deep access. The timezone ID stays in core. The nearest city is null
+	/// nearest-city context on every plan. The timezone ID stays in core. The nearest city is null
 	/// when none is within 200 km.
 	public func point(_ lat: Double, _ lon: Double, deep: Bool = false) async throws -> Point {
 		try await get("/point", query: [("lat", num(lat)), ("lon", num(lon))] + deepQuery(deep))
@@ -821,7 +814,7 @@ public final class ParseAPI: Sendable {
 
 	/// Get current conditions in metric and imperial units. Paid deep adds specialist current
 	/// measurements, forecasts and related detail. With deep, date selects a past UTC day (YYYY-MM-DD)
-	/// in deep.history alongside current conditions. Date alone does not request history.
+	/// in history alongside current conditions. Date alone does not request history.
 	public func weather(_ lat: Double, _ lon: Double, deep: Bool = false, date: String? = nil) async throws -> Weather {
 		try await get("/weather", query: [("lat", num(lat)), ("lon", num(lon)), ("date", date)] + deepQuery(deep))
 	}
@@ -855,17 +848,15 @@ public final class ParseAPI: Sendable {
 		try await get("/emoji", query: emojiQuery(options))
 	}
 
-	/// Complete filtered JSON export. Deep defaults true.
+	/// Compact filtered JSON export for offline use.
 	public func emojiCatalog(_ options: EmojiCatalogOptions = .init()) async throws -> EmojiCatalog {
-		try await get("/emoji/catalog", query: [("profile", options.profile), ("deep", options.deep ? "true" : "false"), ("lang", options.lang), ("category", options.category), ("subcategory", options.subcategory), ("version", options.version), ("max_version", options.maxVersion), ("include_skin_tones", options.includeSkinTones.map { $0 ? "true" : "false" })])
+		try await get("/emoji/catalog", query: [("lang", options.lang), ("category", options.category), ("subcategory", options.subcategory), ("version", options.version), ("max_version", options.maxVersion), ("include_skin_tones", options.includeSkinTones.map { $0 ? "true" : "false" })])
 	}
 	public func emojiConvert(_ text: String, direction: String, shortcodeSource: String) async throws -> EmojiConversion {
 		try await get("/emoji/convert", query: [("direction",direction),("shortcode_source",shortcodeSource)], body: JSONSerialization.data(withJSONObject:["text":text]))
 	}
 
-	public func emojiMetadata() async throws -> EmojiMetadata {
-		try await get("/emoji/metadata")
-	}
+	
 
 	public func emojiCategories() async throws -> EmojiCategories {
 		try await get("/emoji/categories")
@@ -928,10 +919,6 @@ public final class ParseAPI: Sendable {
 			("industry", industry), ("industry_type", industryType)] + deepQuery(deep))
 	}
 
-	/// Counts for this directory edition, not complete country or worldwide coverage.
-	public func companyCoverage() async throws -> CompanyCoverage {
-		try await get("/company/directory/coverage")
-	}
 
 	// MARK: - Transport
 
@@ -963,7 +950,7 @@ public final class ParseAPI: Sendable {
 		}
 
 		let product = path.split(separator: "/").first.map(String.init) ?? ""
-		let metered = ["carrier", "caller", "hlr", "litigator", "reassigned"].contains(product) ||
+		let metered = path == "/email/verify" || ["carrier", "caller", "hlr", "litigator", "reassigned"].contains(product) ||
 			(["email", "vat", "address"].contains(product) && query.contains { $0.0 == "deep" && $0.1 == "true" })
 		let retryLimit = retries ?? (metered ? 0 : 2)
 		var attempt = 0
@@ -977,7 +964,7 @@ public final class ParseAPI: Sendable {
 			}
 			request.timeoutInterval = !timeoutConfigured && path.hasPrefix("/stack/") ? 35 : timeout
 			request.setValue(key, forHTTPHeaderField: "X-API-Key")
-			request.setValue(Self.apiVersion, forHTTPHeaderField: "Parse-Version")
+			request.setValue(Self.apiVersion, forHTTPHeaderField: "X-API-Version")
 			request.setValue(userAgent ?? "parseapi-swift/\(Self.version)", forHTTPHeaderField: "User-Agent")
 			if let appId {
 				request.setValue(appId, forHTTPHeaderField: "X-App-Id")

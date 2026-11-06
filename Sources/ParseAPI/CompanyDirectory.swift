@@ -138,6 +138,8 @@ public struct CompanySocialProfile: Codable, Sendable {
 public struct CompanyPhoneNumber: Codable, Sendable {
  public let number: String
  public let type: String?
+ public let country: String?
+ public let e164: String?
 }
 public struct CompanyEmailAddress: Codable, Sendable {
  public let address: String
@@ -192,7 +194,33 @@ public struct CompanyProfile: Codable, Sendable {
 	public let website: String?
 	public let listings: [CompanyProfileListing]
 	public let address: CompanyProfileAddress?
-	public let deep: CompanyProfileDeep?
+	public let domains: [CompanyProfileDomain]?
+ public let socialProfiles: [CompanySocialProfile]?
+ public let phoneNumbers: [CompanyPhoneNumber]?
+ public let emailAddresses: [CompanyEmailAddress]?
+	public let legalName: String?
+	public let aliases: [String]?
+	public let jurisdiction: CompanyProfileJurisdiction?
+	/// Recorded legal status; not an operating or compliance verdict.
+	public let status: String?
+	public let websites: [CompanyProfileWebsite]?
+	public let identifiers: [CompanyProfileIdentifier]?
+	public let incorporated: String?
+	public let addresses: [CompanyProfileAddress]?
+	public let industries: [CompanyProfileIndustry]?
+	public let parent: String?
+	public let description: String?
+	/// Reported asset URL; the client does not fetch or license the asset.
+	public let logo: String?
+	/// Selected company account URLs; an empty array does not prove no accounts exist.
+	public let socials: [String]?
+	public let phones: [CompanyProfilePhone]?
+	public let emails: [CompanyProfileEmail]?
+	public let founded: CompanyProfileFounding?
+	public let employees: CompanyProfileEmployees?
+	public let registrations: [CompanyProfileRegistration]?
+	/// Attribution for projected enrichment fields only, not the entire legal profile.
+	public let sources: [CompanyProfileSource]?
 }
 
 /// A directory search profile with match evidence; a match is not proof of legal identity.
@@ -203,7 +231,33 @@ public struct CompanyCandidate: Codable, Sendable {
 	public let website: String?
 	public let listings: [CompanyProfileListing]
 	public let address: CompanyProfileAddress?
-	public let deep: CompanyProfileDeep?
+	public let domains: [CompanyProfileDomain]?
+ public let socialProfiles: [CompanySocialProfile]?
+ public let phoneNumbers: [CompanyPhoneNumber]?
+ public let emailAddresses: [CompanyEmailAddress]?
+	public let legalName: String?
+	public let aliases: [String]?
+	public let jurisdiction: CompanyProfileJurisdiction?
+	/// Recorded legal status; not an operating or compliance verdict.
+	public let status: String?
+	public let websites: [CompanyProfileWebsite]?
+	public let identifiers: [CompanyProfileIdentifier]?
+	public let incorporated: String?
+	public let addresses: [CompanyProfileAddress]?
+	public let industries: [CompanyProfileIndustry]?
+	public let parent: String?
+	public let description: String?
+	/// Reported asset URL; the client does not fetch or license the asset.
+	public let logo: String?
+	/// Selected company account URLs; an empty array does not prove no accounts exist.
+	public let socials: [String]?
+	public let phones: [CompanyProfilePhone]?
+	public let emails: [CompanyProfileEmail]?
+	public let founded: CompanyProfileFounding?
+	public let employees: CompanyProfileEmployees?
+	public let registrations: [CompanyProfileRegistration]?
+	/// Attribution for projected enrichment fields only, not the entire legal profile.
+	public let sources: [CompanyProfileSource]?
 	public let match: CompanyMatch
 }
 
@@ -213,41 +267,8 @@ public struct CompanySearch: Codable, Sendable {
 	public let next: String?
 }
 
-/// Counts for this directory edition, not complete country or worldwide coverage.
-public struct CompanyCoverage: Codable, Sendable {
-	public let scope: String
-	public let label: String
-	public let description: String
-	public let snapshotAt: String
-	public let companies: Int
-	public let countries: [String]
-	public let withWebsite: Int
-	public let withListings: Int
-	public let withAddress: Int
 
-	private enum CodingKeys: String, CodingKey { case scope, label, description, snapshotAt, companies, countries, withWebsite, withListings, withAddress }
-	public init(from decoder: Decoder) throws {
-		let values = try decoder.container(keyedBy: CodingKeys.self)
-		scope = try values.decode(String.self, forKey: .scope)
-		label = try values.decode(String.self, forKey: .label)
-		description = try values.decode(String.self, forKey: .description)
-		snapshotAt = values.contains(.snapshotAt) ? try values.decode(String.self, forKey: .snapshotAt) : ""
-		companies = try values.decode(Int.self, forKey: .companies)
-		countries = try values.decode([String].self, forKey: .countries)
-		withWebsite = try values.decode(Int.self, forKey: .withWebsite)
-		withListings = try values.decode(Int.self, forKey: .withListings)
-		withAddress = try values.decode(Int.self, forKey: .withAddress)
-	}
-	public func encode(to encoder: Encoder) throws {
-		var values = encoder.container(keyedBy: CodingKeys.self)
-		try values.encode(scope, forKey: .scope)
-		try values.encode(label, forKey: .label)
-		try values.encode(description, forKey: .description)
-		if !snapshotAt.isEmpty { try values.encode(snapshotAt, forKey: .snapshotAt) }
-		try values.encode(companies, forKey: .companies)
-		try values.encode(countries, forKey: .countries)
-		try values.encode(withWebsite, forKey: .withWebsite)
-		try values.encode(withListings, forKey: .withListings)
-		try values.encode(withAddress, forKey: .withAddress)
-	}
-}
+
+
+
+

@@ -12,21 +12,21 @@ import Testing
     @Test func compactPostalTaxPreservesFactsWithoutInventingMetadata() throws {
         for amount in [0.0, 3210.5] {
             let value = try decode(PostalDeep.self, "{\"currency\":\"USD\",\"property_tax\":{\"annual_median\":\(amount)}}")
-            #expect(value.propertyTax?.annualMedian == amount)
-            #expect(value.currency == "USD")
-            #expect(value.propertyTax?.currency == nil && value.propertyTax?.period == nil)
+ #expect(value.propertyTax?.annualMedian == amount)
+ #expect(value.currency == "USD")
+ #expect(value.propertyTax?.currency == nil && value.propertyTax?.period == nil)
             let encoder = JSONEncoder()
             encoder.keyEncodingStrategy = .convertToSnakeCase
             let tax = try JSONSerialization.jsonObject(with: encoder.encode(value.propertyTax!)) as! [String: Any]
-            #expect(Set(tax.keys) == ["annual_median"])
+ #expect(Set(tax.keys) == ["annual_median"])
         }
         let legacy = #"{"property_tax":{"annual_median":0,"currency":"USD","period":"2020-2024"}}"#
         let postal = try decode(PostalDeep.self, legacy)
-        #expect(postal.propertyTax?.currency == "USD" && postal.propertyTax?.period == "2020-2024")
+ #expect(postal.propertyTax?.currency == "USD" && postal.propertyTax?.period == "2020-2024")
         let district = try decode(DistrictDeep.self, legacy)
-        #expect(district.propertyTax?.currency == "USD" && district.propertyTax?.period == "2020-2024")
+ #expect(district.propertyTax?.currency == "USD" && district.propertyTax?.period == "2020-2024")
         for body in ["{}", #"{"property_tax":null}"#] {
-            #expect(try decode(PostalDeep.self, body).propertyTax == nil)
+ #expect(try decode(PostalDeep.self, body).propertyTax == nil)
         }
     }
 
@@ -43,15 +43,15 @@ import Testing
         ]
         for (body, metric, imperial) in cases {
             let minute = try decode(WeatherMinute.self, body)
-            #expect(minute.precipitationRate == metric && minute.precipitationRateIn == imperial)
+ #expect(minute.precipitationRate == metric && minute.precipitationRateIn == imperial)
             let encoder = JSONEncoder()
             encoder.keyEncodingStrategy = .convertToSnakeCase
             let encoded = try JSONSerialization.jsonObject(with: encoder.encode(minute)) as! [String: Any]
-            #expect(encoded["precipitation"] == nil && encoded["precipitation_in"] == nil)
-            #expect(encoded["precipitation_rate"] as? Double == metric)
-            #expect(encoded["precipitation_rate_in"] as? Double == imperial)
+ #expect(encoded["precipitation"] == nil && encoded["precipitation_in"] == nil)
+ #expect(encoded["precipitation_rate"] as? Double == metric)
+ #expect(encoded["precipitation_rate_in"] as? Double == imperial)
         }
         let history = try decode(WeatherHistory.self, #"{"precipitation":2.54,"precipitation_in":0.1}"#)
-        #expect(history.precipitation == 2.54 && history.precipitationIn == 0.1)
+ #expect(history.precipitation == 2.54 && history.precipitationIn == 0.1)
     }
 }

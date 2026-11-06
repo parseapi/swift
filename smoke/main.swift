@@ -92,7 +92,7 @@ await expectOk("domain", { try await parse.domain("gmail.com") }) { $0.available
 await expectOk("asn", { try await parse.asn("AS13335") }) { $0.asn == 13335 ? nil : "wrong ASN" }
 await expectOk("dns", { try await parse.dns("example.com", type: "A") }) { $0.records.contains { $0.type == "A" } ? nil : "no A records" }
 await expectOk("mx", { try await parse.mx("gmail.com") }) { $0.mx.isEmpty ? "no mx" : nil }
-await expectOk("useragent", { try await parse.useragent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") }) { $0.browser == "Chrome" ? nil : "browser \($0.browser ?? "nil")" }
+await expectOk("useragent", { try await parse.useragent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") }) { $0.browser?.name == "Chrome" ? nil : "browser \($0.browser?.name ?? "nil")" }
 await expectOk("language", { try await parse.language("en") }) { $0.language == "en" && $0.name == "English" ? nil : "wrong language" }
 await expectOk("name", { try await parse.name("BILLY O'SHALL") }) { $0.name == "Billy O'Shall" && $0.valid ? nil : "wrong name" }
 await expectOk("timezone", { try await parse.timezone("America/New_York") }) { $0.offset == "-04:00" || $0.offset == "-05:00" ? nil : "wrong offset" }
@@ -107,7 +107,7 @@ await expectOk("emoji", { try await parse.emoji("rocket") }) { $0.emoji == "\u{1
 await expectOk("emojiSearch", { try await parse.emojiSearch("fire", limit: 5) }) { $0.emojis.isEmpty ? "no results" : nil }
 
 // Deep triad: asked on a free-deep endpoint always yields an object.
-await expectOk("point deep triad", { try await parse.point(36.0726, -79.792, deep: true) }) { $0.deep != nil ? nil : "deep missing" }
+await expectOk("point optional detail", { try await parse.point(36.0726, -79.792, deep: true) }) { $0.country != nil ? nil : "country missing" }
 
 // Honest 404 and auth errors.
 await expectError("honest 404", { try await parse.city("notarealcityxyz") }, code: "not_found")
@@ -131,10 +131,7 @@ if let appKey = env["PARSEAPI_APP_KEY"], let goodAppId = env["PARSEAPI_APP_ID"] 
 
 	await expectError("app key metered 403", { try await app.carrier("555-0100") }, code: "permission_denied")
 
-	await expectOk("app key email deep locked", { try await app.email("hello@gmail.com", deep: true) }) {
-		guard let deep = $0.deep else { return "deep missing" }
-		return deep.deliverable == nil && deep.catchall == nil ? nil : "deep not locked"
-	}
+	await expectError("app key mailbox verification", { try await app.emailVerify("hello@gmail.com") }, code: "permission_denied")
 } else {
 	print("note app key fence checks skipped (set PARSEAPI_APP_KEY + PARSEAPI_APP_ID)")
 }

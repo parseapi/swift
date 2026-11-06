@@ -12,55 +12,55 @@ private actor CallCount {
 
 @Suite struct Stability {
 	@Test func dateEncodingAndCalendarFields() async throws {
-		let stub = StubTransport(body: #"{"date":"2026-03-04","valid":true,"unix":1772582400,"to":"2026-03-09","days":5,"deep":{"month_name":"March","week_year":2026,"days_in_month":31}}"#)
+		let stub = StubTransport(body: #"{"date":"2026-03-04","valid":true,"unix":1772582400,"to":"2026-03-09","days":5,"month_name":"March","week_year":2026,"days_in_month":31}"#)
 		let value = try await makeClient(stub).date("03/04/2026", format: "mdy", to: "2026-03-09")
-		#expect(stub.requests.count == 1)
-		#expect(stub.requests[0].url?.absoluteString == "https://api.parseapi.com/date/03%2F04%2F2026?format=mdy&to=2026-03-09")
-		#expect(value.deep?.monthName == "March")
-		#expect(value.deep?.weekYear == 2026)
-		#expect(value.deep?.daysInMonth == 31)
-		#expect(value.days == 5)
+ #expect(stub.requests.count == 1)
+ #expect(stub.requests[0].url?.absoluteString == "https://api.parseapi.com/date/03%2F04%2F2026?format=mdy&to=2026-03-09")
+ #expect(value.monthName == "March")
+ #expect(value.weekYear == 2026)
+ #expect(value.daysInMonth == 31)
+ #expect(value.days == 5)
 	}
 
 	@Test func invalidDateAndTodayAreSeparateCalls() async throws {
-		let invalid = StubTransport(body: #"{"date":"03/04/2026","valid":false,"deep":{"year":null}}"#)
+		let invalid = StubTransport(body: #"{"date":"03/04/2026","valid":false,"year":null}"#)
 		let value = try await makeClient(invalid).date("03/04/2026")
-		#expect(value.valid == false)
-		#expect(value.deep?.year == nil)
+ #expect(value.valid == false)
+ #expect(value.year == nil)
 		let today = StubTransport(body: #"{"date":"2026-09-05","valid":true}"#)
 		_ = try await makeClient(today).dateToday(to: "2026-12-25")
-		#expect(today.requests[0].url?.absoluteString == "https://api.parseapi.com/date?to=2026-12-25")
+ #expect(today.requests[0].url?.absoluteString == "https://api.parseapi.com/date?to=2026-12-25")
 	}
 
 	@Test func countryStatesIsOneRequest() async throws {
 		let stub = StubTransport(body: #"{"country":"US","states":[]}"#)
 		_ = try await makeClient(stub).countryStates("US")
-		#expect(stub.requests.count == 1)
-		#expect(stub.requests[0].url?.path == "/country/US/states")
+ #expect(stub.requests.count == 1)
+ #expect(stub.requests[0].url?.path == "/country/US/states")
 	}
 
 	@Test func timezoneConversionIsOptional() async throws {
-		let stub = StubTransport(body: #"{"timezone":"America/New_York","at":"2026-09-05T09:00:00-04:00","to":{"timezone":"Europe/London","offset":"+01:00","dst":true,"at":"2026-09-05T14:00:00+01:00","deep":{"offset_minutes":60}}}"#)
+		let stub = StubTransport(body: #"{"timezone":"America/New_York","at":"2026-09-05T09:00:00-04:00","to":{"timezone":"Europe/London","offset":"+01:00","dst":true,"at":"2026-09-05T14:00:00+01:00","offset_minutes":60}}"#)
 		let value = try await makeClient(stub).timezone("America/New_York", at: "2026-09-05T09:00:00", to: "Europe/London")
-		#expect(value.to?.at == "2026-09-05T14:00:00+01:00")
-		#expect(stub.requests[0].url?.absoluteString.hasSuffix("&to=Europe%2FLondon") == true)
+ #expect(value.to?.at == "2026-09-05T14:00:00+01:00")
+ #expect(stub.requests[0].url?.absoluteString.hasSuffix("&to=Europe%2FLondon") == true)
 		let previous = StubTransport(body: #"{"timezone":"America/New_York"}"#)
-		#expect(try await makeClient(previous).timezone("America/New_York").to == nil)
+ #expect(try await makeClient(previous).timezone("America/New_York").to == nil)
 	}
 
 	@Test func weatherHistoryIsOptional() async throws {
-		let stub = StubTransport(body: #"{"latitude":40,"longitude":-74,"current":{},"deep":{"history":{"date":"2026-09-01","high_f":80,"wind_max_mph":20}}}"#)
+		let stub = StubTransport(body: #"{"latitude":40,"longitude":-74,"current":{},"history":{"date":"2026-09-01","high_f":80,"wind_max_mph":20}}"#)
 		let value = try await makeClient(stub).weather(40, -74, deep: true, date: "2026-09-01")
-		#expect(stub.requests[0].url?.absoluteString == "https://api.parseapi.com/weather?lat=40&lon=-74&date=2026-09-01&deep=true")
-		#expect(value.deep?.history?.highF == 80)
-		#expect(value.deep?.history?.windMaxMph == 20)
+ #expect(stub.requests[0].url?.absoluteString == "https://api.parseapi.com/weather?lat=40&lon=-74&date=2026-09-01&deep=true")
+ #expect(value.history?.highF == 80)
+ #expect(value.history?.windMaxMph == 20)
 	}
 
 	@Test func nullCoreCollectionsDecodeAsEmpty() async throws {
 		let stub = StubTransport(body: #"{"country":"US","states":null,"future":{"x":1}}"#)
-		#expect(try await makeClient(stub).countryStates("US").states.isEmpty)
+ #expect(try await makeClient(stub).countryStates("US").states.isEmpty)
 		let missing = StubTransport(body: #"{"domain":"example.com"}"#)
-		#expect(try await makeClient(missing).mx("example.com").mx.isEmpty)
+ #expect(try await makeClient(missing).mx("example.com").mx.isEmpty)
 	}
 
 	@Test func malformedCollectionIsStillAnError() async throws {
@@ -69,7 +69,7 @@ private actor CallCount {
 			_ = try await makeClient(stub).countryStates("US")
 			Issue.record("expected decoding error")
 		} catch is DecodingError {}
-		#expect(stub.requests.count == 1)
+ #expect(stub.requests.count == 1)
 	}
 
 	@Test func cancellationIsNotRetried() async throws {
@@ -82,7 +82,7 @@ private actor CallCount {
 			_ = try await client.domain("example.com")
 			Issue.record("expected cancellation")
 		} catch is CancellationError {}
-		#expect(await calls.value == 1)
+ #expect(await calls.value == 1)
 	}
 
 	@Test func cancelledURLRequestIsNotRetried() async throws {
@@ -95,9 +95,9 @@ private actor CallCount {
 			_ = try await client.domain("example.com")
 			Issue.record("expected cancellation")
 		} catch let error as URLError {
-			#expect(error.code == .cancelled)
+ #expect(error.code == .cancelled)
 		}
-		#expect(await calls.value == 1)
+ #expect(await calls.value == 1)
 	}
 
 	@Test func redirectPolicyRejectsCredentialForwarding() async throws {
@@ -113,6 +113,6 @@ private actor CallCount {
 				continuation.resume(returning: request != nil)
 			}
 		}
-		#expect(followed == false)
+ #expect(followed == false)
 	}
 }

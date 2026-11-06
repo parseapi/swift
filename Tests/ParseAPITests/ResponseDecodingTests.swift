@@ -17,20 +17,19 @@ private actor ResponseRecorder {
    let time = try decoder.decode(Timezone.self, from: responseBody(profile, "time"))
    let metadata = try decoder.decode(EmojiMetadata.self, from: responseBody(profile, "emoji-metadata"))
    let catalog = try decoder.decode(EmojiCatalog.self, from: responseBody(profile, "emoji-catalog"))
-   let coverage = try decoder.decode(CompanyCoverage.self, from: responseBody(profile, "company-coverage"))
    let company = try decoder.decode(CompanyProfile.self, from: responseBody(profile, "company-profile"))
-   precondition(!zones.timezones.isEmpty && time.unix == 1791907200)
+   precondition(zones.timezones?.isEmpty == false && time.unix == 1791907200)
    precondition(time.location?.candidates.first?.country == "US")
    precondition(!metadata.notices.isEmpty && !catalog.emojis.isEmpty)
-   precondition(coverage.companies == 1 && company.deep?.employees?.count == 12)
-   precondition(company.deep?.employees?.approximate == false)
-   precondition(company.deep?.employees?.method == (profile == "standard" ? "reported" : ""))
+   precondition(company.employees?.count == 12)
+   precondition(company.employees?.approximate == false)
+   precondition(company.employees?.method == (profile == "standard" ? "reported" : ""))
    if profile == "standard" {
     precondition(!zones.timezoneDatabaseVersion.isEmpty)
-    precondition(!metadata.sourceVersion.isEmpty && !coverage.snapshotAt.isEmpty)
+    precondition(!metadata.sourceVersion.isEmpty)
    } else {
     precondition(zones.timezoneDatabaseVersion.isEmpty)
-    precondition(metadata.sourceVersion.isEmpty && coverage.snapshotAt.isEmpty)
+    precondition(metadata.sourceVersion.isEmpty)
     precondition(time.location?.candidates.first?.id == nil && time.location?.candidates.first?.timezone == nil)
     precondition(time.location?.source == "")
    }
@@ -50,7 +49,7 @@ private actor ResponseRecorder {
   _ = try await explicitTimeout.timeZones()
   for request in await calls.all() {
    precondition(request.value(forHTTPHeaderField: "Parse-Response") == nil)
-   precondition(request.value(forHTTPHeaderField: "Parse-Version") == "2.0.0")
+   precondition(request.value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
   }
   print("Existing initializer/call signatures compile; default requests omit response preference")
   let cleanCalls = ResponseRecorder(), clean = try responseBody("clean", "timezones")
