@@ -75,9 +75,9 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.12.0"
+	static let version = "1.13.0"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
-	private static let apiVersion = "2.1.0"
+	private static let apiVersion = "2.2.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
 	private static let retryAfterCapSeconds: Double = 5
 
@@ -247,21 +247,28 @@ public final class ParseAPI: Sendable {
 		try await get("/state/\(enc(code))", query: [("lang", lang)] + [("country", country)] + deepQuery(deep))
 	}
 
-	public func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateDistricts {
-		try await get("/state/\(enc(code))/districts", query: [("country", country)] + deepQuery(deep))
+	public func stateCounties(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateCounties {
+		try await get("/state/\(enc(code))/counties", query: [("country", country)] + deepQuery(deep))
 	}
 	/// Select translated display names for this request.
-	public func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateDistricts {
-		try await get("/state/\(enc(code))/districts", query: [("lang", lang)] + [("country", country)] + deepQuery(deep))
+	public func stateCounties(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateCounties {
+		try await get("/state/\(enc(code))/counties", query: [("lang", lang)] + [("country", country)] + deepQuery(deep))
 	}
 
-	public func district(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> District {
-		try await get("/district/\(enc(code))", query: [("country", country), ("state", state)] + deepQuery(deep))
+	public func county(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> County {
+		try await get("/county/\(enc(code))", query: [("country", country), ("state", state)] + deepQuery(deep))
 	}
 	/// Select translated display names for this request.
-	public func district(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> District {
-		try await get("/district/\(enc(code))", query: [("lang", lang)] + [("country", country), ("state", state)] + deepQuery(deep))
+	public func county(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> County {
+		try await get("/county/\(enc(code))", query: [("lang", lang)] + [("country", country), ("state", state)] + deepQuery(deep))
 	}
+
+    /// Legacy method spelling; use county(_:country:state:deep:).
+    public func district(_ code:String,country:String? = nil,state:String? = nil,deep:Bool = false) async throws -> District {try await county(code,country:country,state:state,deep:deep)}
+    public func district(_ code:String,country:String? = nil,state:String? = nil,deep:Bool = false,lang:String?) async throws -> District {try await county(code,country:country,state:state,deep:deep,lang:lang)}
+    /// Legacy method spelling; use stateCounties(_:country:deep:).
+    public func stateDistricts(_ code:String,country:String? = nil,deep:Bool = false) async throws -> StateDistricts {try await stateCounties(code,country:country,deep:deep)}
+    public func stateDistricts(_ code:String,country:String? = nil,deep:Bool = false,lang:String?) async throws -> StateDistricts {try await stateCounties(code,country:country,deep:deep,lang:lang)}
 
 	public func city(_ name: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> City {
 		try await get("/city/\(enc(name))", query: [("country", country), ("state", state)] + deepQuery(deep))

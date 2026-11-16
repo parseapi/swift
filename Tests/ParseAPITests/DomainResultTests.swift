@@ -24,7 +24,7 @@ import Testing
  #expect(result.domain == "x.example")
  #expect(stub.requests.count == 1)
  #expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/domain/b%C3%BCcher.example?deep=true")
- #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+ #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Version") == "2.2.0")
  #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Key") == "parse_testtesttesttest")
 			if index == 0 {
  #expect(result.registration == nil) }

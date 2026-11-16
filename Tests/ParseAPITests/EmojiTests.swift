@@ -37,7 +37,7 @@ import Testing
  #expect(parse.requests[0].url?.query == "lang=fr&deep=true")
 		let body = try JSONDecoder().decode([String:String].self,from:#require(parse.requests[0].httpBody))
  #expect(body == ["text":"x 👍🏿 👍🏿"])
- #expect(parse.requests[0].value(forHTTPHeaderField:"X-API-Version") == "2.1.0")
+ #expect(parse.requests[0].value(forHTTPHeaderField:"X-API-Version") == "2.2.0")
 		let taxonomy = try await makeClient(StubTransport(body:#"{"categories":[{"category":"People & Body","subcategories":["hand-fingers-closed"]}]}"#)).emojiCategories()
  #expect(taxonomy.categories[0].subcategories == ["hand-fingers-closed"])
 	}

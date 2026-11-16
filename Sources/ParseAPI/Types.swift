@@ -2,7 +2,7 @@ import Foundation
 
 // Response types for the reviewed ParseAPI public API contract.
 // Nullable fields are optionals; optional detail belongs to its owning entity.
-// Optional 2.1 detail belongs to its owning resource. Missing and null remain unknown.
+// Optional 2.2 detail belongs to its owning resource. Missing and null remain unknown.
 
 // Core list fields have always represented collections. Keep their public
 // types stable when a response carries null or omits an empty collection.
@@ -30,11 +30,40 @@ public struct IPDeep: Codable, Sendable {
 	public let tor: Bool?
 	public let vpn: Bool?
 	public let provider: String?
-	/// Present only when supported. District is qualified by the response country.
-	public let district: String?
-	public let districtName: String?
+	/// Present only when supported. County is qualified by the response country.
+	public let county: String?
+	public let countyName: String?
 	public let censusDivision: String?
 	public let censusRegion: String?
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String? { county }
+    /// Legacy source spelling. The encoded response uses only countyName.
+    public var districtName: String? { countyName }
+    private enum CodingKeys: String, CodingKey { case stateName, postal, latitude, longitude, timezone, network, asnType, proxy, state, city, registry, datacenter, relay, tor, vpn, provider, county, countyName, censusDivision, censusRegion }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        postal = try values.decodeIfPresent(String.self, forKey: .postal)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+        timezone = try values.decodeIfPresent(String.self, forKey: .timezone)
+        network = try values.decodeIfPresent(String.self, forKey: .network)
+        asnType = try values.decodeIfPresent(String.self, forKey: .asnType)
+        proxy = try values.decodeIfPresent(Bool.self, forKey: .proxy)
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        city = try values.decodeIfPresent(String.self, forKey: .city)
+        registry = try values.decodeIfPresent(String.self, forKey: .registry)
+        datacenter = try values.decodeIfPresent(Bool.self, forKey: .datacenter)
+        relay = try values.decodeIfPresent(Bool.self, forKey: .relay)
+        tor = try values.decodeIfPresent(Bool.self, forKey: .tor)
+        vpn = try values.decodeIfPresent(Bool.self, forKey: .vpn)
+        provider = try values.decodeIfPresent(String.self, forKey: .provider)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district")
+        countyName = try decodeCountyWire(String.self, from: decoder, canonical: "countyName", legacy: "districtName")
+        censusDivision = try values.decodeIfPresent(String.self, forKey: .censusDivision)
+        censusRegion = try values.decodeIfPresent(String.self, forKey: .censusRegion)
+    }
 }
 
 public struct IP: Codable, Sendable {
@@ -60,10 +89,45 @@ public struct IP: Codable, Sendable {
 	public let tor: Bool?
 	public let vpn: Bool?
 	public let provider: String?
-	public let district: String?
-	public let districtName: String?
+	public let county: String?
+	public let countyName: String?
 	public let censusDivision: String?
 	public let censusRegion: String?
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String? { county }
+    /// Legacy source spelling. The encoded response uses only countyName.
+    public var districtName: String? { countyName }
+    private enum CodingKeys: String, CodingKey { case stateName, postal, latitude, longitude, timezone, network, asnType, proxy, ip, country, countryName, continent, asn, asnName, state, city, registry, datacenter, relay, tor, vpn, provider, county, countyName, censusDivision, censusRegion }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        postal = try values.decodeIfPresent(String.self, forKey: .postal)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+        timezone = try values.decodeIfPresent(String.self, forKey: .timezone)
+        network = try values.decodeIfPresent(String.self, forKey: .network)
+        asnType = try values.decodeIfPresent(String.self, forKey: .asnType)
+        proxy = try values.decodeIfPresent(Bool.self, forKey: .proxy)
+        ip = try values.decode(String.self, forKey: .ip)
+        country = try values.decodeIfPresent(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        continent = try values.decodeIfPresent(String.self, forKey: .continent)
+        asn = try values.decodeIfPresent(String.self, forKey: .asn)
+        asnName = try values.decodeIfPresent(String.self, forKey: .asnName)
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        city = try values.decodeIfPresent(String.self, forKey: .city)
+        registry = try values.decodeIfPresent(String.self, forKey: .registry)
+        datacenter = try values.decodeIfPresent(Bool.self, forKey: .datacenter)
+        relay = try values.decodeIfPresent(Bool.self, forKey: .relay)
+        tor = try values.decodeIfPresent(Bool.self, forKey: .tor)
+        vpn = try values.decodeIfPresent(Bool.self, forKey: .vpn)
+        provider = try values.decodeIfPresent(String.self, forKey: .provider)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district")
+        countyName = try decodeCountyWire(String.self, from: decoder, canonical: "countyName", legacy: "districtName")
+        censusDivision = try values.decodeIfPresent(String.self, forKey: .censusDivision)
+        censusRegion = try values.decodeIfPresent(String.self, forKey: .censusRegion)
+    }
 }
 
 public struct Continent: Codable, Sendable {
@@ -374,7 +438,8 @@ public struct State: Codable, Sendable {
 	public let latitude: Double?
 	public let longitude: Double?
 	public let timezones: [String]
-	public let iso: String?
+	public let isoCode: String?
+	public var iso: String? { isoCode }
 	public let fips: String?
 	public let areaCodes: [String]?
 	public let capital: StateCapital?
@@ -382,7 +447,7 @@ public struct State: Codable, Sendable {
 
  
  
- public var iso31662:String? {iso}
+ public var iso31662:String? {isoCode}
 	public let population:Int?
 	public let populationPeriod:String? = nil
 	public let area:Double?
@@ -394,7 +459,7 @@ public struct State: Codable, Sendable {
 		case country
 		case countryName
 		case fips
-		case iso = "isoSubdivision"
+		case isoCode
 		case latitude
 		case longitude
 		case name
@@ -406,26 +471,71 @@ public struct State: Codable, Sendable {
 		case timezones
 		case type
 	}
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        state = try values.decode(String.self, forKey: .state)
+        name = try values.decode(String.self, forKey: .name)
+        nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
+        type = try values.decodeIfPresent(String.self, forKey: .type)
+        country = try values.decode(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+        timezones = try values.decode([String].self, forKey: .timezones)
+        isoCode = try decodeISOWire(String.self, from: decoder, canonical: "iso_code", camelCase: "isoCode", legacy: ["iso_subdivision", "isoSubdivision", "iso", "iso_3166_2", "iso31662"])
+        fips = try values.decodeIfPresent(String.self, forKey: .fips)
+        areaCodes = try values.decodeIfPresent([String].self, forKey: .areaCodes)
+        capital = try values.decodeIfPresent(StateCapital.self, forKey: .capital)
+        population = try values.decodeIfPresent(Int.self, forKey: .population)
+        area = try values.decodeIfPresent(Double.self, forKey: .area)
+        tax = try values.decodeIfPresent(StateTax.self, forKey: .tax)
+    }
 }
 
-public struct StateDistrictItem: Codable, Sendable {
-	public let district: String
+public struct StateCountyItem: Codable, Sendable {
+	public let county: String
+	public let isoCode: String?
 	public let name: String
 	public let type: String?
 	public let population: Int?
 	public let populationPeriod: String? = nil
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String { county }
+    private enum CodingKeys: String, CodingKey { case county, isoCode, name, type, population }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district") ?? values.decode(String.self, forKey: .county)
+        isoCode = try values.decodeIfPresent(String.self, forKey: .isoCode)
+        name = try values.decode(String.self, forKey: .name)
+        type = try values.decodeIfPresent(String.self, forKey: .type)
+        population = try values.decodeIfPresent(Int.self, forKey: .population)
+    }
 }
 
-public struct StateDistricts: Codable, Sendable {
+public struct StateCounties: Codable, Sendable {
 	public let state: String
 	public let stateName: String?
 	public let country: String
 	public let countryName: String?
-	public let districts: [StateDistrictItem]
+	public let counties: [StateCountyItem]
+
+    /// Legacy source spelling. The encoded response uses only counties.
+    public var districts: [StateCountyItem] { counties }
+    private enum CodingKeys: String, CodingKey { case state, stateName, country, countryName, counties }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        state = try values.decode(String.self, forKey: .state)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        country = try values.decode(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        counties = try decodeCountyWire([StateCountyItem].self, from: decoder, canonical: "counties", legacy: "districts") ?? []
+    }
 }
 
-public struct District: Codable, Sendable {
-	public let district: String
+public struct County: Codable, Sendable {
+	public let county: String
+	public let isoCode: String?
 	public let name: String
 	public let type: String?
 	public let state: String?
@@ -442,6 +552,30 @@ public struct District: Codable, Sendable {
 	public let waterArea: Double?
 	public let seat: String?
 	public let propertyTax: PropertyTax?
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String { county }
+    private enum CodingKeys: String, CodingKey { case county, isoCode, name, type, state, stateName, country, countryName, latitude, longitude, timezones, population, area, landArea, waterArea, seat, propertyTax }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district") ?? values.decode(String.self, forKey: .county)
+        isoCode = try values.decodeIfPresent(String.self, forKey: .isoCode)
+        name = try values.decode(String.self, forKey: .name)
+        type = try values.decodeIfPresent(String.self, forKey: .type)
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        country = try values.decode(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+        timezones = try values.decode([String].self, forKey: .timezones)
+        population = try values.decodeIfPresent(Int.self, forKey: .population)
+        area = try values.decodeIfPresent(Double.self, forKey: .area)
+        landArea = try values.decodeIfPresent(Double.self, forKey: .landArea)
+        waterArea = try values.decodeIfPresent(Double.self, forKey: .waterArea)
+        seat = try values.decodeIfPresent(String.self, forKey: .seat)
+        propertyTax = try values.decodeIfPresent(PropertyTax.self, forKey: .propertyTax)
+    }
 }
 
 public struct City: Codable, Sendable {
@@ -453,8 +587,8 @@ public struct City: Codable, Sendable {
 	public let type: String?
 	public let state: String?
 	public let stateName: String?
-	public let district: String?
-	public let districtName: String?
+	public let county: String?
+	public let countyName: String?
 	public let country: String
 	public let countryName: String?
 	public let latitude: Double?
@@ -475,6 +609,42 @@ public struct City: Codable, Sendable {
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String? { county }
+    /// Legacy source spelling. The encoded response uses only countyName.
+    public var districtName: String? { countyName }
+    private enum CodingKeys: String, CodingKey { case nameRomanized, romanizationLanguage, match, name, nameLocal, type, state, stateName, county, countyName, country, countryName, latitude, longitude, timezone, id, grain, parent, capitalOf, elevation, elevationFt, population, populationObservedOn, populationBasis, area, landArea, waterArea }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        nameRomanized = try values.decodeIfPresent(String.self, forKey: .nameRomanized)
+        romanizationLanguage = try values.decodeIfPresent(String.self, forKey: .romanizationLanguage)
+        match = try values.decodeIfPresent(CityMatch.self, forKey: .match)
+        name = try values.decode(String.self, forKey: .name)
+        nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
+        type = try values.decodeIfPresent(String.self, forKey: .type)
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district")
+        countyName = try decodeCountyWire(String.self, from: decoder, canonical: "countyName", legacy: "districtName")
+        country = try values.decode(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+        timezone = try values.decodeIfPresent(String.self, forKey: .timezone)
+        id = try values.decodeIfPresent(String.self, forKey: .id)
+        grain = try values.decodeIfPresent(String.self, forKey: .grain)
+        parent = try values.decodeIfPresent(CityParent.self, forKey: .parent)
+        capitalOf = try values.decodeIfPresent(String.self, forKey: .capitalOf)
+        elevation = try values.decodeIfPresent(Double.self, forKey: .elevation)
+        elevationFt = try values.decodeIfPresent(Double.self, forKey: .elevationFt)
+        population = try values.decodeIfPresent(Int.self, forKey: .population)
+        populationObservedOn = try values.decodeIfPresent(String.self, forKey: .populationObservedOn)
+        populationBasis = try values.decodeIfPresent(String.self, forKey: .populationBasis)
+        area = try values.decodeIfPresent(Double.self, forKey: .area)
+        landArea = try values.decodeIfPresent(Double.self, forKey: .landArea)
+        waterArea = try values.decodeIfPresent(Double.self, forKey: .waterArea)
+    }
 }
 
 /// Nearest-city lookups add the distance from the query point.
@@ -486,8 +656,8 @@ public struct CityNearest: Codable, Sendable {
 	public let type: String?
 	public let state: String?
 	public let stateName: String?
-	public let district: String?
-	public let districtName: String?
+	public let county: String?
+	public let countyName: String?
 	public let country: String
 	public let countryName: String?
 	public let latitude: Double?
@@ -509,6 +679,43 @@ public struct CityNearest: Codable, Sendable {
 	public let area: Double?
 	public let landArea: Double?
 	public let waterArea: Double?
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String? { county }
+    /// Legacy source spelling. The encoded response uses only countyName.
+    public var districtName: String? { countyName }
+    private enum CodingKeys: String, CodingKey { case nameRomanized, romanizationLanguage, name, nameLocal, type, state, stateName, county, countyName, country, countryName, latitude, longitude, timezone, id, distance, distanceMi, grain, parent, capitalOf, elevation, elevationFt, population, populationObservedOn, populationBasis, area, landArea, waterArea }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        nameRomanized = try values.decodeIfPresent(String.self, forKey: .nameRomanized)
+        romanizationLanguage = try values.decodeIfPresent(String.self, forKey: .romanizationLanguage)
+        name = try values.decode(String.self, forKey: .name)
+        nameLocal = try values.decodeIfPresent(String.self, forKey: .nameLocal)
+        type = try values.decodeIfPresent(String.self, forKey: .type)
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district")
+        countyName = try decodeCountyWire(String.self, from: decoder, canonical: "countyName", legacy: "districtName")
+        country = try values.decode(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+        timezone = try values.decodeIfPresent(String.self, forKey: .timezone)
+        id = try values.decodeIfPresent(String.self, forKey: .id)
+        distance = try values.decode(Double.self, forKey: .distance)
+        distanceMi = try values.decode(Double.self, forKey: .distanceMi)
+        grain = try values.decodeIfPresent(String.self, forKey: .grain)
+        parent = try values.decodeIfPresent(CityParent.self, forKey: .parent)
+        capitalOf = try values.decodeIfPresent(String.self, forKey: .capitalOf)
+        elevation = try values.decodeIfPresent(Double.self, forKey: .elevation)
+        elevationFt = try values.decodeIfPresent(Double.self, forKey: .elevationFt)
+        population = try values.decodeIfPresent(Int.self, forKey: .population)
+        populationObservedOn = try values.decodeIfPresent(String.self, forKey: .populationObservedOn)
+        populationBasis = try values.decodeIfPresent(String.self, forKey: .populationBasis)
+        area = try values.decodeIfPresent(Double.self, forKey: .area)
+        landArea = try values.decodeIfPresent(Double.self, forKey: .landArea)
+        waterArea = try values.decodeIfPresent(Double.self, forKey: .waterArea)
+    }
 }
 
 public struct CitySearch: Codable, Sendable {
@@ -559,9 +766,9 @@ public struct Postal: Codable, Sendable {
 	public let cityLocal: String?
 	/// Nil is unknown. An empty list has no eligible choices. One choice does not imply city.
 	public let localities: [PostalLocality]?
-	public let district: String?
-	public let districtName: String?
-	public let districtNameLocal: String?
+	public let county: String?
+	public let countyName: String?
+	public let countyNameLocal: String?
 	public let state: String?
 	public let stateName: String?
 	public let stateNameLocal: String?
@@ -585,6 +792,44 @@ public struct Postal: Codable, Sendable {
 	public let metros: [PostalMetro]?
 	public let propertyTax: PostalPropertyTax?
 	public let tax: PostalTax?
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String? { county }
+    /// Legacy source spelling. The encoded response uses only countyName.
+    public var districtName: String? { countyName }
+    /// Legacy source spelling. The encoded response uses only countyNameLocal.
+    public var districtNameLocal: String? { countyNameLocal }
+    private enum CodingKeys: String, CodingKey { case postal, city, cityLocal, localities, county, countyName, countyNameLocal, state, stateName, stateNameLocal, country, countryName, latitude, longitude, timezone, type, elevation, elevationFt, population, area, landArea, waterArea, currency, neighbors, metros, propertyTax, tax }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        postal = try values.decode(String.self, forKey: .postal)
+        city = try values.decodeIfPresent(String.self, forKey: .city)
+        cityLocal = try values.decodeIfPresent(String.self, forKey: .cityLocal)
+        localities = try values.decodeIfPresent([PostalLocality].self, forKey: .localities)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district")
+        countyName = try decodeCountyWire(String.self, from: decoder, canonical: "countyName", legacy: "districtName")
+        countyNameLocal = try decodeCountyWire(String.self, from: decoder, canonical: "countyNameLocal", legacy: "districtNameLocal")
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        stateNameLocal = try values.decodeIfPresent(String.self, forKey: .stateNameLocal)
+        country = try values.decode(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+        timezone = try values.decodeIfPresent(String.self, forKey: .timezone)
+        type = try values.decodeIfPresent(String.self, forKey: .type)
+        elevation = try values.decodeIfPresent(Double.self, forKey: .elevation)
+        elevationFt = try values.decodeIfPresent(Double.self, forKey: .elevationFt)
+        population = try values.decodeIfPresent(Int.self, forKey: .population)
+        area = try values.decodeIfPresent(Double.self, forKey: .area)
+        landArea = try values.decodeIfPresent(Double.self, forKey: .landArea)
+        waterArea = try values.decodeIfPresent(Double.self, forKey: .waterArea)
+        currency = try values.decodeIfPresent(String.self, forKey: .currency)
+        neighbors = try values.decodeIfPresent([String].self, forKey: .neighbors)
+        metros = try values.decodeIfPresent([PostalMetro].self, forKey: .metros)
+        propertyTax = try values.decodeIfPresent(PostalPropertyTax.self, forKey: .propertyTax)
+        tax = try values.decodeIfPresent(PostalTax.self, forKey: .tax)
+    }
 }
 
 public struct PostalNearbyItem: Codable, Sendable {
@@ -1154,8 +1399,8 @@ public struct Point: Codable, Sendable {
 	public let countryName: String?
 	public let state: String?
 	public let stateName: String?
-	public let district: String?
-	public let districtName: String?
+	public let county: String?
+	public let countyName: String?
 
 	public let timezone: String?
 	public let elevation: Double?
@@ -1163,6 +1408,29 @@ public struct Point: Codable, Sendable {
 	public let resolution: Double?
 	public let city: PointCity?
 	public let electoral: PointElectoral?
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String? { county }
+    /// Legacy source spelling. The encoded response uses only countyName.
+    public var districtName: String? { countyName }
+    private enum CodingKeys: String, CodingKey { case latitude, longitude, country, countryName, state, stateName, county, countyName, timezone, elevation, elevationFt, resolution, city, electoral }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        latitude = try values.decode(Double.self, forKey: .latitude)
+        longitude = try values.decode(Double.self, forKey: .longitude)
+        country = try values.decodeIfPresent(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district")
+        countyName = try decodeCountyWire(String.self, from: decoder, canonical: "countyName", legacy: "districtName")
+        timezone = try values.decodeIfPresent(String.self, forKey: .timezone)
+        elevation = try values.decodeIfPresent(Double.self, forKey: .elevation)
+        elevationFt = try values.decodeIfPresent(Double.self, forKey: .elevationFt)
+        resolution = try values.decodeIfPresent(Double.self, forKey: .resolution)
+        city = try values.decodeIfPresent(PointCity.self, forKey: .city)
+        electoral = try values.decodeIfPresent(PointElectoral.self, forKey: .electoral)
+    }
 }
 
 public struct WeatherForecastPeriod: Codable, Sendable {
@@ -1378,8 +1646,8 @@ public struct Address: Codable, Sendable {
 	public let street: String?
 	public let unit: String?
 	public let city: String?
-	public let district: String?
-	public let districtName: String?
+	public let county: String?
+	public let countyName: String?
 	public let state: String?
 	public let stateName: String?
 	public let postal: String?
@@ -1388,6 +1656,31 @@ public struct Address: Codable, Sendable {
 	public let latitude: Double?
 	public let longitude: Double?
 	
+
+    /// Legacy source spelling. The encoded response uses only county.
+    public var district: String? { county }
+    /// Legacy source spelling. The encoded response uses only countyName.
+    public var districtName: String? { countyName }
+    private enum CodingKeys: String, CodingKey { case address, valid, registered, number, street, unit, city, county, countyName, state, stateName, postal, country, countryName, latitude, longitude }
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        address = try values.decodeIfPresent(String.self, forKey: .address)
+        valid = try values.decode(Bool.self, forKey: .valid)
+        registered = try values.decodeIfPresent(Bool.self, forKey: .registered)
+        number = try values.decodeIfPresent(String.self, forKey: .number)
+        street = try values.decodeIfPresent(String.self, forKey: .street)
+        unit = try values.decodeIfPresent(String.self, forKey: .unit)
+        city = try values.decodeIfPresent(String.self, forKey: .city)
+        county = try decodeCountyWire(String.self, from: decoder, canonical: "county", legacy: "district")
+        countyName = try decodeCountyWire(String.self, from: decoder, canonical: "countyName", legacy: "districtName")
+        state = try values.decodeIfPresent(String.self, forKey: .state)
+        stateName = try values.decodeIfPresent(String.self, forKey: .stateName)
+        postal = try values.decodeIfPresent(String.self, forKey: .postal)
+        country = try values.decodeIfPresent(String.self, forKey: .country)
+        countryName = try values.decodeIfPresent(String.self, forKey: .countryName)
+        latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
+        longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
+    }
 }
 
 public struct AddressSuggestion: Codable, Sendable {
@@ -1694,7 +1987,7 @@ public struct StateDeep: Codable, Sendable {
 }
 
 
-public struct StateDistrictDeep: Codable, Sendable {
+public struct StateCountyDeep: Codable, Sendable {
 	public let population: Int?
 	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
 	public let populationPeriod: String? = nil
@@ -1706,7 +1999,7 @@ public struct StateDistrictDeep: Codable, Sendable {
 }
 
 
-public struct DistrictDeep: Codable, Sendable {
+public struct CountyDeep: Codable, Sendable {
 	public let population: Int?
 	@available(*, deprecated, message: "No longer returned; retained for source compatibility")
 	public let populationPeriod: String? = nil
@@ -2385,3 +2678,18 @@ public struct CurrencyRate: Codable, Sendable {
 public struct CurrencyDeep: Codable, Sendable {}
 
 
+
+/// Legacy type spelling; use StateCountyItem.
+public typealias StateDistrictItem = StateCountyItem
+
+/// Legacy type spelling; use StateCounties.
+public typealias StateDistricts = StateCounties
+
+/// Legacy type spelling; use County.
+public typealias District = County
+
+/// Legacy type spelling; use CountyDeep.
+public typealias DistrictDeep = CountyDeep
+
+/// Legacy type spelling; use StateCountyDeep.
+public typealias StateDistrictDeep = StateCountyDeep

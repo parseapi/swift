@@ -53,4 +53,23 @@ struct ISONamingTests {
   let state=try decode(State.self,#"{"state":"CA","name":"California","country":"US","timezones":[],"iso_subdivision":null,"iso":"US-CA","iso_3166_2":"US-TX"}"#)
  #expect(state.iso==nil)
  }
+ @Test func stateCountyISOCodeKeepsCanonicalNullAndExactPlace()throws {
+  for key in ["iso_code","iso_subdivision","iso","iso_3166_2"] {
+   let value=try decode(State.self,"{\"state\":\"CO\",\"name\":\"Colorado\",\"country\":\"US\",\"timezones\":[],\"\(key)\":\"US-CO\"}")
+   #expect(value.isoCode=="US-CO" && value.iso==value.isoCode && value.iso31662==value.isoCode)
+   let encoder=JSONEncoder();encoder.keyEncodingStrategy = .convertToSnakeCase
+   let raw=try JSONSerialization.jsonObject(with:encoder.encode(value)) as! [String:Any]
+   #expect(raw["iso_code"] as? String == "US-CO")
+   #expect(raw["iso_subdivision"]==nil && raw["iso"]==nil && raw["iso_3166_2"]==nil)
+  }
+  for fields in [#""iso_code":null,"iso_subdivision":"US-CA","iso":"US-TX","iso_3166_2":"US-NY""#,#""iso_subdivision":"US-CA","iso":"US-TX","iso_3166_2":"US-NY","iso_code":null"#] {
+   let value=try decode(State.self,#"{"state":"CO","name":"Colorado","country":"US","timezones":[],"# + fields + "}")
+   #expect(value.isoCode==nil && value.iso==nil && value.iso31662==nil)
+  }
+  struct Feature:Decodable {let properties:County}
+  let feature=try decode(Feature.self,#"{"type":"Feature","properties":{"county":"E09000033","iso_code":"GB-WSM","name":"Westminster","country":"GB","timezones":[],"type":"district"},"geometry":null}"#)
+  #expect(feature.properties.isoCode=="GB-WSM" && feature.properties.county=="E09000033" && feature.properties.type=="district")
+  let list=try decode(StateCounties.self,#"{"state":"ENG","country":"GB","counties":[{"county":"29","name":"Finistere","iso_code":"FR-29"},{"county":"08031","name":"Denver County","iso_code":null},{"county":"old","name":"Old response"}]}"#)
+  #expect(list.counties[0].isoCode=="FR-29" && list.counties[1].isoCode==nil && list.counties[2].isoCode==nil)
+ }
 }

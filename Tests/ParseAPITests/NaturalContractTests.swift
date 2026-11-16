@@ -26,7 +26,9 @@ default:throw CocoaError(.coderReadCorrupt)
    let actual=try JSONSerialization.jsonObject(with:encoded) as! [String:Any]
    #expect(actual["deep"] == nil)
    for key in row["fields"] as! [String] {
-    let want=field(body,key),got=field(actual,key)
+    // Historical State ISO inputs re-encode using the current canonical key.
+    let encodedKey = (row["product"] as? String == "state" && key == "iso_subdivision") ? "iso_code" : key
+    let want=field(body,key),got=field(actual,encodedKey)
     if want==nil { #expect(got==nil) } else { #expect((got as? NSObject)?.isEqual(want)==true,Comment(rawValue:"\(row["id"]!):\(key)")) }
    }
   }

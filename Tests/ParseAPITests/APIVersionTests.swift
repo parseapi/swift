@@ -16,7 +16,7 @@ import Testing
  #expect(stub.requests.count == 2)
 		for request in stub.requests {
  #expect(request.url?.absoluteString == "https://api.parseapi.com/ip?deep=true")
- #expect(request.value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+ #expect(request.value(forHTTPHeaderField: "X-API-Version") == "2.2.0")
  #expect(request.value(forHTTPHeaderField: "Parse-Version") == nil)
  #expect(request.value(forHTTPHeaderField: "X-API-Key") == "parse_app_version_test")
  #expect(request.value(forHTTPHeaderField: "X-App-Id") == "com.example.version")
@@ -28,7 +28,7 @@ import Testing
 		let stub = StubTransport(body: #"{"useragent":"Example/1.0","bot":false,"mobile":false}"#)
 		_ = try await makeClient(stub, appId: "com.example.version").useragent("Example/1.0")
 		let request = stub.requests[0]
- #expect(request.value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+ #expect(request.value(forHTTPHeaderField: "X-API-Version") == "2.2.0")
  #expect(request.value(forHTTPHeaderField: "User-Agent") == "Example/1.0")
  #expect(request.value(forHTTPHeaderField: "X-API-Key") == "parse_testtesttesttest")
  #expect(request.value(forHTTPHeaderField: "X-App-Id") == "com.example.version")
@@ -45,6 +45,6 @@ import Testing
  #expect(error.requestId == "req_version")
 		}
  #expect(stub.requests.count == 1)
- #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+ #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Version") == "2.2.0")
 	}
 }

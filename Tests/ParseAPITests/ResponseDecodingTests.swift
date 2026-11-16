@@ -49,7 +49,7 @@ private actor ResponseRecorder {
   _ = try await explicitTimeout.timeZones()
   for request in await calls.all() {
    precondition(request.value(forHTTPHeaderField: "Parse-Response") == nil)
-   precondition(request.value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+   precondition(request.value(forHTTPHeaderField: "X-API-Version") == "2.2.0")
   }
   print("Existing initializer/call signatures compile; default requests omit response preference")
   let cleanCalls = ResponseRecorder(), clean = try responseBody("clean", "timezones")

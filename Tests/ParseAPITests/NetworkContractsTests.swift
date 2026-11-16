@@ -45,7 +45,7 @@ import Testing
     let district = try await makeClient(districtStub).district("36061", country: "US", state: "NY")
  #expect(district.timezones == ["America/New_York"])
  #expect(districtStub.requests.count == 1)
- #expect(districtStub.requests[0].url!.absoluteString.hasSuffix("/district/36061?country=US&state=NY"))
+ #expect(districtStub.requests[0].url!.absoluteString.hasSuffix("/county/36061?country=US&state=NY"))
     let domain = try read(Domain.self, "domain_unregistered")
  #expect(domain.available == true && domain.registration?.dnssec == nil)
 }

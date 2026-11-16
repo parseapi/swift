@@ -15,7 +15,7 @@ import Testing
 			let client = try makeClient(stub)
 			let result = try await client.stack("bücher.example", deep: true, pretty: true)
  #expect(stub.requests[0].url!.absoluteString == "https://api.parseapi.com/stack/b%C3%BCcher.example?deep=true&pretty=true")
- #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Version") == "2.1.0")
+ #expect(stub.requests[0].value(forHTTPHeaderField: "X-API-Version") == "2.2.0")
 			if i == 0 || i == 3 {
  #expect(result.cms == nil && result.servers == nil) }
 			else if i != 2 {

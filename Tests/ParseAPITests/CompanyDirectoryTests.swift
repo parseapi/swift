@@ -39,7 +39,7 @@ private let directorySearchJSON = #"{"companies":[{"id":"co_222222222222","name"
  #expect(stub.requests.count == expected.count)
   for (request,path) in zip(stub.requests,expected) {
  #expect(request.url?.absoluteString == "https://api.parseapi.com"+path)
- #expect(request.value(forHTTPHeaderField:"X-API-Version") == "2.1.0")
+ #expect(request.value(forHTTPHeaderField:"X-API-Version") == "2.2.0")
   }
  }
  @Test func oldEmptyPartialAndFutureDeep() throws {

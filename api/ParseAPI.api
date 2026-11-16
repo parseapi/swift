@@ -12,8 +12,10 @@ Address.address: let address: String?
 Address.city: let city: String?
 Address.country: let country: String?
 Address.countryName: let countryName: String?
-Address.district: let district: String?
-Address.districtName: let districtName: String?
+Address.county: let county: String?
+Address.countyName: let countyName: String?
+Address.district: var district: String? { get }
+Address.districtName: var districtName: String? { get }
 Address.init(from:): init(from decoder: any Decoder) throws
 Address.latitude: let latitude: Double?
 Address.longitude: let longitude: Double?
@@ -129,8 +131,10 @@ City.area: let area: Double?
 City.capitalOf: let capitalOf: String?
 City.country: let country: String
 City.countryName: let countryName: String?
-City.district: let district: String?
-City.districtName: let districtName: String?
+City.county: let county: String?
+City.countyName: let countyName: String?
+City.district: var district: String? { get }
+City.districtName: var districtName: String? { get }
 City.elevation: let elevation: Double?
 City.elevationFt: let elevationFt: Double?
 City.grain: let grain: String?
@@ -291,10 +295,12 @@ CityNearest.area: let area: Double?
 CityNearest.capitalOf: let capitalOf: String?
 CityNearest.country: let country: String
 CityNearest.countryName: let countryName: String?
+CityNearest.county: let county: String?
+CityNearest.countyName: let countyName: String?
 CityNearest.distance: let distance: Double
 CityNearest.distanceMi: let distanceMi: Double
-CityNearest.district: let district: String?
-CityNearest.districtName: let districtName: String?
+CityNearest.district: var district: String? { get }
+CityNearest.districtName: var districtName: String? { get }
 CityNearest.elevation: let elevation: Double?
 CityNearest.elevationFt: let elevationFt: Double?
 CityNearest.grain: let grain: String?
@@ -379,10 +385,12 @@ CityResource.area: let area: Double?
 CityResource.capitalOf: let capitalOf: String?
 CityResource.country: let country: String?
 CityResource.countryName: let countryName: String?
+CityResource.county: let county: String?
+CityResource.countyName: let countyName: String?
 CityResource.distance: let distance: Double?
 CityResource.distanceMi: let distanceMi: Double?
-CityResource.district: let district: String?
-CityResource.districtName: let districtName: String?
+CityResource.district: var district: String? { get }
+CityResource.districtName: var districtName: String? { get }
 CityResource.elevation: let elevation: Double?
 CityResource.elevationFt: let elevationFt: Double?
 CityResource.grain: let grain: String?
@@ -967,6 +975,44 @@ CountryTax: conformsTo Swift.Encodable
 CountryTax: conformsTo Swift.Sendable
 CountryTax: conformsTo Swift.SendableMetatype
 CountryTax: struct CountryTax
+County.area: let area: Double?
+County.country: let country: String
+County.countryName: let countryName: String?
+County.county: let county: String
+County.district: var district: String { get }
+County.init(from:): init(from decoder: any Decoder) throws
+County.isoCode: let isoCode: String?
+County.landArea: let landArea: Double?
+County.latitude: let latitude: Double?
+County.longitude: let longitude: Double?
+County.name: let name: String
+County.population: let population: Int?
+County.populationPeriod: let populationPeriod: String?
+County.propertyTax: let propertyTax: PropertyTax?
+County.seat: let seat: String?
+County.state: let state: String?
+County.stateName: let stateName: String?
+County.timezones: let timezones: [String]
+County.type: let type: String?
+County.waterArea: let waterArea: Double?
+County: conformsTo Swift.Decodable
+County: conformsTo Swift.Encodable
+County: conformsTo Swift.Sendable
+County: conformsTo Swift.SendableMetatype
+County: struct County
+CountyDeep.area: let area: Double?
+CountyDeep.init(from:): init(from decoder: any Decoder) throws
+CountyDeep.landArea: let landArea: Double?
+CountyDeep.population: let population: Int?
+CountyDeep.populationPeriod: let populationPeriod: String?
+CountyDeep.propertyTax: let propertyTax: PropertyTax?
+CountyDeep.seat: let seat: String?
+CountyDeep.waterArea: let waterArea: Double?
+CountyDeep: conformsTo Swift.Decodable
+CountyDeep: conformsTo Swift.Encodable
+CountyDeep: conformsTo Swift.Sendable
+CountyDeep: conformsTo Swift.SendableMetatype
+CountyDeep: struct CountyDeep
 Currency.countries: let countries: [String]?
 Currency.currency: let currency: String
 Currency.digits: let digits: Int?
@@ -1059,42 +1105,8 @@ DateInfoDeep: conformsTo Swift.Encodable
 DateInfoDeep: conformsTo Swift.Sendable
 DateInfoDeep: conformsTo Swift.SendableMetatype
 DateInfoDeep: struct DateInfoDeep
-District.area: let area: Double?
-District.country: let country: String
-District.countryName: let countryName: String?
-District.district: let district: String
-District.init(from:): init(from decoder: any Decoder) throws
-District.landArea: let landArea: Double?
-District.latitude: let latitude: Double?
-District.longitude: let longitude: Double?
-District.name: let name: String
-District.population: let population: Int?
-District.populationPeriod: let populationPeriod: String?
-District.propertyTax: let propertyTax: PropertyTax?
-District.seat: let seat: String?
-District.state: let state: String?
-District.stateName: let stateName: String?
-District.timezones: let timezones: [String]
-District.type: let type: String?
-District.waterArea: let waterArea: Double?
-District: conformsTo Swift.Decodable
-District: conformsTo Swift.Encodable
-District: conformsTo Swift.Sendable
-District: conformsTo Swift.SendableMetatype
-District: struct District
-DistrictDeep.area: let area: Double?
-DistrictDeep.init(from:): init(from decoder: any Decoder) throws
-DistrictDeep.landArea: let landArea: Double?
-DistrictDeep.population: let population: Int?
-DistrictDeep.populationPeriod: let populationPeriod: String?
-DistrictDeep.propertyTax: let propertyTax: PropertyTax?
-DistrictDeep.seat: let seat: String?
-DistrictDeep.waterArea: let waterArea: Double?
-DistrictDeep: conformsTo Swift.Decodable
-DistrictDeep: conformsTo Swift.Encodable
-DistrictDeep: conformsTo Swift.Sendable
-DistrictDeep: conformsTo Swift.SendableMetatype
-DistrictDeep: struct DistrictDeep
+District: typealias District = County
+DistrictDeep: typealias DistrictDeep = CountyDeep
 Domain.available: let available: Bool?
 Domain.domain: let domain: String
 Domain.init(from:): init(from decoder: any Decoder) throws
@@ -1564,9 +1576,11 @@ IP.city: let city: String?
 IP.continent: let continent: String?
 IP.country: let country: String?
 IP.countryName: let countryName: String?
+IP.county: let county: String?
+IP.countyName: let countyName: String?
 IP.datacenter: let datacenter: Bool?
-IP.district: let district: String?
-IP.districtName: let districtName: String?
+IP.district: var district: String? { get }
+IP.districtName: var districtName: String? { get }
 IP.init(from:): init(from decoder: any Decoder) throws
 IP.ip: let ip: String
 IP.latitude: let latitude: Double?
@@ -1591,9 +1605,11 @@ IPDeep.asnType: let asnType: String?
 IPDeep.censusDivision: let censusDivision: String?
 IPDeep.censusRegion: let censusRegion: String?
 IPDeep.city: let city: String?
+IPDeep.county: let county: String?
+IPDeep.countyName: let countyName: String?
 IPDeep.datacenter: let datacenter: Bool?
-IPDeep.district: let district: String?
-IPDeep.districtName: let districtName: String?
+IPDeep.district: var district: String? { get }
+IPDeep.districtName: var districtName: String? { get }
 IPDeep.init(from:): init(from decoder: any Decoder) throws
 IPDeep.latitude: let latitude: Double?
 IPDeep.longitude: let longitude: Double?
@@ -1813,6 +1829,8 @@ ParseAPI.country(_:deep:): func country(_ code: String, deep: Bool = false) asyn
 ParseAPI.country(_:deep:lang:): func country(_ code: String, deep: Bool = false, lang: String?) async throws -> Country
 ParseAPI.countryStates(_:): func countryStates(_ code: String) async throws -> CountryStates
 ParseAPI.countryStates(_:lang:): func countryStates(_ code: String, lang: String?) async throws -> CountryStates
+ParseAPI.county(_:country:state:deep:): func county(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false) async throws -> County
+ParseAPI.county(_:country:state:deep:lang:): func county(_ code: String, country: String? = nil, state: String? = nil, deep: Bool = false, lang: String?) async throws -> County
 ParseAPI.currency(_:deep:): func currency(_ code: String, deep: Bool = false) async throws -> Currency
 ParseAPI.currency(_:deep:lang:): func currency(_ code: String, deep: Bool = false, lang: String?) async throws -> Currency
 ParseAPI.currencyRate(_:_:date:amount:): func currencyRate(_ base: String, _ quote: String, date: String? = nil, amount: Double? = nil) async throws -> CurrencyRate
@@ -1871,6 +1889,8 @@ ParseAPI.postalNearby(_:country:radius:unit:deep:lang:): func postalNearby(_ cod
 ParseAPI.stack(_:deep:pretty:): func stack(_ domain: String, deep: Bool = false, pretty: Bool = false) async throws -> Stack
 ParseAPI.state(_:country:deep:): func state(_ code: String, country: String? = nil, deep: Bool = false) async throws -> State
 ParseAPI.state(_:country:deep:lang:): func state(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> State
+ParseAPI.stateCounties(_:country:deep:): func stateCounties(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateCounties
+ParseAPI.stateCounties(_:country:deep:lang:): func stateCounties(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateCounties
 ParseAPI.stateDistricts(_:country:deep:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false) async throws -> StateDistricts
 ParseAPI.stateDistricts(_:country:deep:lang:): func stateDistricts(_ code: String, country: String? = nil, deep: Bool = false, lang: String?) async throws -> StateDistricts
 ParseAPI.time(_:at:deep:lang:disambiguation:targets:): func time(_ timezone: String? = nil, at: String? = nil, deep: Bool = false, lang: String? = nil, disambiguation: String? = nil, targets: [String]) async throws -> Time
@@ -1934,8 +1954,10 @@ PhoneDeep: struct PhoneDeep
 Point.city: let city: PointCity?
 Point.country: let country: String?
 Point.countryName: let countryName: String?
-Point.district: let district: String?
-Point.districtName: let districtName: String?
+Point.county: let county: String?
+Point.countyName: let countyName: String?
+Point.district: var district: String? { get }
+Point.districtName: var districtName: String? { get }
 Point.electoral: let electoral: PointElectoral?
 Point.elevation: let elevation: Double?
 Point.elevationFt: let elevationFt: Double?
@@ -1994,10 +2016,13 @@ Postal.city: let city: String?
 Postal.cityLocal: let cityLocal: String?
 Postal.country: let country: String
 Postal.countryName: let countryName: String?
+Postal.county: let county: String?
+Postal.countyName: let countyName: String?
+Postal.countyNameLocal: let countyNameLocal: String?
 Postal.currency: let currency: String?
-Postal.district: let district: String?
-Postal.districtName: let districtName: String?
-Postal.districtNameLocal: let districtNameLocal: String?
+Postal.district: var district: String? { get }
+Postal.districtName: var districtName: String? { get }
+Postal.districtNameLocal: var districtNameLocal: String? { get }
 Postal.elevation: let elevation: Double?
 Postal.elevationFt: let elevationFt: Double?
 Postal.init(from:): init(from decoder: any Decoder) throws
@@ -2187,7 +2212,8 @@ State.countryName: let countryName: String?
 State.fips: let fips: String?
 State.init(from:): init(from decoder: any Decoder) throws
 State.iso31662: var iso31662: String? { get }
-State.iso: let iso: String?
+State.iso: var iso: String? { get }
+State.isoCode: let isoCode: String?
 State.latitude: let latitude: Double?
 State.longitude: let longitude: Double?
 State.name: let name: String
@@ -2213,6 +2239,39 @@ StateCapital: conformsTo Swift.Encodable
 StateCapital: conformsTo Swift.Sendable
 StateCapital: conformsTo Swift.SendableMetatype
 StateCapital: struct StateCapital
+StateCounties.counties: let counties: [StateCountyItem]
+StateCounties.country: let country: String
+StateCounties.countryName: let countryName: String?
+StateCounties.districts: var districts: [StateCountyItem] { get }
+StateCounties.init(from:): init(from decoder: any Decoder) throws
+StateCounties.state: let state: String
+StateCounties.stateName: let stateName: String?
+StateCounties: conformsTo Swift.Decodable
+StateCounties: conformsTo Swift.Encodable
+StateCounties: conformsTo Swift.Sendable
+StateCounties: conformsTo Swift.SendableMetatype
+StateCounties: struct StateCounties
+StateCountyDeep.init(from:): init(from decoder: any Decoder) throws
+StateCountyDeep.population: let population: Int?
+StateCountyDeep.populationPeriod: let populationPeriod: String?
+StateCountyDeep: conformsTo Swift.Decodable
+StateCountyDeep: conformsTo Swift.Encodable
+StateCountyDeep: conformsTo Swift.Sendable
+StateCountyDeep: conformsTo Swift.SendableMetatype
+StateCountyDeep: struct StateCountyDeep
+StateCountyItem.county: let county: String
+StateCountyItem.district: var district: String { get }
+StateCountyItem.init(from:): init(from decoder: any Decoder) throws
+StateCountyItem.isoCode: let isoCode: String?
+StateCountyItem.name: let name: String
+StateCountyItem.population: let population: Int?
+StateCountyItem.populationPeriod: let populationPeriod: String?
+StateCountyItem.type: let type: String?
+StateCountyItem: conformsTo Swift.Decodable
+StateCountyItem: conformsTo Swift.Encodable
+StateCountyItem: conformsTo Swift.Sendable
+StateCountyItem: conformsTo Swift.SendableMetatype
+StateCountyItem: struct StateCountyItem
 StateDeep.area: let area: Double?
 StateDeep.areaCodes: let areaCodes: [String]?
 StateDeep.capital: let capital: String?
@@ -2227,36 +2286,9 @@ StateDeep: conformsTo Swift.Encodable
 StateDeep: conformsTo Swift.Sendable
 StateDeep: conformsTo Swift.SendableMetatype
 StateDeep: struct StateDeep
-StateDistrictDeep.init(from:): init(from decoder: any Decoder) throws
-StateDistrictDeep.population: let population: Int?
-StateDistrictDeep.populationPeriod: let populationPeriod: String?
-StateDistrictDeep: conformsTo Swift.Decodable
-StateDistrictDeep: conformsTo Swift.Encodable
-StateDistrictDeep: conformsTo Swift.Sendable
-StateDistrictDeep: conformsTo Swift.SendableMetatype
-StateDistrictDeep: struct StateDistrictDeep
-StateDistrictItem.district: let district: String
-StateDistrictItem.init(from:): init(from decoder: any Decoder) throws
-StateDistrictItem.name: let name: String
-StateDistrictItem.population: let population: Int?
-StateDistrictItem.populationPeriod: let populationPeriod: String?
-StateDistrictItem.type: let type: String?
-StateDistrictItem: conformsTo Swift.Decodable
-StateDistrictItem: conformsTo Swift.Encodable
-StateDistrictItem: conformsTo Swift.Sendable
-StateDistrictItem: conformsTo Swift.SendableMetatype
-StateDistrictItem: struct StateDistrictItem
-StateDistricts.country: let country: String
-StateDistricts.countryName: let countryName: String?
-StateDistricts.districts: let districts: [StateDistrictItem]
-StateDistricts.init(from:): init(from decoder: any Decoder) throws
-StateDistricts.state: let state: String
-StateDistricts.stateName: let stateName: String?
-StateDistricts: conformsTo Swift.Decodable
-StateDistricts: conformsTo Swift.Encodable
-StateDistricts: conformsTo Swift.Sendable
-StateDistricts: conformsTo Swift.SendableMetatype
-StateDistricts: struct StateDistricts
+StateDistrictDeep: typealias StateDistrictDeep = StateCountyDeep
+StateDistrictItem: typealias StateDistrictItem = StateCountyItem
+StateDistricts: typealias StateDistricts = StateCounties
 StateTax.init(from:): init(from decoder: any Decoder) throws
 StateTax.name: let name: String?
 StateTax.rate: let rate: Double?
