@@ -35,14 +35,14 @@ default:throw CocoaError(.coderReadCorrupt)
  }
 }
 
-@Test func emailVerificationIsExplicitPostAndDoesNotAutomaticallyRetry() async throws {
+@Test func emailVerificationIsExplicitGetAndDoesNotAutomaticallyRetry() async throws {
  let stub=StubTransport(body:#"{"email":"a+tag@example.com","valid":true,"free":false,"disposable":false,"role":false,"deliverable":false,"catchall":null}"#)
  let client=try ParseAPI("fixture",baseURL:"https://api.parseapi.com",transport:stub.transport)
  let result=try await client.emailVerify("a+tag@example.com")
  #expect(result.deliverable==false && result.catchall==nil)
- #expect(stub.requests[0].httpMethod=="POST" && stub.requests[0].url?.path=="/email/verify")
- let body=try #require(stub.requests[0].httpBody)
- #expect(try JSONSerialization.jsonObject(with:body) as? [String:String] == ["email":"a+tag@example.com"])
+ #expect(stub.requests[0].httpMethod=="GET" && stub.requests[0].url?.path=="/email/verify")
+ #expect(stub.requests[0].httpBody==nil)
+ #expect(URLComponents(url:stub.requests[0].url!,resolvingAgainstBaseURL:false)?.queryItems?.first(where:{$0.name=="email"})?.value=="a+tag@example.com")
  let failure=StubTransport([(503,#"{"code":"service_unavailable","message":"pending"}"#,[:]),(503,"{}",[:]),(503,"{}",[:])])
  let failing=try ParseAPI("fixture",baseURL:"https://api.parseapi.com",transport:failure.transport)
  do { _ = try await failing.emailVerify("a@example.com"); Issue.record("Expected a service error") } catch { }

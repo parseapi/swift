@@ -2,7 +2,7 @@
 County migration: this SDK selects HTTP API `2.2.0`. Use County methods and the `county`, `county_name`, `county_name_local`, `counties` and State `iso_code` fields. This is a breaking field-read migration. Earlier published packages retain their documented contract and saved account defaults stay unchanged.
 ```swift
 // Package.swift dependencies
-.package(url: "https://github.com/parseapi/swift", from: "1.13.0")
+.package(url: "https://github.com/parseapi/swift", from: "1.13.1")
 ```
 
 ```swift

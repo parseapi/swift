@@ -75,7 +75,7 @@ final class ParseAPIRedirectDelegate: NSObject, URLSessionTaskDelegate {
 ///     let parse = try ParseAPI("parse_app_...")
 ///     let ip = try await parse.ip("8.8.8.8")
 public final class ParseAPI: Sendable {
-	static let version = "1.13.0"
+	static let version = "1.13.1"
 	// The response types' wire contract. Changes require a reviewed major SDK release.
 	private static let apiVersion = "2.2.0"
 	private static let retryStatus: Set<Int> = [429, 500, 502, 503, 504]
@@ -509,7 +509,7 @@ public final class ParseAPI: Sendable {
 	/// deep.
 	/// Run one explicit metered mailbox check. App keys receive permission_denied.
 	public func emailVerify(_ email: String) async throws -> Email {
-		try await get("/email/verify", body: JSONSerialization.data(withJSONObject: ["email": email]))
+		try await get("/email/verify", query: [("email", email)])
 	}
 
 	public func email(_ email: String, deep: Bool = false) async throws -> Email {
@@ -860,7 +860,7 @@ public final class ParseAPI: Sendable {
 		try await get("/emoji/catalog", query: [("lang", options.lang), ("category", options.category), ("subcategory", options.subcategory), ("version", options.version), ("max_version", options.maxVersion), ("include_skin_tones", options.includeSkinTones.map { $0 ? "true" : "false" })])
 	}
 	public func emojiConvert(_ text: String, direction: String, shortcodeSource: String) async throws -> EmojiConversion {
-		try await get("/emoji/convert", query: [("direction",direction),("shortcode_source",shortcodeSource)], body: JSONSerialization.data(withJSONObject:["text":text]))
+		try await get("/emoji/convert", query: [("text",text),("direction",direction),("shortcode_source",shortcodeSource)])
 	}
 
 	
@@ -871,7 +871,7 @@ public final class ParseAPI: Sendable {
 
 	/// Positions use UTF-16 code units; end is exclusive.
 	public func emojiParse(_ text: String, deep: Bool = false, lang: String? = nil) async throws -> EmojiParse {
-		try await get("/emoji/parse", query: [("lang", lang)] + deepQuery(deep), body: JSONSerialization.data(withJSONObject: ["text": text]))
+		try await get("/emoji/parse", query: [("text", text), ("lang", lang)] + deepQuery(deep))
 	}
 
 	private func emojiQuery(_ options: EmojiSearchOptions) -> [(String, String?)] {
@@ -945,12 +945,21 @@ public final class ParseAPI: Sendable {
 	}
 
 	private func get<T: Decodable>(_ path: String, query: [(String, String?)] = [], userAgent: String? = nil, body: Data? = nil) async throws -> T {
+		var requestBody = body
 		var url = baseURL + path
 		let pairs = query.compactMap { name, value in
 			value.map { "\(name)=\(enc($0))" }
 		}
 		if !pairs.isEmpty {
 			url += "?" + pairs.joined(separator: "&")
+		}
+		if requestBody == nil, ["/email/verify", "/emoji/parse", "/emoji/convert"].contains(path), url.utf8.count > 8000 {
+			let field = path == "/email/verify" ? "email" : "text"
+			if let value = query.first(where: { $0.0 == field })?.1 {
+				requestBody = try JSONSerialization.data(withJSONObject: [field: value])
+				let remaining = query.filter { $0.0 != field }.compactMap { name, value in value.map { "\(name)=\(enc($0))" } }
+				url = baseURL + path + (remaining.isEmpty ? "" : "?" + remaining.joined(separator: "&"))
+			}
 		}
 		guard let requestURL = URL(string: url) else {
 			throw URLError(.badURL)
@@ -964,7 +973,7 @@ public final class ParseAPI: Sendable {
 		while true {
 			try Task.checkCancellation()
 			var request = URLRequest(url: requestURL)
-			if let body {
+			if let body = requestBody {
 				request.httpMethod = "POST"
 				request.httpBody = body
 				request.setValue("application/json", forHTTPHeaderField: "Content-Type")

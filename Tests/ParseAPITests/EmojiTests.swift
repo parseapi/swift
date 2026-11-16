@@ -33,10 +33,9 @@ import Testing
 		let result = try await makeClient(parse).emojiParse("x 👍🏿 👍🏿",deep:true,lang:"fr")
  #expect(result.emojis.count == 1 && result.emojis[0].positions[1].end == 11)
  #expect(result.emojis[0].base == "👍" && result.emojis[0].variants?.first?.tones == ["dark"])
- #expect(parse.requests[0].httpMethod == "POST")
- #expect(parse.requests[0].url?.query == "lang=fr&deep=true")
-		let body = try JSONDecoder().decode([String:String].self,from:#require(parse.requests[0].httpBody))
- #expect(body == ["text":"x 👍🏿 👍🏿"])
+ #expect(parse.requests[0].httpMethod == "GET")
+ #expect(URLComponents(url:parse.requests[0].url!,resolvingAgainstBaseURL:false)?.queryItems?.first(where:{$0.name=="text"})?.value=="x 👍🏿 👍🏿")
+ #expect(parse.requests[0].httpBody == nil)
  #expect(parse.requests[0].value(forHTTPHeaderField:"X-API-Version") == "2.2.0")
 		let taxonomy = try await makeClient(StubTransport(body:#"{"categories":[{"category":"People & Body","subcategories":["hand-fingers-closed"]}]}"#)).emojiCategories()
  #expect(taxonomy.categories[0].subcategories == ["hand-fingers-closed"])
@@ -67,9 +66,21 @@ import Testing
  @Test func privateConversion() async throws {
   let conversion=StubTransport(body:#"{"text":"🐈","total":1,"replacements":[{"emoji":"🐈","shortcode":":cat:","start":0,"end":5}],"unresolved":[]}"#)
  #expect(try await makeClient(conversion).emojiConvert(":cat:",direction:"to_emoji",shortcodeSource:"cldr").text == "🐈")
- #expect(conversion.requests[0].httpMethod == "POST")
- #expect(try JSONDecoder().decode([String:String].self,from:#require(conversion.requests[0].httpBody)) == ["text":":cat:"])
+ #expect(conversion.requests[0].httpMethod == "GET")
+ #expect(URLComponents(url:conversion.requests[0].url!,resolvingAgainstBaseURL:false)?.queryItems?.first(where:{$0.name=="text"})?.value == ":cat:")
  }
 
 
+}
+
+
+@Test func emojiLongTextKeepsPostAndEmptyTextKeepsGet() async throws {
+ for text in [String(repeating:"🚀",count:8000),""] {
+  let stub=StubTransport(body:#"{"emojis":[]}"#)
+  _ = try await makeClient(stub).emojiParse(text)
+  #expect(stub.requests.count==1)
+  let request=stub.requests[0]
+  if text.isEmpty {#expect(request.httpMethod=="GET");#expect(URLComponents(url:request.url!,resolvingAgainstBaseURL:false)?.queryItems?.contains(where:{$0.name=="text" && $0.value==""})==true)}
+  else {#expect(request.httpMethod=="POST");let body=try #require(request.httpBody);#expect(try JSONSerialization.jsonObject(with:body) as? [String:String] == ["text":text])}
+ }
 }
